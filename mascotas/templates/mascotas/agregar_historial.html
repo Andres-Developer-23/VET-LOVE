@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-plus-circle me-2"></i>Agregar Historial Médico
+                </h3>
+                <p class="card-subtitle text-muted">Para: {{ mascota.nombre }}</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.veterinario|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.peso|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.diagnostico|as_crispy_field }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.tratamiento|as_crispy_field }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.observaciones|as_crispy_field }}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'mascotas:detalle_mascota' mascota.id %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Guardar Historial
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información importante</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Registra todos los detalles relevantes de la visita veterinaria.</li>
+                    <li>Incluye el diagnóstico, tratamiento y cualquier observación importante.</li>
+                    <li>El peso actual de la mascota ayuda a llevar un control de su salud.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

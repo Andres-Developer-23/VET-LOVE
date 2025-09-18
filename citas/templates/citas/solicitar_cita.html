@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2><i class="fas fa-calendar-plus me-2"></i>Solicitar Nueva Cita</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Formulario de Cita</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="id_mascota" class="form-label">Mascota</label>
+                        {{ form.mascota }}
+                        {% if form.mascota.errors %}
+                        <div class="text-danger">
+                            {% for error in form.mascota.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_fecha" class="form-label">Fecha y Hora</label>
+                        {{ form.fecha }}
+                        {% if form.fecha.errors %}
+                        <div class="text-danger">
+                            {% for error in form.fecha.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_tipo" class="form-label">Tipo de Cita</label>
+                        {{ form.tipo }}
+                        {% if form.tipo.errors %}
+                        <div class="text-danger">
+                            {% for error in form.tipo.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_motivo" class="form-label">Motivo de la Consulta</label>
+                        {{ form.motivo }}
+                        {% if form.motivo.errors %}
+                        <div class="text-danger">
+                            {% for error in form.motivo.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-check me-1"></i>Solicitar Cita
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información importante</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li><strong>Horario de atención:</strong> Lunes a Sábado de 8:00 am a 6:00 pm</li>
+                    <li><strong>Puntualidad:</strong> Por favor arrive 10 minutos antes de su cita</li>
+                    <li><strong>Cancelaciones:</strong> Avise con al menos 4 horas de anticipación</li>
+                    <li><strong>Emergencias:</strong> Para urgencias fuera de horario, llame al: 555-1234</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
