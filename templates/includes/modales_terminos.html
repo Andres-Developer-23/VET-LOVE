@@ -1,0 +1,53 @@
+<!-- templates/includes/modales_terminos.html -->
+<div class="modal fade" id="terminosModal" tabindex="-1" aria-labelledby="terminosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="terminosModalLabel">
+                    <i class="fas fa-file-contract me-2"></i>Términos y Condiciones
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 class="mb-4">Términos y Condiciones de Uso</h4>
+                <p class="text-muted">Última actualización: {{ now|date:"d/m/Y" }}</p>
+                
+                <div class="mb-4">
+                    <h5>1. Aceptación de los Términos</h5>
+                    <p>Al registrarte y utilizar nuestros servicios, aceptas cumplir con estos términos y condiciones.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>2. Servicios</h5>
+                    <p>Veterinaria HappyPets ofrece servicios de gestión de mascotas, citas veterinarias y historial médico para animales.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>3. Responsabilidades del Usuario</h5>
+                    <p>El usuario se compromete a proporcionar información veraz y actualizada sobre sus mascotas.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>4. Privacidad</h5>
+                    <p>Respetamos tu privacidad y protegemos tus datos personales según nuestra política de privacidad.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>5. Modificaciones</h5>
+                    <p>Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>6. Limitación de Responsabilidad</h5>
+                    <p>Veterinaria HappyPets no se hace responsable por daños indirectos o consecuentes resultantes del uso de nuestros servicios.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('aceptoTerminos').checked = true; $('#terminosModal').modal('hide');">
+                    <i class="fas fa-check me-1"></i>Aceptar Términos
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

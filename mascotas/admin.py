@@ -3,15 +3,31 @@ from .models import Mascota, HistorialMedico, Vacuna
 
 @admin.register(Mascota)
 class MascotaAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'tipo', 'raza', 'sexo', 'cliente', 'fecha_registro']
+    list_display = ['nombre', 'tipo', 'raza', 'sexo', 'cliente', 'edad', 'fecha_registro']
     list_filter = ['tipo', 'sexo', 'fecha_registro']
     search_fields = ['nombre', 'raza', 'cliente__usuario__first_name', 'cliente__usuario__last_name']
-    readonly_fields = ['fecha_registro']
+    readonly_fields = ['fecha_registro', 'edad']
     date_hierarchy = 'fecha_registro'
+    fieldsets = (
+        (None, {
+            'fields': ('nombre', 'cliente')
+        }),
+        ('Información de la mascota', {
+            'fields': ('tipo', 'raza', 'sexo', 'fecha_nacimiento', 'foto', 'caracteristicas')
+        }),
+        ('Metadata', {
+            'fields': ('fecha_registro',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def edad(self, obj):
+        return obj.edad()
+    edad.short_description = 'Edad'
 
 @admin.register(HistorialMedico)
 class HistorialMedicoAdmin(admin.ModelAdmin):
-    list_display = ['mascota', 'fecha', 'veterinario', 'diagnostico_corto']
+    list_display = ['mascota', 'fecha', 'veterinario', 'diagnostico_corto', 'peso']
     list_filter = ['fecha', 'veterinario']
     search_fields = ['mascota__nombre', 'veterinario', 'diagnostico']
     readonly_fields = ['fecha']

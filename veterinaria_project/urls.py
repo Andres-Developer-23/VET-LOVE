@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(pattern_name='mascotas:lista_mascotas'), name='home'),
+    path('', TemplateView.as_view(template_name='inicio.html'), name='home'),
     path('mascotas/', include('mascotas.urls')),
     path('clientes/', include('clientes.urls')),
     path('citas/', include('citas.urls')),

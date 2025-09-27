@@ -36,4 +36,4 @@ class Cita(models.Model):
         return f"{self.mascota.nombre} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"
     
     def puede_ser_cancelada(self):
-        return self.estado in ['programada', 'confirmada']  
+        return self.estado in ['programada', 'confirmada']

@@ -1,0 +1,1256 @@
+INFO 2025-09-19 15:20:06,169 autoreload 2812 16212 Watching for file changes with StatReloader
+INFO 2025-09-19 15:20:06,169 autoreload 2812 16212 Watching for file changes with StatReloader
+INFO 2025-09-19 15:20:18,151 autoreload 2812 16212 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 15:20:18,151 autoreload 2812 16212 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 15:20:19,544 autoreload 9792 1944 Watching for file changes with StatReloader
+INFO 2025-09-19 15:20:19,544 autoreload 9792 1944 Watching for file changes with StatReloader
+INFO 2025-09-19 15:23:45,016 autoreload 5100 9760 Watching for file changes with StatReloader
+INFO 2025-09-19 15:23:45,016 autoreload 5100 9760 Watching for file changes with StatReloader
+INFO 2025-09-19 15:24:11,569 autoreload 6264 15608 Watching for file changes with StatReloader
+INFO 2025-09-19 15:24:11,569 autoreload 6264 15608 Watching for file changes with StatReloader
+INFO 2025-09-19 15:24:26,336 basehttp 6264 3216 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:24:26,336 basehttp 6264 3216 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:24:26,398 basehttp 6264 3216 "GET / HTTP/1.1" 200 18916
+INFO 2025-09-19 15:24:26,398 basehttp 6264 3216 "GET / HTTP/1.1" 200 18916
+WARNING 2025-09-19 15:24:26,481 basehttp 6264 3216 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,482 basehttp 6264 12884 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,481 basehttp 6264 3216 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,482 basehttp 6264 12884 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,663 basehttp 6264 9308 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,663 basehttp 6264 9308 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,708 basehttp 6264 9608 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:24:26,708 basehttp 6264 9608 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:25:08,940 basehttp 6264 8744 "GET /accounts/login/ HTTP/1.1" 200 6854
+INFO 2025-09-19 15:25:08,940 basehttp 6264 8744 "GET /accounts/login/ HTTP/1.1" 200 6854
+INFO 2025-09-19 15:25:12,075 basehttp 6264 8744 "GET / HTTP/1.1" 200 18916
+INFO 2025-09-19 15:25:12,075 basehttp 6264 8744 "GET / HTTP/1.1" 200 18916
+WARNING 2025-09-19 15:25:12,155 basehttp 6264 8744 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,155 basehttp 6264 8744 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,166 basehttp 6264 15852 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,166 basehttp 6264 15852 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,218 basehttp 6264 7076 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,218 basehttp 6264 7076 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,226 basehttp 6264 9036 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:12,226 basehttp 6264 9036 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:25:13,694 basehttp 6264 13408 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:25:13,694 basehttp 6264 13408 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:25:13,710 basehttp 6264 13408 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 6854
+INFO 2025-09-19 15:25:13,710 basehttp 6264 13408 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 6854
+INFO 2025-09-19 15:25:15,589 basehttp 6264 13408 "GET / HTTP/1.1" 200 18916
+INFO 2025-09-19 15:25:15,589 basehttp 6264 13408 "GET / HTTP/1.1" 200 18916
+WARNING 2025-09-19 15:25:15,681 basehttp 6264 13408 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,683 basehttp 6264 12152 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,681 basehttp 6264 13408 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,683 basehttp 6264 12152 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,712 basehttp 6264 12524 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,712 basehttp 6264 12524 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,725 basehttp 6264 8564 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:25:15,725 basehttp 6264 8564 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:26,522 log 6264 10504 Not Found: /favicon.ico
+WARNING 2025-09-19 15:32:26,522 log 6264 10504 Not Found: /favicon.ico
+WARNING 2025-09-19 15:32:26,523 basehttp 6264 10504 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 15:32:26,523 basehttp 6264 10504 "GET /favicon.ico HTTP/1.1" 404 3479
+INFO 2025-09-19 15:32:31,277 basehttp 6264 7984 "GET / HTTP/1.1" 200 18916
+INFO 2025-09-19 15:32:31,277 basehttp 6264 7984 "GET / HTTP/1.1" 200 18916
+WARNING 2025-09-19 15:32:31,778 basehttp 6264 10504 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:31,778 basehttp 6264 10504 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,199 basehttp 6264 5192 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,199 basehttp 6264 5192 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,475 basehttp 6264 7916 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,475 basehttp 6264 7916 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,594 basehttp 6264 6500 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:32:32,594 basehttp 6264 6500 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:38:58,702 basehttp 6264 14496 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 15:38:58,702 basehttp 6264 14496 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 15:39:25,953 log 6264 13996 Not Found: /favicon.ico
+WARNING 2025-09-19 15:39:25,953 log 6264 13996 Not Found: /favicon.ico
+WARNING 2025-09-19 15:39:25,954 basehttp 6264 13996 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 15:39:25,954 basehttp 6264 13996 "GET /favicon.ico HTTP/1.1" 404 3479
+INFO 2025-09-19 15:39:27,866 basehttp 6264 13996 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 15:39:27,866 basehttp 6264 13996 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 15:39:28,284 basehttp 6264 3912 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,284 basehttp 6264 3912 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,734 basehttp 6264 356 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,734 basehttp 6264 356 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,793 basehttp 6264 9516 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,793 basehttp 6264 9516 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,833 basehttp 6264 15116 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:39:28,833 basehttp 6264 15116 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:39:37,540 basehttp 6264 13996 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:39:37,540 basehttp 6264 13996 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:40:24,812 autoreload 4236 12676 Watching for file changes with StatReloader
+INFO 2025-09-19 15:40:24,812 autoreload 4236 12676 Watching for file changes with StatReloader
+INFO 2025-09-19 15:40:30,422 basehttp 4236 10736 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 15:40:30,422 basehttp 4236 10736 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 15:40:30,516 basehttp 4236 10736 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,517 basehttp 4236 4456 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,516 basehttp 4236 10736 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,517 basehttp 4236 4456 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,688 basehttp 4236 13188 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,688 basehttp 4236 13188 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,711 basehttp 4236 8108 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:40:30,711 basehttp 4236 8108 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:40:35,029 basehttp 4236 13224 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:40:35,029 basehttp 4236 13224 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:41:34,802 basehttp 4236 5500 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 15:41:34,802 basehttp 4236 5500 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 15:41:35,615 basehttp 4236 10140 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:35,615 basehttp 4236 10140 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,124 basehttp 4236 2840 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,124 basehttp 4236 2840 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,231 basehttp 4236 5044 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,231 basehttp 4236 4792 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,231 basehttp 4236 5044 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 15:41:36,231 basehttp 4236 4792 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 15:41:38,463 basehttp 4236 12612 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:41:38,463 basehttp 4236 12612 "GET /accounts/login/ HTTP/1.1" 200 6852
+WARNING 2025-09-19 15:41:38,565 log 4236 10736 Not Found: /favicon.ico
+WARNING 2025-09-19 15:41:38,565 log 4236 10736 Not Found: /favicon.ico
+WARNING 2025-09-19 15:41:38,566 basehttp 4236 10736 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 15:41:38,566 basehttp 4236 10736 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 15:41:39,894 log 4236 12444 Not Found: /favicon.ico
+WARNING 2025-09-19 15:41:39,894 log 4236 12444 Not Found: /favicon.ico
+WARNING 2025-09-19 15:41:39,895 basehttp 4236 12444 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 15:41:39,895 basehttp 4236 12444 "GET /favicon.ico HTTP/1.1" 404 3479
+INFO 2025-09-19 15:41:56,106 basehttp 4236 8996 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:41:56,106 basehttp 4236 8996 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:41:56,747 basehttp 4236 10736 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 15:41:56,747 basehttp 4236 10736 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 15:42:01,454 basehttp 4236 8996 "GET /mascotas/1/ HTTP/1.1" 200 13695
+INFO 2025-09-19 15:42:01,454 basehttp 4236 8996 "GET /mascotas/1/ HTTP/1.1" 200 13695
+INFO 2025-09-19 15:43:45,831 basehttp 4236 13224 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:43:45,831 basehttp 4236 13224 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:43:46,016 basehttp 4236 13224 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4239
+INFO 2025-09-19 15:43:46,016 basehttp 4236 13224 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4239
+INFO 2025-09-19 15:43:46,738 basehttp 4236 13224 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-19 15:43:46,738 basehttp 4236 13224 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-19 15:43:46,788 basehttp 4236 9420 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-19 15:43:46,788 basehttp 4236 9420 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-19 15:43:46,811 basehttp 4236 2548 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-19 15:43:46,811 basehttp 4236 2548 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-19 15:43:46,850 basehttp 4236 908 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-19 15:43:46,850 basehttp 4236 908 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-19 15:43:46,870 basehttp 4236 12792 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-09-19 15:43:46,870 basehttp 4236 12792 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-09-19 15:43:46,885 basehttp 4236 3904 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-19 15:43:46,885 basehttp 4236 3904 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-19 15:43:46,916 basehttp 4236 12792 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-19 15:43:46,916 basehttp 4236 12792 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-19 15:43:50,571 basehttp 4236 12792 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:43:50,571 basehttp 4236 12792 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:43:59,546 basehttp 4236 12792 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:43:59,546 basehttp 4236 12792 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-09-19 15:43:59,561 basehttp 4236 12792 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4239
+INFO 2025-09-19 15:43:59,561 basehttp 4236 12792 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4239
+INFO 2025-09-19 15:44:03,087 basehttp 4236 12792 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 15:44:03,087 basehttp 4236 12792 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 16:19:01,898 autoreload 12100 16752 Watching for file changes with StatReloader
+INFO 2025-09-19 16:19:01,898 autoreload 12100 16752 Watching for file changes with StatReloader
+INFO 2025-09-19 16:19:04,918 basehttp 12100 11980 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 16:19:04,918 basehttp 12100 11980 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 16:19:05,068 basehttp 12100 11980 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,068 basehttp 12100 11980 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,073 basehttp 12100 4248 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,073 basehttp 12100 4248 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,247 basehttp 12100 11796 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,247 basehttp 12100 11796 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,293 basehttp 12100 10864 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:05,293 basehttp 12100 10864 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 16:19:07,160 basehttp 12100 7752 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 16:19:07,160 basehttp 12100 7752 "GET /accounts/login/ HTTP/1.1" 200 6852
+INFO 2025-09-19 16:19:21,434 basehttp 12100 7752 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 16:19:21,434 basehttp 12100 7752 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 16:19:21,483 basehttp 12100 7752 "GET / HTTP/1.1" 200 20285
+INFO 2025-09-19 16:19:21,483 basehttp 12100 7752 "GET / HTTP/1.1" 200 20285
+WARNING 2025-09-19 16:19:21,586 basehttp 12100 9776 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,587 basehttp 12100 7752 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,586 basehttp 12100 9776 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,587 basehttp 12100 7752 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,607 basehttp 12100 6424 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,607 basehttp 12100 6424 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,616 basehttp 12100 2000 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:19:21,616 basehttp 12100 2000 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 16:19:28,342 basehttp 12100 12384 "GET /clientes/perfil/ HTTP/1.1" 200 18090
+INFO 2025-09-19 16:19:28,342 basehttp 12100 12384 "GET /clientes/perfil/ HTTP/1.1" 200 18090
+INFO 2025-09-19 16:19:42,159 basehttp 12100 12384 "GET /administracion/dashboard/ HTTP/1.1" 200 19264
+INFO 2025-09-19 16:19:42,159 basehttp 12100 12384 "GET /administracion/dashboard/ HTTP/1.1" 200 19264
+INFO 2025-09-19 16:20:04,830 basehttp 12100 12384 "GET /admin/auth/user/add/ HTTP/1.1" 200 24328
+INFO 2025-09-19 16:20:04,830 basehttp 12100 12384 "GET /admin/auth/user/add/ HTTP/1.1" 200 24328
+INFO 2025-09-19 16:20:05,002 basehttp 12100 15596 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 16:20:05,002 basehttp 12100 15596 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 16:20:05,430 basehttp 12100 5396 "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+INFO 2025-09-19 16:20:05,430 basehttp 12100 5396 "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+INFO 2025-09-19 16:20:05,436 basehttp 12100 5396 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-19 16:20:05,436 basehttp 12100 5396 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-19 16:20:05,472 basehttp 12100 5396 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-19 16:20:05,472 basehttp 12100 5396 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-19 16:20:05,477 basehttp 12100 5396 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-19 16:20:05,477 basehttp 12100 5396 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-19 16:20:05,484 basehttp 12100 5396 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-19 16:20:05,484 basehttp 12100 5396 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-19 16:20:05,505 basehttp 12100 5396 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-19 16:20:05,505 basehttp 12100 5396 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+WARNING 2025-09-19 16:20:05,516 basehttp 12100 5396 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 16:20:05,516 basehttp 12100 5396 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 16:20:05,527 basehttp 12100 2916 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-19 16:20:05,527 basehttp 12100 2916 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-19 16:20:05,559 basehttp 12100 14676 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-19 16:20:05,559 basehttp 12100 14676 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-19 16:20:05,607 basehttp 12100 12384 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-19 16:20:05,607 basehttp 12100 12384 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-19 16:20:05,617 basehttp 12100 12384 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-19 16:20:05,617 basehttp 12100 12384 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-19 16:20:05,639 basehttp 12100 9388 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-19 16:20:05,639 basehttp 12100 9388 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-19 16:20:05,700 basehttp 12100 7124 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-19 16:20:05,700 basehttp 12100 7124 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-19 16:20:05,715 basehttp 12100 7124 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-19 16:20:05,715 basehttp 12100 7124 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-19 16:20:05,725 basehttp 12100 7124 "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+INFO 2025-09-19 16:20:05,725 basehttp 12100 7124 "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+INFO 2025-09-19 16:20:05,732 basehttp 12100 15596 "GET /static/admin/js/inlines.js HTTP/1.1" 200 15628
+INFO 2025-09-19 16:20:05,732 basehttp 12100 15596 "GET /static/admin/js/inlines.js HTTP/1.1" 200 15628
+INFO 2025-09-19 16:20:05,786 basehttp 12100 15596 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-19 16:20:05,786 basehttp 12100 15596 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-19 16:20:05,894 basehttp 12100 15596 "GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 537
+INFO 2025-09-19 16:20:05,894 basehttp 12100 15596 "GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 537
+INFO 2025-09-19 16:20:21,514 basehttp 12100 15596 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 17312
+INFO 2025-09-19 16:20:21,514 basehttp 12100 15596 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 17312
+WARNING 2025-09-19 16:20:21,601 basehttp 12100 7124 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 16:20:21,601 basehttp 12100 7124 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 16:20:21,631 basehttp 12100 15596 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 16:20:21,631 basehttp 12100 15596 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 16:20:21,633 basehttp 12100 9388 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-19 16:20:21,633 basehttp 12100 9388 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-19 16:20:21,696 basehttp 12100 9388 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-19 16:20:21,696 basehttp 12100 9388 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-19 16:20:32,156 basehttp 12100 9388 "GET /admin/ HTTP/1.1" 200 11718
+INFO 2025-09-19 16:20:32,156 basehttp 12100 9388 "GET /admin/ HTTP/1.1" 200 11718
+WARNING 2025-09-19 16:20:32,245 basehttp 12100 15596 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 16:20:32,247 basehttp 12100 9388 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+WARNING 2025-09-19 16:20:32,245 basehttp 12100 15596 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 16:20:32,247 basehttp 12100 9388 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-09-19 16:20:40,482 basehttp 12100 9388 "GET /admin/ HTTP/1.1" 200 11718
+INFO 2025-09-19 16:20:40,482 basehttp 12100 9388 "GET /admin/ HTTP/1.1" 200 11718
+WARNING 2025-09-19 16:20:40,570 basehttp 12100 9388 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 16:20:40,570 basehttp 12100 9388 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 16:27:48,067 autoreload 12100 16752 C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py changed, reloading.
+INFO 2025-09-19 16:27:48,067 autoreload 12100 16752 C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py changed, reloading.
+INFO 2025-09-19 16:27:49,481 autoreload 3556 14840 Watching for file changes with StatReloader
+INFO 2025-09-19 16:27:49,481 autoreload 3556 14840 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:01,768 autoreload 3556 14840 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:01,768 autoreload 3556 14840 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:03,267 autoreload 17128 5876 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:03,267 autoreload 17128 5876 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:19,337 autoreload 17128 5876 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:19,337 autoreload 17128 5876 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:20,797 autoreload 15752 9516 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:20,797 autoreload 15752 9516 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:42,854 autoreload 15752 9516 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:42,854 autoreload 15752 9516 C:\Users\Lenovo\VETERINARIA_APP\veterinaria_project\settings.py changed, reloading.
+INFO 2025-09-19 16:30:44,349 autoreload 5952 4968 Watching for file changes with StatReloader
+INFO 2025-09-19 16:30:44,349 autoreload 5952 4968 Watching for file changes with StatReloader
+INFO 2025-09-19 16:38:48,488 autoreload 8096 16544 Watching for file changes with StatReloader
+INFO 2025-09-19 16:38:48,488 autoreload 8096 16544 Watching for file changes with StatReloader
+INFO 2025-09-19 16:39:13,966 autoreload 4148 13900 Watching for file changes with StatReloader
+INFO 2025-09-19 16:39:13,966 autoreload 4148 13900 Watching for file changes with StatReloader
+INFO 2025-09-19 16:41:39,365 autoreload 5752 8588 Watching for file changes with StatReloader
+INFO 2025-09-19 16:41:39,365 autoreload 5752 8588 Watching for file changes with StatReloader
+INFO 2025-09-19 16:44:14,723 autoreload 1160 11284 Watching for file changes with StatReloader
+INFO 2025-09-19 16:44:14,723 autoreload 1160 11284 Watching for file changes with StatReloader
+INFO 2025-09-19 16:45:51,283 autoreload 148 14492 Watching for file changes with StatReloader
+INFO 2025-09-19 16:45:51,283 autoreload 148 14492 Watching for file changes with StatReloader
+INFO 2025-09-19 16:47:12,610 autoreload 2960 16420 Watching for file changes with StatReloader
+INFO 2025-09-19 16:47:12,610 autoreload 2960 16420 Watching for file changes with StatReloader
+INFO 2025-09-19 16:48:53,525 autoreload 14264 10580 Watching for file changes with StatReloader
+INFO 2025-09-19 16:48:53,525 autoreload 14264 10580 Watching for file changes with StatReloader
+INFO 2025-09-19 16:51:43,662 autoreload 14264 10580 C:\Users\Lenovo\VETERINARIA_APP\clientes\forms.py changed, reloading.
+INFO 2025-09-19 16:51:43,662 autoreload 14264 10580 C:\Users\Lenovo\VETERINARIA_APP\clientes\forms.py changed, reloading.
+INFO 2025-09-19 16:51:44,813 autoreload 1296 2768 Watching for file changes with StatReloader
+INFO 2025-09-19 16:51:44,813 autoreload 1296 2768 Watching for file changes with StatReloader
+INFO 2025-09-19 16:52:25,474 basehttp 1296 16360 "GET / HTTP/1.1" 200 20285
+INFO 2025-09-19 16:52:25,474 basehttp 1296 16360 "GET / HTTP/1.1" 200 20285
+WARNING 2025-09-19 16:52:25,601 basehttp 1296 16360 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,601 basehttp 1296 8996 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,601 basehttp 1296 16360 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,601 basehttp 1296 8996 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,773 basehttp 1296 16840 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,773 basehttp 1296 16840 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,905 basehttp 1296 2116 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:25,905 basehttp 1296 2116 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 16:52:31,555 basehttp 1296 14496 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 16:52:31,555 basehttp 1296 14496 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 16:52:31,570 basehttp 1296 14496 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 16:52:31,570 basehttp 1296 14496 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 16:52:31,645 basehttp 1296 14496 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,645 basehttp 1296 14496 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,654 basehttp 1296 3296 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,654 basehttp 1296 3296 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,690 basehttp 1296 13844 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,690 basehttp 1296 13844 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,700 basehttp 1296 17188 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:52:31,700 basehttp 1296 17188 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+ERROR 2025-09-19 16:52:34,793 log 1296 9400 Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 199, in render
+    template = context.template.engine.select_template(template_name)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\engine.py", line 214, in select_template
+    raise TemplateDoesNotExist(", ".join(not_found))
+django.template.exceptions.TemplateDoesNotExist: includes/modales_terminos.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: includes/modales_terminos.html
+ERROR 2025-09-19 16:52:34,793 log 1296 9400 Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader_tags.py", line 199, in render
+    template = context.template.engine.select_template(template_name)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\engine.py", line 214, in select_template
+    raise TemplateDoesNotExist(", ".join(not_found))
+django.template.exceptions.TemplateDoesNotExist: includes/modales_terminos.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 109, in render
+    reraise(exc, self.backend)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\backends\django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: includes/modales_terminos.html
+ERROR 2025-09-19 16:52:34,807 basehttp 1296 9400 "GET /accounts/login/ HTTP/1.1" 500 161364
+ERROR 2025-09-19 16:52:34,807 basehttp 1296 9400 "GET /accounts/login/ HTTP/1.1" 500 161364
+INFO 2025-09-19 16:53:30,527 autoreload 1296 2768 C:\Users\Lenovo\VETERINARIA_APP\clientes\forms.py changed, reloading.
+INFO 2025-09-19 16:53:30,527 autoreload 1296 2768 C:\Users\Lenovo\VETERINARIA_APP\clientes\forms.py changed, reloading.
+INFO 2025-09-19 16:53:32,149 autoreload 16448 10764 Watching for file changes with StatReloader
+INFO 2025-09-19 16:53:32,149 autoreload 16448 10764 Watching for file changes with StatReloader
+INFO 2025-09-19 16:58:04,765 autoreload 1536 13704 Watching for file changes with StatReloader
+INFO 2025-09-19 16:58:04,765 autoreload 1536 13704 Watching for file changes with StatReloader
+INFO 2025-09-19 16:58:07,773 basehttp 1536 13460 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 16:58:07,773 basehttp 1536 13460 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 16:58:07,930 basehttp 1536 13460 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:07,930 basehttp 1536 13460 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:07,966 basehttp 1536 16724 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:07,966 basehttp 1536 16724 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:08,153 basehttp 1536 4312 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:08,153 basehttp 1536 4312 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:08,172 basehttp 1536 13772 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 16:58:08,172 basehttp 1536 13772 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 16:58:14,754 basehttp 1536 16216 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 16:58:14,754 basehttp 1536 16216 "GET /accounts/login/ HTTP/1.1" 200 9053
+ERROR 2025-09-19 16:58:19,676 log 1536 16216 Internal Server Error: /clientes/registro/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py", line 84, in registro_usuario
+    return render(request, 'clientes/registro.html', {
+        'user_form': user_form,
+        'cliente_form': cliente_form
+    })
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: clientes/registro.html
+ERROR 2025-09-19 16:58:19,676 log 1536 16216 Internal Server Error: /clientes/registro/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py", line 84, in registro_usuario
+    return render(request, 'clientes/registro.html', {
+        'user_form': user_form,
+        'cliente_form': cliente_form
+    })
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: clientes/registro.html
+ERROR 2025-09-19 16:58:19,682 basehttp 1536 16216 "GET /clientes/registro/ HTTP/1.1" 500 91020
+ERROR 2025-09-19 16:58:19,682 basehttp 1536 16216 "GET /clientes/registro/ HTTP/1.1" 500 91020
+INFO 2025-09-19 16:58:23,087 basehttp 1536 16216 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 16:58:23,087 basehttp 1536 16216 "GET /accounts/login/ HTTP/1.1" 200 9053
+ERROR 2025-09-19 16:58:27,517 log 1536 16216 Internal Server Error: /clientes/registro/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py", line 84, in registro_usuario
+    return render(request, 'clientes/registro.html', {
+        'user_form': user_form,
+        'cliente_form': cliente_form
+    })
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: clientes/registro.html
+ERROR 2025-09-19 16:58:27,517 log 1536 16216 Internal Server Error: /clientes/registro/
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Lenovo\VETERINARIA_APP\clientes\views.py", line 84, in registro_usuario
+    return render(request, 'clientes/registro.html', {
+        'user_form': user_form,
+        'cliente_form': cliente_form
+    })
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Lenovo\VETERINARIA_APP\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: clientes/registro.html
+ERROR 2025-09-19 16:58:27,521 basehttp 1536 16216 "GET /clientes/registro/ HTTP/1.1" 500 91020
+ERROR 2025-09-19 16:58:27,521 basehttp 1536 16216 "GET /clientes/registro/ HTTP/1.1" 500 91020
+INFO 2025-09-19 17:03:16,291 autoreload 2116 7216 Watching for file changes with StatReloader
+INFO 2025-09-19 17:03:16,291 autoreload 2116 7216 Watching for file changes with StatReloader
+INFO 2025-09-19 17:03:36,185 basehttp 2116 17172 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 17:03:36,185 basehttp 2116 17172 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 17:03:36,333 basehttp 2116 2960 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,334 basehttp 2116 17172 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,333 basehttp 2116 2960 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,334 basehttp 2116 17172 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,514 basehttp 2116 13120 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,514 basehttp 2116 13120 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,539 basehttp 2116 5696 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:03:36,539 basehttp 2116 5696 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 17:03:41,299 basehttp 2116 364 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:03:41,299 basehttp 2116 364 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:03:43,453 basehttp 2116 364 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:03:43,453 basehttp 2116 364 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:05:16,188 basehttp 2116 364 "POST /clientes/registro/ HTTP/1.1" 200 11404
+INFO 2025-09-19 17:05:16,188 basehttp 2116 364 "POST /clientes/registro/ HTTP/1.1" 200 11404
+INFO 2025-09-19 17:05:51,159 basehttp 2116 364 "POST /clientes/registro/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:05:51,159 basehttp 2116 364 "POST /clientes/registro/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:05:51,172 basehttp 2116 364 "GET /accounts/login/ HTTP/1.1" 200 9387
+INFO 2025-09-19 17:05:51,172 basehttp 2116 364 "GET /accounts/login/ HTTP/1.1" 200 9387
+INFO 2025-09-19 17:25:30,596 autoreload 11024 9188 Watching for file changes with StatReloader
+INFO 2025-09-19 17:25:30,596 autoreload 11024 9188 Watching for file changes with StatReloader
+INFO 2025-09-19 17:25:31,185 basehttp 11024 9432 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:25:31,185 basehttp 11024 9432 "GET /accounts/login/ HTTP/1.1" 200 9053
+WARNING 2025-09-19 17:25:31,710 log 11024 9432 Not Found: /favicon.ico
+WARNING 2025-09-19 17:25:31,710 log 11024 9432 Not Found: /favicon.ico
+WARNING 2025-09-19 17:25:31,715 basehttp 11024 9432 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 17:25:31,715 basehttp 11024 9432 "GET /favicon.ico HTTP/1.1" 404 3479
+INFO 2025-09-19 17:25:51,686 basehttp 11024 9432 "POST /accounts/login/ HTTP/1.1" 200 9370
+INFO 2025-09-19 17:25:51,686 basehttp 11024 9432 "POST /accounts/login/ HTTP/1.1" 200 9370
+INFO 2025-09-19 17:25:58,442 basehttp 11024 15572 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:25:58,442 basehttp 11024 15572 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:28:53,150 basehttp 11024 16788 "POST /clientes/registro/ HTTP/1.1" 200 11386
+INFO 2025-09-19 17:28:53,150 basehttp 11024 16788 "POST /clientes/registro/ HTTP/1.1" 200 11386
+INFO 2025-09-19 17:29:24,843 basehttp 11024 16788 "POST /clientes/registro/ HTTP/1.1" 200 11386
+INFO 2025-09-19 17:29:24,843 basehttp 11024 16788 "POST /clientes/registro/ HTTP/1.1" 200 11386
+INFO 2025-09-19 17:29:32,916 basehttp 11024 16788 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:29:32,916 basehttp 11024 16788 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:29:45,440 basehttp 11024 16788 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:29:45,440 basehttp 11024 16788 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:29:45,495 basehttp 11024 16788 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 17:29:45,495 basehttp 11024 16788 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 17:29:53,592 basehttp 11024 16788 "GET /administracion/dashboard/ HTTP/1.1" 200 19264
+INFO 2025-09-19 17:29:53,592 basehttp 11024 16788 "GET /administracion/dashboard/ HTTP/1.1" 200 19264
+INFO 2025-09-19 17:30:23,610 basehttp 11024 16788 "GET /admin/ HTTP/1.1" 200 11142
+INFO 2025-09-19 17:30:23,610 basehttp 11024 16788 "GET /admin/ HTTP/1.1" 200 11142
+WARNING 2025-09-19 17:30:23,717 basehttp 11024 16788 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:30:23,717 basehttp 11024 16788 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:30:30,742 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17681
+INFO 2025-09-19 17:30:30,742 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17681
+WARNING 2025-09-19 17:30:30,865 basehttp 11024 12452 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:30:30,865 basehttp 11024 12452 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:30:30,889 basehttp 11024 5480 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:30:30,889 basehttp 11024 5480 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:30:31,159 basehttp 11024 7544 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-19 17:30:31,159 basehttp 11024 7544 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-19 17:30:31,168 basehttp 11024 7544 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-09-19 17:30:31,168 basehttp 11024 7544 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-09-19 17:30:31,177 basehttp 11024 13572 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-19 17:30:31,177 basehttp 11024 13572 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-19 17:30:31,215 basehttp 11024 13572 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-19 17:30:31,215 basehttp 11024 13572 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-19 17:30:31,219 basehttp 11024 5480 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-09-19 17:30:31,219 basehttp 11024 5480 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-09-19 17:30:31,259 basehttp 11024 5480 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-19 17:30:31,260 basehttp 11024 13572 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-19 17:30:31,259 basehttp 11024 5480 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-19 17:30:31,260 basehttp 11024 13572 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-19 17:30:57,447 basehttp 11024 13572 "GET /admin/auth/user/?is_staff__exact=1 HTTP/1.1" 200 17796
+INFO 2025-09-19 17:30:57,447 basehttp 11024 13572 "GET /admin/auth/user/?is_staff__exact=1 HTTP/1.1" 200 17796
+WARNING 2025-09-19 17:30:57,517 basehttp 11024 5480 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:30:57,517 basehttp 11024 5480 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:30:57,545 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:30:57,545 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:06,745 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17681
+INFO 2025-09-19 17:31:06,745 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17681
+INFO 2025-09-19 17:31:26,383 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:31:26,383 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:31:26,450 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17821
+INFO 2025-09-19 17:31:26,450 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17821
+WARNING 2025-09-19 17:31:26,523 basehttp 11024 7544 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:31:26,523 basehttp 11024 7544 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:31:26,553 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:26,553 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:26,659 basehttp 11024 13572 "GET /static/admin/img/icon-alert.svg HTTP/1.1" 200 504
+INFO 2025-09-19 17:31:26,659 basehttp 11024 13572 "GET /static/admin/img/icon-alert.svg HTTP/1.1" 200 504
+INFO 2025-09-19 17:31:45,116 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 200 12059
+INFO 2025-09-19 17:31:45,116 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 200 12059
+INFO 2025-09-19 17:31:45,186 basehttp 11024 13572 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-09-19 17:31:45,186 basehttp 11024 13572 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+WARNING 2025-09-19 17:31:45,196 basehttp 11024 14604 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:31:45,196 basehttp 11024 14604 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:31:47,903 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:31:47,903 basehttp 11024 13572 "POST /admin/auth/user/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:31:47,964 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17190
+INFO 2025-09-19 17:31:47,964 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17190
+WARNING 2025-09-19 17:31:48,031 basehttp 11024 5728 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:31:48,031 basehttp 11024 5728 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:31:48,061 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:48,061 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:54,000 basehttp 11024 13572 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 16904
+INFO 2025-09-19 17:31:54,000 basehttp 11024 13572 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 16904
+WARNING 2025-09-19 17:31:54,079 basehttp 11024 13836 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:31:54,079 basehttp 11024 13836 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:31:54,118 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:31:54,118 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:32:15,767 basehttp 11024 13572 "GET /admin/auth/user/add/ HTTP/1.1" 200 23920
+INFO 2025-09-19 17:32:15,767 basehttp 11024 13572 "GET /admin/auth/user/add/ HTTP/1.1" 200 23920
+WARNING 2025-09-19 17:32:15,843 basehttp 11024 7688 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:32:15,843 basehttp 11024 7688 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:32:15,873 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:32:15,873 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:33:44,184 basehttp 11024 13572 "POST /admin/auth/user/add/ HTTP/1.1" 200 24338
+INFO 2025-09-19 17:33:44,184 basehttp 11024 13572 "POST /admin/auth/user/add/ HTTP/1.1" 200 24338
+WARNING 2025-09-19 17:33:44,252 basehttp 11024 8020 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:33:44,252 basehttp 11024 8020 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:33:44,280 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:33:44,280 basehttp 11024 13572 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:34:22,182 basehttp 11024 13572 "GET /admin/auth/user/add/ HTTP/1.1" 200 23920
+INFO 2025-09-19 17:34:22,182 basehttp 11024 13572 "GET /admin/auth/user/add/ HTTP/1.1" 200 23920
+INFO 2025-09-19 17:34:23,178 basehttp 11024 13572 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 16904
+INFO 2025-09-19 17:34:23,178 basehttp 11024 13572 "GET /admin/clientes/cliente/add/ HTTP/1.1" 200 16904
+INFO 2025-09-19 17:34:24,606 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:24,606 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:27,820 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:27,820 basehttp 11024 13572 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:30,521 basehttp 11024 13572 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 17:34:30,521 basehttp 11024 13572 "GET /admin/ HTTP/1.1" 200 11478
+WARNING 2025-09-19 17:34:30,588 basehttp 11024 13572 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:34:30,588 basehttp 11024 13572 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:34:30,624 basehttp 11024 5996 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-09-19 17:34:30,624 basehttp 11024 5996 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-09-19 17:34:34,436 basehttp 11024 5996 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:34,436 basehttp 11024 5996 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:40,416 basehttp 11024 5996 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 17:34:40,416 basehttp 11024 5996 "GET /admin/ HTTP/1.1" 200 11478
+WARNING 2025-09-19 17:34:40,483 basehttp 11024 5996 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:34:40,483 basehttp 11024 5996 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:34:49,236 basehttp 11024 6372 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+INFO 2025-09-19 17:34:49,236 basehttp 11024 6372 "GET /admin/auth/user/ HTTP/1.1" 200 17043
+WARNING 2025-09-19 17:34:49,324 basehttp 11024 9448 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 17:34:49,324 basehttp 11024 9448 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 17:34:49,348 basehttp 11024 6372 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:34:49,348 basehttp 11024 6372 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 17:34:56,975 basehttp 11024 6372 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:34:56,975 basehttp 11024 6372 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:34:56,989 basehttp 11024 6372 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 17:34:56,989 basehttp 11024 6372 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 17:34:57,066 basehttp 11024 6372 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,066 basehttp 11024 288 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,066 basehttp 11024 6372 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,066 basehttp 11024 288 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,108 basehttp 11024 7596 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,108 basehttp 11024 7596 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,119 basehttp 11024 4576 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 17:34:57,119 basehttp 11024 4576 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 17:34:59,546 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:34:59,546 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 17:35:03,428 basehttp 11024 14056 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:35:03,428 basehttp 11024 14056 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 17:36:17,249 basehttp 11024 14056 "POST /clientes/registro/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:36:17,249 basehttp 11024 14056 "POST /clientes/registro/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:36:17,268 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9387
+INFO 2025-09-19 17:36:17,268 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9387
+INFO 2025-09-19 17:40:10,126 basehttp 11024 14056 "GET /clientes/activar/Mw/cwe0wh-dacbd1e4621d8daba15836ce894842a4/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:40:10,126 basehttp 11024 14056 "GET /clientes/activar/Mw/cwe0wh-dacbd1e4621d8daba15836ce894842a4/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:40:10,146 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9347
+INFO 2025-09-19 17:40:10,146 basehttp 11024 14056 "GET /accounts/login/ HTTP/1.1" 200 9347
+INFO 2025-09-19 17:40:39,484 basehttp 11024 14056 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:40:39,484 basehttp 11024 14056 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:40:39,528 basehttp 11024 14056 "GET /mascotas/ HTTP/1.1" 200 6806
+INFO 2025-09-19 17:40:39,528 basehttp 11024 14056 "GET /mascotas/ HTTP/1.1" 200 6806
+INFO 2025-09-19 17:46:11,291 basehttp 11024 12684 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 17:46:11,291 basehttp 11024 12684 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 17:58:25,212 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:58:25,212 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:58:25,259 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 7711
+INFO 2025-09-19 17:58:25,259 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 7711
+INFO 2025-09-19 17:58:50,721 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 17:58:50,721 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 17:59:36,729 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:59:36,729 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 17:59:36,777 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 8649
+INFO 2025-09-19 17:59:36,777 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 8649
+INFO 2025-09-19 17:59:39,934 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 17:59:39,934 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 18:00:43,182 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:00:43,182 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:00:43,229 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 9593
+INFO 2025-09-19 18:00:43,229 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 9593
+INFO 2025-09-19 18:00:45,438 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 18:00:45,438 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 18:02:16,494 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:02:16,494 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:02:16,543 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 10533
+INFO 2025-09-19 18:02:16,543 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 10533
+INFO 2025-09-19 18:02:19,719 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 18:02:19,719 basehttp 11024 7580 "GET /mascotas/agregar/ HTTP/1.1" 200 14167
+INFO 2025-09-19 18:02:57,376 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:02:57,376 basehttp 11024 7580 "POST /mascotas/agregar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:02:57,426 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11473
+INFO 2025-09-19 18:02:57,426 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11473
+INFO 2025-09-19 18:07:49,820 basehttp 11024 7580 "GET /mascotas/6/ HTTP/1.1" 200 10161
+INFO 2025-09-19 18:07:49,820 basehttp 11024 7580 "GET /mascotas/6/ HTTP/1.1" 200 10161
+INFO 2025-09-19 18:07:56,897 basehttp 11024 7580 "GET /mascotas/6/editar/ HTTP/1.1" 200 13563
+INFO 2025-09-19 18:07:56,897 basehttp 11024 7580 "GET /mascotas/6/editar/ HTTP/1.1" 200 13563
+INFO 2025-09-19 18:08:27,909 basehttp 11024 7580 "POST /mascotas/6/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:08:27,909 basehttp 11024 7580 "POST /mascotas/6/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:08:27,966 basehttp 11024 7580 "GET /mascotas/6/ HTTP/1.1" 200 10139
+INFO 2025-09-19 18:08:27,966 basehttp 11024 7580 "GET /mascotas/6/ HTTP/1.1" 200 10139
+INFO 2025-09-19 18:08:28,074 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 18:08:28,074 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 18:08:37,548 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11145
+INFO 2025-09-19 18:08:37,548 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11145
+INFO 2025-09-19 18:08:37,643 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:08:37,643 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:09:28,655 basehttp 11024 7580 "GET /mascotas/4/ HTTP/1.1" 200 10157
+INFO 2025-09-19 18:09:28,655 basehttp 11024 7580 "GET /mascotas/4/ HTTP/1.1" 200 10157
+INFO 2025-09-19 18:09:34,503 basehttp 11024 7580 "GET /mascotas/4/editar/ HTTP/1.1" 200 13562
+INFO 2025-09-19 18:09:34,503 basehttp 11024 7580 "GET /mascotas/4/editar/ HTTP/1.1" 200 13562
+INFO 2025-09-19 18:10:01,858 basehttp 11024 7580 "POST /mascotas/4/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:10:01,858 basehttp 11024 7580 "POST /mascotas/4/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:10:01,906 basehttp 11024 7580 "GET /mascotas/4/ HTTP/1.1" 200 10356
+INFO 2025-09-19 18:10:01,906 basehttp 11024 7580 "GET /mascotas/4/ HTTP/1.1" 200 10356
+INFO 2025-09-19 18:10:02,020 basehttp 11024 7580 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 18:10:02,020 basehttp 11024 7580 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 18:10:05,622 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11081
+INFO 2025-09-19 18:10:05,622 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11081
+INFO 2025-09-19 18:10:05,721 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:10:05,721 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:10:05,737 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:10:05,737 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:19,853 basehttp 11024 7580 "GET /mascotas/3/ HTTP/1.1" 200 10414
+INFO 2025-09-19 18:11:19,853 basehttp 11024 7580 "GET /mascotas/3/ HTTP/1.1" 200 10414
+INFO 2025-09-19 18:11:23,361 basehttp 11024 7580 "GET /mascotas/3/editar/ HTTP/1.1" 200 13633
+INFO 2025-09-19 18:11:23,361 basehttp 11024 7580 "GET /mascotas/3/editar/ HTTP/1.1" 200 13633
+INFO 2025-09-19 18:11:42,027 basehttp 11024 7580 "POST /mascotas/3/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:11:42,027 basehttp 11024 7580 "POST /mascotas/3/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:11:42,085 basehttp 11024 7580 "GET /mascotas/3/ HTTP/1.1" 200 10608
+INFO 2025-09-19 18:11:42,085 basehttp 11024 7580 "GET /mascotas/3/ HTTP/1.1" 200 10608
+INFO 2025-09-19 18:11:42,199 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 18:11:42,199 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 18:11:45,104 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11013
+INFO 2025-09-19 18:11:45,104 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 11013
+INFO 2025-09-19 18:11:45,206 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:45,206 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:45,233 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:45,233 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:45,259 basehttp 11024 9532 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:45,259 basehttp 11024 9532 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:11:50,194 basehttp 11024 9532 "GET /mascotas/5/ HTTP/1.1" 200 10163
+INFO 2025-09-19 18:11:50,194 basehttp 11024 9532 "GET /mascotas/5/ HTTP/1.1" 200 10163
+INFO 2025-09-19 18:11:55,701 basehttp 11024 9532 "GET /mascotas/5/editar/ HTTP/1.1" 200 13570
+INFO 2025-09-19 18:11:55,701 basehttp 11024 9532 "GET /mascotas/5/editar/ HTTP/1.1" 200 13570
+INFO 2025-09-19 18:14:10,910 basehttp 11024 9532 "POST /mascotas/5/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:14:10,910 basehttp 11024 9532 "POST /mascotas/5/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:14:10,969 basehttp 11024 9532 "GET /mascotas/5/ HTTP/1.1" 200 10345
+INFO 2025-09-19 18:14:10,969 basehttp 11024 9532 "GET /mascotas/5/ HTTP/1.1" 200 10345
+INFO 2025-09-19 18:14:11,178 basehttp 11024 9532 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 18:14:11,178 basehttp 11024 9532 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 18:14:13,798 basehttp 11024 9532 "GET /mascotas/ HTTP/1.1" 200 10932
+INFO 2025-09-19 18:14:13,798 basehttp 11024 9532 "GET /mascotas/ HTTP/1.1" 200 10932
+INFO 2025-09-19 18:14:13,897 basehttp 11024 7580 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,897 basehttp 11024 7580 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,923 basehttp 11024 9532 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,923 basehttp 11024 9532 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,965 basehttp 11024 9476 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,965 basehttp 11024 9476 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,994 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:13,994 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:14:19,040 basehttp 11024 7580 "GET /mascotas/7/ HTTP/1.1" 200 10158
+INFO 2025-09-19 18:14:19,040 basehttp 11024 7580 "GET /mascotas/7/ HTTP/1.1" 200 10158
+INFO 2025-09-19 18:14:23,016 basehttp 11024 7580 "GET /mascotas/7/editar/ HTTP/1.1" 200 13564
+INFO 2025-09-19 18:14:23,016 basehttp 11024 7580 "GET /mascotas/7/editar/ HTTP/1.1" 200 13564
+INFO 2025-09-19 18:16:19,824 basehttp 11024 7580 "POST /mascotas/7/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:16:19,824 basehttp 11024 7580 "POST /mascotas/7/editar/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:16:19,875 basehttp 11024 7580 "GET /mascotas/7/ HTTP/1.1" 200 10348
+INFO 2025-09-19 18:16:19,875 basehttp 11024 7580 "GET /mascotas/7/ HTTP/1.1" 200 10348
+INFO 2025-09-19 18:16:19,993 basehttp 11024 7580 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 18:16:19,993 basehttp 11024 7580 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 18:16:39,776 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 18:16:39,776 basehttp 11024 7580 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 18:16:39,878 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,878 basehttp 11024 7580 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,893 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,893 basehttp 11024 9476 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,956 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,956 basehttp 11024 7580 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,991 basehttp 11024 9532 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:39,991 basehttp 11024 9532 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:40,005 basehttp 11024 9476 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:40,005 basehttp 11024 9476 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 18:16:51,749 basehttp 11024 9476 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+INFO 2025-09-19 18:16:51,749 basehttp 11024 9476 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+WARNING 2025-09-19 18:16:51,855 log 11024 9476 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 18:16:51,855 log 11024 9476 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 18:16:51,858 basehttp 11024 9476 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 18:16:51,858 basehttp 11024 9476 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 18:17:30,635 basehttp 11024 9476 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:17:30,635 basehttp 11024 9476 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:17:30,651 basehttp 11024 9476 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 18:17:30,651 basehttp 11024 9476 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 18:17:30,733 basehttp 11024 9532 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,734 basehttp 11024 9476 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,733 basehttp 11024 9532 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,734 basehttp 11024 9476 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,770 basehttp 11024 7580 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,770 basehttp 11024 7580 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,781 basehttp 11024 3068 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 18:17:30,781 basehttp 11024 3068 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 18:17:45,776 basehttp 11024 768 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:17:45,776 basehttp 11024 768 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:17:45,807 basehttp 11024 768 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9053
+INFO 2025-09-19 18:17:45,807 basehttp 11024 768 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9053
+INFO 2025-09-19 18:18:08,207 basehttp 11024 768 "POST /accounts/login/?next=/mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:18:08,207 basehttp 11024 768 "POST /accounts/login/?next=/mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 18:18:08,250 basehttp 11024 768 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 18:18:08,250 basehttp 11024 768 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 18:18:15,079 basehttp 11024 768 "GET /administracion/dashboard/ HTTP/1.1" 200 19285
+INFO 2025-09-19 18:18:15,079 basehttp 11024 768 "GET /administracion/dashboard/ HTTP/1.1" 200 19285
+INFO 2025-09-19 19:02:32,743 autoreload 14372 17060 Watching for file changes with StatReloader
+INFO 2025-09-19 19:02:32,743 autoreload 14372 17060 Watching for file changes with StatReloader
+INFO 2025-09-19 19:02:37,265 basehttp 14372 10208 "GET / HTTP/1.1" 200 20285
+INFO 2025-09-19 19:02:37,265 basehttp 14372 10208 "GET / HTTP/1.1" 200 20285
+WARNING 2025-09-19 19:02:37,391 basehttp 14372 13380 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,392 basehttp 14372 10208 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,391 basehttp 14372 13380 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,392 basehttp 14372 10208 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,594 basehttp 14372 7360 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,594 basehttp 14372 7360 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,621 basehttp 14372 8340 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:37,621 basehttp 14372 8340 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:02:42,061 basehttp 14372 4068 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:02:42,061 basehttp 14372 4068 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:02:54,157 basehttp 14372 4068 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:02:54,157 basehttp 14372 4068 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:02:54,171 basehttp 14372 4068 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 19:02:54,171 basehttp 14372 4068 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 19:02:54,261 basehttp 14372 4068 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,261 basehttp 14372 4068 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,262 basehttp 14372 9188 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,262 basehttp 14372 9188 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,327 basehttp 14372 11120 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,327 basehttp 14372 11120 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,342 basehttp 14372 12400 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:02:54,342 basehttp 14372 12400 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:02:57,334 basehttp 14372 16224 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:02:57,334 basehttp 14372 16224 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:03:00,265 basehttp 14372 16224 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 19:03:00,265 basehttp 14372 16224 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 19:03:06,416 basehttp 14372 16224 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:03:06,416 basehttp 14372 16224 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:03:18,098 basehttp 14372 16224 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:03:18,098 basehttp 14372 16224 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:03:18,151 basehttp 14372 16224 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:03:18,151 basehttp 14372 16224 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:03:26,583 basehttp 14372 16224 "GET /administracion/dashboard/ HTTP/1.1" 200 20325
+INFO 2025-09-19 19:03:26,583 basehttp 14372 16224 "GET /administracion/dashboard/ HTTP/1.1" 200 20325
+INFO 2025-09-19 19:04:09,326 basehttp 14372 16224 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 19:04:09,326 basehttp 14372 16224 "GET /admin/ HTTP/1.1" 200 11478
+WARNING 2025-09-19 19:04:09,422 basehttp 14372 16224 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 19:04:09,422 basehttp 14372 16224 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 19:04:15,143 basehttp 14372 12360 "GET /admin/mascotas/mascota/ HTTP/1.1" 200 20460
+INFO 2025-09-19 19:04:15,143 basehttp 14372 12360 "GET /admin/mascotas/mascota/ HTTP/1.1" 200 20460
+WARNING 2025-09-19 19:04:15,270 basehttp 14372 2128 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 19:04:15,270 basehttp 14372 2128 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 19:04:15,282 basehttp 14372 12360 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 19:04:15,282 basehttp 14372 12360 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 19:04:24,536 basehttp 14372 12360 "GET /admin/auth/user/ HTTP/1.1" 200 17689
+INFO 2025-09-19 19:04:24,536 basehttp 14372 12360 "GET /admin/auth/user/ HTTP/1.1" 200 17689
+WARNING 2025-09-19 19:04:24,635 basehttp 14372 13992 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 19:04:24,635 basehttp 14372 13992 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 19:04:24,671 basehttp 14372 12360 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 19:04:24,671 basehttp 14372 12360 "GET /admin/jsi18n/ HTTP/1.1" 200 8691
+INFO 2025-09-19 19:04:36,820 basehttp 14372 12360 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 19:04:36,820 basehttp 14372 12360 "GET /admin/ HTTP/1.1" 200 11478
+WARNING 2025-09-19 19:04:36,893 basehttp 14372 12360 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 19:04:36,893 basehttp 14372 12360 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 19:04:39,042 basehttp 14372 8752 "GET /admin/auth/user/ HTTP/1.1" 200 17689
+INFO 2025-09-19 19:04:39,042 basehttp 14372 8752 "GET /admin/auth/user/ HTTP/1.1" 200 17689
+INFO 2025-09-19 19:04:40,209 basehttp 14372 8752 "GET /admin/mascotas/mascota/ HTTP/1.1" 200 20460
+INFO 2025-09-19 19:04:40,209 basehttp 14372 8752 "GET /admin/mascotas/mascota/ HTTP/1.1" 200 20460
+INFO 2025-09-19 19:04:41,272 basehttp 14372 8752 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 19:04:41,272 basehttp 14372 8752 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 19:04:55,534 basehttp 14372 8752 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:04:55,534 basehttp 14372 8752 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:04:55,550 basehttp 14372 8752 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 19:04:55,550 basehttp 14372 8752 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 19:04:55,642 basehttp 14372 8752 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,642 basehttp 14372 9512 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,642 basehttp 14372 8752 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,642 basehttp 14372 9512 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,728 basehttp 14372 12464 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,728 basehttp 14372 17236 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,728 basehttp 14372 12464 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:04:55,728 basehttp 14372 17236 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:04:57,341 basehttp 14372 15572 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:04:57,341 basehttp 14372 15572 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:05:16,795 basehttp 14372 15572 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:05:16,795 basehttp 14372 15572 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:05:16,857 basehttp 14372 15572 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:05:16,857 basehttp 14372 15572 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:05:17,554 basehttp 14372 1940 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 19:05:17,554 basehttp 14372 1940 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 19:05:17,606 basehttp 14372 15572 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 19:05:17,606 basehttp 14372 15572 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 19:05:17,679 basehttp 14372 8728 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 19:05:17,679 basehttp 14372 8728 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 19:05:17,699 basehttp 14372 6408 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 19:05:17,699 basehttp 14372 6408 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 19:05:17,730 basehttp 14372 9116 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 19:05:17,730 basehttp 14372 9116 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 19:05:27,960 basehttp 14372 9116 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:05:27,960 basehttp 14372 9116 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:05:29,837 basehttp 14372 9116 "GET /citas/mis-citas/ HTTP/1.1" 200 6839
+INFO 2025-09-19 19:05:29,837 basehttp 14372 9116 "GET /citas/mis-citas/ HTTP/1.1" 200 6839
+INFO 2025-09-19 19:05:33,824 basehttp 14372 9116 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+INFO 2025-09-19 19:05:33,824 basehttp 14372 9116 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+INFO 2025-09-19 19:05:33,911 basehttp 14372 9116 "GET /static/clientes/css/perfil.css HTTP/1.1" 304 0
+INFO 2025-09-19 19:05:33,911 basehttp 14372 9116 "GET /static/clientes/css/perfil.css HTTP/1.1" 304 0
+WARNING 2025-09-19 19:05:33,950 log 14372 6408 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 19:05:33,950 log 14372 6408 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 19:05:33,951 basehttp 14372 6408 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 19:05:33,951 basehttp 14372 6408 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 19:06:06,826 basehttp 14372 6408 "GET / HTTP/1.1" 200 20008
+INFO 2025-09-19 19:06:06,826 basehttp 14372 6408 "GET / HTTP/1.1" 200 20008
+WARNING 2025-09-19 19:06:06,932 basehttp 14372 6408 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,933 basehttp 14372 9116 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,932 basehttp 14372 6408 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,933 basehttp 14372 9116 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,943 basehttp 14372 8728 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,943 basehttp 14372 8728 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,952 basehttp 14372 15572 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:06:06,952 basehttp 14372 15572 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:06:47,908 basehttp 14372 1940 "GET /citas/solicitar/ HTTP/1.1" 200 9931
+INFO 2025-09-19 19:06:47,908 basehttp 14372 1940 "GET /citas/solicitar/ HTTP/1.1" 200 9931
+INFO 2025-09-19 19:47:58,223 autoreload 9120 3024 Watching for file changes with StatReloader
+INFO 2025-09-19 19:47:58,223 autoreload 9120 3024 Watching for file changes with StatReloader
+INFO 2025-09-19 19:48:03,131 basehttp 9120 2836 "GET / HTTP/1.1" 200 20008
+INFO 2025-09-19 19:48:03,131 basehttp 9120 2836 "GET / HTTP/1.1" 200 20008
+WARNING 2025-09-19 19:48:03,238 basehttp 9120 2836 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,238 basehttp 9120 16920 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,238 basehttp 9120 2836 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,238 basehttp 9120 16920 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,415 basehttp 9120 13860 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,415 basehttp 9120 13860 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,496 basehttp 9120 4376 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:03,496 basehttp 9120 4376 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:48:07,650 basehttp 9120 3028 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:48:07,650 basehttp 9120 3028 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:48:07,739 basehttp 9120 3028 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,739 basehttp 9120 3028 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,768 basehttp 9120 10080 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,768 basehttp 9120 10080 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,813 basehttp 9120 3028 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,813 basehttp 9120 3028 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,840 basehttp 9120 4584 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,840 basehttp 9120 4584 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,864 basehttp 9120 16228 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:07,864 basehttp 9120 16228 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 19:48:20,662 basehttp 9120 16228 "GET /citas/mis-citas/ HTTP/1.1" 200 6839
+INFO 2025-09-19 19:48:20,662 basehttp 9120 16228 "GET /citas/mis-citas/ HTTP/1.1" 200 6839
+INFO 2025-09-19 19:48:27,674 basehttp 9120 16228 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+INFO 2025-09-19 19:48:27,674 basehttp 9120 16228 "GET /clientes/perfil/ HTTP/1.1" 200 17876
+WARNING 2025-09-19 19:48:27,860 log 9120 16228 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 19:48:27,860 log 9120 16228 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 19:48:27,862 basehttp 9120 16228 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 19:48:27,862 basehttp 9120 16228 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 19:48:59,533 basehttp 9120 16228 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:48:59,533 basehttp 9120 16228 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:48:59,550 basehttp 9120 16228 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 19:48:59,550 basehttp 9120 16228 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 19:48:59,637 basehttp 9120 4584 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,637 basehttp 9120 16228 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,637 basehttp 9120 4584 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,637 basehttp 9120 16228 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,706 basehttp 9120 3028 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,706 basehttp 9120 3028 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,717 basehttp 9120 10080 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:48:59,717 basehttp 9120 10080 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:49:01,553 basehttp 9120 5264 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:49:01,553 basehttp 9120 5264 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:49:36,221 basehttp 9120 5264 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:49:36,221 basehttp 9120 5264 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:49:36,271 basehttp 9120 5264 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:49:36,271 basehttp 9120 5264 "GET /mascotas/ HTTP/1.1" 200 8653
+INFO 2025-09-19 19:49:44,286 basehttp 9120 5264 "GET /administracion/dashboard/ HTTP/1.1" 200 20325
+INFO 2025-09-19 19:49:44,286 basehttp 9120 5264 "GET /administracion/dashboard/ HTTP/1.1" 200 20325
+INFO 2025-09-19 19:49:54,175 basehttp 9120 5264 "GET /admin/ HTTP/1.1" 200 11478
+INFO 2025-09-19 19:49:54,175 basehttp 9120 5264 "GET /admin/ HTTP/1.1" 200 11478
+WARNING 2025-09-19 19:49:54,265 basehttp 9120 5264 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 19:49:54,265 basehttp 9120 5264 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 19:49:59,507 basehttp 9120 11548 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:49:59,507 basehttp 9120 11548 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:49:59,520 basehttp 9120 11548 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 19:49:59,520 basehttp 9120 11548 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 19:49:59,610 basehttp 9120 11548 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,610 basehttp 9120 11548 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,611 basehttp 9120 9816 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,611 basehttp 9120 9816 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,657 basehttp 9120 9836 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,657 basehttp 9120 9836 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,681 basehttp 9120 4208 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:49:59,681 basehttp 9120 4208 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:50:02,371 basehttp 9120 1420 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:50:02,371 basehttp 9120 1420 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:50:04,016 basehttp 9120 1420 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 19:50:04,016 basehttp 9120 1420 "GET /clientes/registro/ HTTP/1.1" 200 11064
+INFO 2025-09-19 19:54:42,499 basehttp 9120 11508 "GET / HTTP/1.1" 200 18914
+INFO 2025-09-19 19:54:42,499 basehttp 9120 11508 "GET / HTTP/1.1" 200 18914
+WARNING 2025-09-19 19:54:42,593 basehttp 9120 11508 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,594 basehttp 9120 2784 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,593 basehttp 9120 11508 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,594 basehttp 9120 2784 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,776 basehttp 9120 11604 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,776 basehttp 9120 11604 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,802 basehttp 9120 16052 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 19:54:42,802 basehttp 9120 16052 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 19:54:46,023 basehttp 9120 13600 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:54:46,023 basehttp 9120 13600 "GET /accounts/login/ HTTP/1.1" 200 9053
+INFO 2025-09-19 19:54:58,937 basehttp 9120 13600 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:54:58,937 basehttp 9120 13600 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-19 19:54:58,983 basehttp 9120 13600 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:54:58,983 basehttp 9120 13600 "GET /mascotas/ HTTP/1.1" 200 10860
+INFO 2025-09-19 19:54:59,662 basehttp 9120 13600 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 19:54:59,662 basehttp 9120 13600 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 200 37858
+INFO 2025-09-19 19:54:59,690 basehttp 9120 10988 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 19:54:59,690 basehttp 9120 10988 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 200 8616
+INFO 2025-09-19 19:54:59,736 basehttp 9120 9300 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 19:54:59,736 basehttp 9120 9300 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 200 10390
+INFO 2025-09-19 19:54:59,776 basehttp 9120 9432 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 19:54:59,776 basehttp 9120 9432 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 200 12190
+INFO 2025-09-19 19:54:59,808 basehttp 9120 2356 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 19:54:59,808 basehttp 9120 2356 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 200 9776
+INFO 2025-09-19 19:55:07,115 basehttp 9120 2356 "GET /mascotas/6/ HTTP/1.1" 200 9859
+INFO 2025-09-19 19:55:07,115 basehttp 9120 2356 "GET /mascotas/6/ HTTP/1.1" 200 9859
+INFO 2025-09-19 19:55:11,712 basehttp 9120 2356 "GET /mascotas/6/agregar-vacuna/ HTTP/1.1" 200 11466
+INFO 2025-09-19 19:55:11,712 basehttp 9120 2356 "GET /mascotas/6/agregar-vacuna/ HTTP/1.1" 200 11466
+INFO 2025-09-19 21:56:09,146 autoreload 3876 13988 Watching for file changes with StatReloader
+INFO 2025-09-19 21:56:09,146 autoreload 3876 13988 Watching for file changes with StatReloader
+INFO 2025-09-19 21:56:14,582 basehttp 3876 17324 "GET / HTTP/1.1" 200 20004
+INFO 2025-09-19 21:56:14,582 basehttp 3876 17324 "GET / HTTP/1.1" 200 20004
+WARNING 2025-09-19 21:56:14,686 basehttp 3876 17324 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,686 basehttp 3876 17324 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,699 basehttp 3876 11100 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,699 basehttp 3876 11100 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,940 basehttp 3876 5808 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,940 basehttp 3876 5808 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,965 basehttp 3876 3888 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:14,965 basehttp 3876 3888 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 21:56:15,330 log 3876 14368 Not Found: /favicon.ico
+WARNING 2025-09-19 21:56:15,330 log 3876 14368 Not Found: /favicon.ico
+WARNING 2025-09-19 21:56:15,332 basehttp 3876 14368 "GET /favicon.ico HTTP/1.1" 404 3479
+WARNING 2025-09-19 21:56:15,332 basehttp 3876 14368 "GET /favicon.ico HTTP/1.1" 404 3479
+INFO 2025-09-19 21:56:17,093 basehttp 3876 14368 "GET /mascotas/ HTTP/1.1" 200 10856
+INFO 2025-09-19 21:56:17,093 basehttp 3876 14368 "GET /mascotas/ HTTP/1.1" 200 10856
+INFO 2025-09-19 21:56:17,194 basehttp 3876 14368 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,194 basehttp 3876 14368 "GET /media/mascotas/Jerbo-persa_zgwWxU8.webp HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,219 basehttp 3876 7864 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,219 basehttp 3876 7864 "GET /media/mascotas/gato-ciames_ZVP7Obz.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,265 basehttp 3876 14368 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,265 basehttp 3876 14368 "GET /media/mascotas/labrador_06uurEU.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,301 basehttp 3876 15040 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,301 basehttp 3876 15040 "GET /media/mascotas/loro_lgGxGw9.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,319 basehttp 3876 11792 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:17,319 basehttp 3876 11792 "GET /media/mascotas/ajolote_39qhVPS.jpeg HTTP/1.1" 304 0
+INFO 2025-09-19 21:56:47,774 basehttp 3876 11792 "GET /clientes/perfil/ HTTP/1.1" 200 17872
+INFO 2025-09-19 21:56:47,774 basehttp 3876 11792 "GET /clientes/perfil/ HTTP/1.1" 200 17872
+WARNING 2025-09-19 21:56:47,914 log 3876 11792 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 21:56:47,914 log 3876 11792 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 21:56:47,916 basehttp 3876 11792 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 21:56:47,916 basehttp 3876 11792 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 22:00:42,225 basehttp 3876 11792 "GET / HTTP/1.1" 200 20003
+INFO 2025-09-19 22:00:42,225 basehttp 3876 11792 "GET / HTTP/1.1" 200 20003
+WARNING 2025-09-19 22:00:42,309 basehttp 3876 11792 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,309 basehttp 3876 15040 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,309 basehttp 3876 11792 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,309 basehttp 3876 15040 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,376 basehttp 3876 14368 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,376 basehttp 3876 14368 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,385 basehttp 3876 7864 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:00:42,385 basehttp 3876 7864 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:00:44,953 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:00:44,953 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:00:48,754 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:00:48,754 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:00:50,938 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 6834
+INFO 2025-09-19 22:00:50,938 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 6834
+INFO 2025-09-19 22:00:52,535 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17871
+INFO 2025-09-19 22:00:52,535 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17871
+WARNING 2025-09-19 22:00:52,653 log 3876 15736 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 22:00:52,653 log 3876 15736 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 22:00:52,655 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 22:00:52,655 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 22:00:54,664 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 6834
+INFO 2025-09-19 22:00:54,664 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 6834
+INFO 2025-09-19 22:00:56,790 basehttp 3876 15736 "GET /citas/solicitar/ HTTP/1.1" 200 9926
+INFO 2025-09-19 22:00:56,790 basehttp 3876 15736 "GET /citas/solicitar/ HTTP/1.1" 200 9926
+INFO 2025-09-19 22:02:01,838 basehttp 3876 15736 "POST /citas/solicitar/ HTTP/1.1" 200 10800
+INFO 2025-09-19 22:02:01,838 basehttp 3876 15736 "POST /citas/solicitar/ HTTP/1.1" 200 10800
+INFO 2025-09-19 22:02:52,761 basehttp 3876 15736 "POST /citas/solicitar/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:02:52,761 basehttp 3876 15736 "POST /citas/solicitar/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:02:52,821 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 8092
+INFO 2025-09-19 22:02:52,821 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 8092
+INFO 2025-09-19 22:03:16,104 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:16,104 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:18,272 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:18,272 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:19,201 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:19,201 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:03:27,933 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17871
+INFO 2025-09-19 22:03:27,933 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17871
+WARNING 2025-09-19 22:03:28,052 log 3876 15736 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 22:03:28,052 log 3876 15736 Not Found: /media/clientes/fotos_perfil/default.png
+WARNING 2025-09-19 22:03:28,057 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+WARNING 2025-09-19 22:03:28,057 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/default.png HTTP/1.1" 404 3621
+INFO 2025-09-19 22:03:47,879 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:03:47,879 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:03:47,926 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 18604
+INFO 2025-09-19 22:03:47,926 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 18604
+INFO 2025-09-19 22:03:48,211 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/Imagen1.png HTTP/1.1" 200 83798
+INFO 2025-09-19 22:03:48,211 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/Imagen1.png HTTP/1.1" 200 83798
+INFO 2025-09-19 22:03:59,728 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:03:59,728 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:03:59,790 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17877
+INFO 2025-09-19 22:03:59,790 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 17877
+INFO 2025-09-19 22:04:32,193 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:04:32,193 basehttp 3876 15736 "POST /clientes/perfil/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:04:32,260 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 18598
+INFO 2025-09-19 22:04:32,260 basehttp 3876 15736 "GET /clientes/perfil/ HTTP/1.1" 200 18598
+INFO 2025-09-19 22:04:32,387 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/black.jpg HTTP/1.1" 200 171265
+INFO 2025-09-19 22:04:32,387 basehttp 3876 15736 "GET /media/clientes/fotos_perfil/black.jpg HTTP/1.1" 200 171265
+INFO 2025-09-19 22:05:23,699 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:05:23,699 basehttp 3876 15736 "GET /mascotas/ HTTP/1.1" 200 10855
+INFO 2025-09-19 22:05:31,119 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:05:31,119 basehttp 3876 15736 "GET /citas/mis-citas/ HTTP/1.1" 200 7613
+INFO 2025-09-19 22:05:39,238 basehttp 3876 15736 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:05:39,238 basehttp 3876 15736 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:05:39,253 basehttp 3876 15736 "GET / HTTP/1.1" 200 18909
+INFO 2025-09-19 22:05:39,253 basehttp 3876 15736 "GET / HTTP/1.1" 200 18909
+WARNING 2025-09-19 22:05:39,326 basehttp 3876 15736 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,326 basehttp 3876 15736 "GET /static/img/doctor1.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,337 basehttp 3876 10008 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,337 basehttp 3876 10008 "GET /static/img/doctor2.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,379 basehttp 3876 11508 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,379 basehttp 3876 11508 "GET /static/img/doctor3.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,391 basehttp 3876 17292 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:05:39,391 basehttp 3876 17292 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:13:41,364 basehttp 3876 13508 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:13:41,364 basehttp 3876 13508 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:13:41,432 basehttp 3876 13508 "GET /static/img/medi.jpg HTTP/1.1" 200 14931
+INFO 2025-09-19 22:13:41,432 basehttp 3876 15284 "GET /static/img/medi2.jpg HTTP/1.1" 200 16465
+INFO 2025-09-19 22:13:41,432 basehttp 3876 13508 "GET /static/img/medi.jpg HTTP/1.1" 200 14931
+INFO 2025-09-19 22:13:41,432 basehttp 3876 15284 "GET /static/img/medi2.jpg HTTP/1.1" 200 16465
+WARNING 2025-09-19 22:13:41,638 basehttp 3876 15284 "GET /static/img/medi3.jpg HTTP/1.1" 404 1966
+WARNING 2025-09-19 22:13:41,638 basehttp 3876 15284 "GET /static/img/medi3.jpg HTTP/1.1" 404 1966
+WARNING 2025-09-19 22:13:41,694 basehttp 3876 13508 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:13:41,694 basehttp 3876 13508 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:14:38,095 basehttp 3876 16488 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:14:38,095 basehttp 3876 16488 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:14:38,168 basehttp 3876 16488 "GET /static/img/medi.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:14:38,168 basehttp 3876 16488 "GET /static/img/medi.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:14:38,171 basehttp 3876 1360 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:14:38,171 basehttp 3876 1360 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+WARNING 2025-09-19 22:14:38,244 basehttp 3876 16488 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:14:38,244 basehttp 3876 16488 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:14:38,271 basehttp 3876 1360 "GET /static/img/medi3.jpg HTTP/1.1" 200 22048
+INFO 2025-09-19 22:14:38,271 basehttp 3876 1360 "GET /static/img/medi3.jpg HTTP/1.1" 200 22048
+INFO 2025-09-19 22:17:55,184 basehttp 3876 1360 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:17:55,184 basehttp 3876 1360 "GET / HTTP/1.1" 200 18902
+INFO 2025-09-19 22:17:55,251 basehttp 3876 1360 "GET /static/img/medi.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:17:55,251 basehttp 3876 1360 "GET /static/img/medi.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:17:55,283 basehttp 3876 15384 "GET /static/img/medi2.jpg HTTP/1.1" 200 18809
+INFO 2025-09-19 22:17:55,283 basehttp 3876 15384 "GET /static/img/medi2.jpg HTTP/1.1" 200 18809
+INFO 2025-09-19 22:17:55,454 basehttp 3876 15384 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:17:55,454 basehttp 3876 15384 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+WARNING 2025-09-19 22:17:55,488 basehttp 3876 15384 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:17:55,488 basehttp 3876 15384 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:19:47,332 basehttp 3876 1360 "GET / HTTP/1.1" 200 18903
+INFO 2025-09-19 22:19:47,332 basehttp 3876 1360 "GET / HTTP/1.1" 200 18903
+INFO 2025-09-19 22:19:47,393 basehttp 3876 6236 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:19:47,393 basehttp 3876 6236 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:19:47,395 basehttp 3876 1360 "GET /static/img/medi1.jpg HTTP/1.1" 200 22392
+INFO 2025-09-19 22:19:47,395 basehttp 3876 1360 "GET /static/img/medi1.jpg HTTP/1.1" 200 22392
+INFO 2025-09-19 22:19:47,589 basehttp 3876 1360 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:19:47,589 basehttp 3876 1360 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+WARNING 2025-09-19 22:19:47,619 basehttp 3876 1360 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:19:47,619 basehttp 3876 1360 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:20:19,512 basehttp 3876 6236 "GET / HTTP/1.1" 200 18903
+INFO 2025-09-19 22:20:19,512 basehttp 3876 6236 "GET / HTTP/1.1" 200 18903
+INFO 2025-09-19 22:20:19,581 basehttp 3876 6236 "GET /static/img/medi1.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:20:19,581 basehttp 3876 6236 "GET /static/img/medi1.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:20:19,582 basehttp 3876 8720 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:20:19,582 basehttp 3876 8720 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:20:19,628 basehttp 3876 8720 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:20:19,628 basehttp 3876 8720 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+WARNING 2025-09-19 22:20:19,643 basehttp 3876 8720 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:20:19,643 basehttp 3876 8720 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:24:10,925 basehttp 3876 6236 "GET / HTTP/1.1" 200 18900
+INFO 2025-09-19 22:24:10,925 basehttp 3876 6236 "GET / HTTP/1.1" 200 18900
+INFO 2025-09-19 22:24:11,023 basehttp 3876 6236 "GET /static/img/medi1.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:11,023 basehttp 3876 6236 "GET /static/img/medi1.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:11,098 basehttp 3876 9180 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:11,098 basehttp 3876 9180 "GET /static/img/medi3.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:11,271 basehttp 3876 9180 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:11,271 basehttp 3876 9180 "GET /static/img/medi2.jpg HTTP/1.1" 304 0
+WARNING 2025-09-19 22:24:11,299 basehttp 3876 9180 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+WARNING 2025-09-19 22:24:11,299 basehttp 3876 9180 "GET /static/img/hero-bg.jpg HTTP/1.1" 404 1972
+INFO 2025-09-19 22:24:44,332 basehttp 3876 6236 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:24:44,332 basehttp 3876 6236 "GET /mascotas/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:24:44,394 basehttp 3876 6236 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9048
+INFO 2025-09-19 22:24:44,394 basehttp 3876 6236 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9048
+INFO 2025-09-19 22:24:52,815 basehttp 3876 6236 "GET /accounts/password_reset/ HTTP/1.1" 200 4440
+INFO 2025-09-19 22:24:52,815 basehttp 3876 6236 "GET /accounts/password_reset/ HTTP/1.1" 200 4440
+INFO 2025-09-19 22:24:52,897 basehttp 3876 6236 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,897 basehttp 3876 6236 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,902 basehttp 3876 2184 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,902 basehttp 3876 2184 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,913 basehttp 3876 5812 "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,916 basehttp 3876 16456 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,913 basehttp 3876 5812 "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,916 basehttp 3876 16456 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,920 basehttp 3876 2980 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,920 basehttp 3876 2980 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+WARNING 2025-09-19 22:24:52,932 basehttp 3876 9212 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 22:24:52,932 basehttp 3876 9212 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 22:24:52,959 basehttp 3876 2980 "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:24:52,959 basehttp 3876 2980 "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-09-19 22:25:00,530 basehttp 3876 2980 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9048
+INFO 2025-09-19 22:25:00,530 basehttp 3876 2980 "GET /accounts/login/?next=/mascotas/ HTTP/1.1" 200 9048
+INFO 2025-09-19 22:25:04,884 basehttp 3876 2980 "GET /accounts/password_reset/ HTTP/1.1" 200 4440
+INFO 2025-09-19 22:25:04,884 basehttp 3876 2980 "GET /accounts/password_reset/ HTTP/1.1" 200 4440
+WARNING 2025-09-19 22:25:04,957 basehttp 3876 2980 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 22:25:04,957 basehttp 3876 2980 "GET /static/img/logo.png HTTP/1.1" 404 1963
+INFO 2025-09-19 22:25:16,719 basehttp 3876 5812 "POST /accounts/password_reset/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:25:16,719 basehttp 3876 5812 "POST /accounts/password_reset/ HTTP/1.1" 302 0
+INFO 2025-09-19 22:25:16,738 basehttp 3876 5812 "GET /accounts/password_reset/done/ HTTP/1.1" 200 4032
+INFO 2025-09-19 22:25:16,738 basehttp 3876 5812 "GET /accounts/password_reset/done/ HTTP/1.1" 200 4032
+WARNING 2025-09-19 22:25:16,817 basehttp 3876 5812 "GET /static/img/logo.png HTTP/1.1" 404 1963
+WARNING 2025-09-19 22:25:16,817 basehttp 3876 5812 "GET /static/img/logo.png HTTP/1.1" 404 1963

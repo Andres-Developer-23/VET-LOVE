@@ -1,0 +1,50 @@
+<!-- templates/includes/modales_privacidad.html -->
+<div class="modal fade" id="privacidadModal" tabindex="-1" aria-labelledby="privacidadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacidadModalLabel">
+                    <i class="fas fa-shield-alt me-2"></i>Política de Privacidad
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4 class="mb-4">Política de Privacidad</h4>
+                <p class="text-muted">Última actualización: {{ now|date:"d/m/Y" }}</p>
+                
+                <div class="mb-4">
+                    <h5>1. Información que Recopilamos</h5>
+                    <p>Recopilamos información personal que nos proporcionas voluntariamente al registrarte y usar nuestros servicios.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>2. Uso de la Información</h5>
+                    <p>Utilizamos tu información para proporcionar y mejorar nuestros servicios, comunicarnos contigo y personalizar tu experiencia.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>3. Protección de Datos</h5>
+                    <p>Implementamos medidas de seguridad para proteger tu información personal contra accesos no autorizados.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>4. Cookies</h5>
+                    <p>Utilizamos cookies para mejorar la experiencia del usuario y analizar el tráfico del sitio web.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>5. Tus Derechos</h5>
+                    <p>Tienes derecho a acceder, rectificar y eliminar tus datos personales en cualquier momento.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>6. Compartir Información</h5>
+                    <p>No compartimos tu información personal con terceros excepto cuando sea necesario para proporcionar nuestros servicios.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

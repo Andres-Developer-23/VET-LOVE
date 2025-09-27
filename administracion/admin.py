@@ -1,4 +1,6 @@
 from django.contrib import admin
 
-# No hay modelos para registrar en esta aplicación
-# Este archivo se mantiene para futuras expansiones
+# Configuración del sitio admin
+admin.site.site_header = 'Administración de Veterinaria HappyPets'
+admin.site.site_title = 'Veterinaria HappyPets'
+admin.site.index_title = 'Panel de administración'

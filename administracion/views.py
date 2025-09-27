@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
-from datetime import timedelta
-from django.db.models import Count, Q
+from datetime import timedelta, datetime
+from django.db.models import Count, Q, Sum
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import csv
 from datetime import datetime
 
 from clientes.models import Cliente
 from mascotas.models import Mascota
 from citas.models import Cita
+from django.contrib.auth.models import User
 
 def staff_required(login_url=None):
     return user_passes_test(lambda u: u.is_staff, login_url=login_url)
@@ -21,6 +22,7 @@ def dashboard(request):
     # Estadísticas generales
     total_clientes = Cliente.objects.count()
     total_mascotas = Mascota.objects.count()
+    total_usuarios = User.objects.count()
     
     # Citas de hoy
     hoy = timezone.now().date()
@@ -60,9 +62,31 @@ def dashboard(request):
         tipo='urgencia'
     ).count()
     
+    # Usuarios activos hoy
+    usuarios_activos_hoy = User.objects.filter(
+        last_login__date=hoy
+    ).count()
+    
+    # Citas pendientes
+    citas_pendientes = Cita.objects.filter(
+        estado='programada',
+        fecha__date__gte=hoy
+    ).count()
+    
+    # Estadísticas mensuales
+    primer_dia_mes = hoy.replace(day=1)
+    citas_este_mes = Cita.objects.filter(
+        fecha__date__gte=primer_dia_mes
+    ).count()
+    
+    clientes_este_mes = Cliente.objects.filter(
+        fecha_registro__date__gte=primer_dia_mes
+    ).count()
+
     context = {
         'total_clientes': total_clientes,
         'total_mascotas': total_mascotas,
+        'total_usuarios': total_usuarios,
         'citas_hoy': citas_hoy,
         'citas_semana_count': citas_semana_count,
         'proximas_citas': proximas_citas,
@@ -73,57 +97,39 @@ def dashboard(request):
         'hoy': hoy,
         'inicio_semana': inicio_semana,
         'fin_semana': fin_semana,
+        'usuarios_activos_hoy': usuarios_activos_hoy,
+        'citas_pendientes': citas_pendientes,
+        'citas_este_mes': citas_este_mes,
+        'clientes_este_mes': clientes_este_mes,
     }
     
     return render(request, 'administracion/dashboard.html', context)
-
-# views.py - Vista mejorada para exportar a Excel
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment
-from openpyxl.utils import get_column_letter
 
 @login_required
 @staff_required(login_url='/admin/login/')
 def exportar_datos(request):
     if request.method == 'POST':
-        # Crear libro de trabajo de Excel
-        wb = Workbook()
+        # Crear respuesta CSV
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="dashboard_export_{}.csv"'.format(
+            datetime.now().strftime("%Y%m%d_%H%M")
+        )
         
-        # Obtener la hoja activa (por defecto se crea una)
-        ws = wb.active
-        ws.title = "Resumen"
+        writer = csv.writer(response)
         
-        # Estilos
-        title_font = Font(bold=True, size=14)
-        header_font = Font(bold=True, color="FFFFFF")
-        header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
-        centered_alignment = Alignment(horizontal='center')
+        # Escribir encabezados
+        writer.writerow(['Dashboard de Administración - Exportación'])
+        writer.writerow(['Fecha de exportación:', datetime.now().strftime("%d/%m/%Y %H:%M")])
+        writer.writerow([])
+        writer.writerow(['Métrica', 'Valor'])
         
-        # Título
-        ws['A1'] = 'Dashboard de Administración - Exportación'
-        ws['A1'].font = title_font
-        ws.merge_cells('A1:B1')
-        
-        # Fecha de exportación
-        ws['A2'] = 'Fecha de exportación:'
-        ws['B2'] = timezone.now().strftime("%d/%m/%Y %H:%M")
-        
-        # Espacio
-        ws.append([])
-        
-        # Estadísticas generales
-        ws.append(['Métrica', 'Valor'])
-        ws['A4'].font = header_font
-        ws['A4'].fill = header_fill
-        ws['B4'].font = header_font
-        ws['B4'].fill = header_fill
-        
+        # Obtener datos
         hoy = timezone.now().date()
         
-        # Datos de las tarjetas
         datos_estadisticas = [
             ('Total Clientes', Cliente.objects.count()),
             ('Total Mascotas', Mascota.objects.count()),
+            ('Total Usuarios', User.objects.count()),
             ('Citas Hoy', Cita.objects.filter(fecha__date=hoy, estado__in=['programada', 'confirmada']).count()),
             ('Citas Esta Semana', Cita.objects.filter(
                 fecha__date__range=[hoy - timedelta(days=hoy.weekday()), hoy + timedelta(days=6 - hoy.weekday())]
@@ -134,85 +140,40 @@ def exportar_datos(request):
                 estado__in=['programada', 'confirmada'],
                 tipo='urgencia'
             ).count()),
+            ('Usuarios Activos Hoy', User.objects.filter(last_login__date=hoy).count()),
+            ('Citas Pendientes', Cita.objects.filter(estado='programada', fecha__date__gte=hoy).count()),
         ]
         
-        for idx, (metrica, valor) in enumerate(datos_estadisticas, start=5):
-            ws[f'A{idx}'] = metrica
-            ws[f'B{idx}'] = valor
+        # Escribir datos
+        for metrica, valor in datos_estadisticas:
+            writer.writerow([metrica, valor])
         
-        # Ajustar anchos de columna
-        ws.column_dimensions['A'].width = 30
-        ws.column_dimensions['B'].width = 15
-        
-        # Hoja de citas de hoy
-        ws_hoy = wb.create_sheet("Citas Hoy")
-        
-        ws_hoy.append(['Citas para Hoy'])
-        ws_hoy.merge_cells('A1:E1')
-        ws_hoy['A1'].font = title_font
-        ws_hoy['A1'].alignment = centered_alignment
-        
-        ws_hoy.append(['Hora', 'Mascota', 'Dueño', 'Tipo', 'Estado'])
-        for col in range(1, 6):
-            ws_hoy.cell(row=2, column=col).font = header_font
-            ws_hoy.cell(row=2, column=col).fill = header_fill
-            ws_hoy.cell(row=2, column=col).alignment = centered_alignment
-        
-        citas_hoy = Cita.objects.filter(
-            fecha__date=hoy, 
-            estado__in=['programada', 'confirmada']
-        ).order_by('fecha')
-        
-        for cita in citas_hoy:
-            ws_hoy.append([
-                cita.fecha.time().strftime("%H:%M"),
-                cita.mascota.nombre,
-                cita.mascota.cliente.usuario.get_full_name(),
-                cita.get_tipo_display(),
-                cita.get_estado_display()
-            ])
-        
-        # Ajustar anchos de columna para hoja de hoy
-        for col in range(1, 6):
-            ws_hoy.column_dimensions[get_column_letter(col)].width = 20
-        
-        # Hoja de próximas citas
-        ws_proximas = wb.create_sheet("Próximas Citas")
-        
-        ws_proximas.append(['Próximas Citas (7 días)'])
-        ws_proximas.merge_cells('A1:D1')
-        ws_proximas['A1'].font = title_font
-        ws_proximas['A1'].alignment = centered_alignment
-        
-        ws_proximas.append(['Fecha', 'Hora', 'Mascota', 'Tipo', 'Estado'])
-        for col in range(1, 6):
-            ws_proximas.cell(row=2, column=col).font = header_font
-            ws_proximas.cell(row=2, column=col).fill = header_fill
-            ws_proximas.cell(row=2, column=col).alignment = centered_alignment
-        
-        proximas_citas = Cita.objects.filter(
-            fecha__date__range=[hoy, hoy + timedelta(days=7)],
-            estado__in=['programada', 'confirmada']
-        ).order_by('fecha')[:10]
-        
-        for cita in proximas_citas:
-            ws_proximas.append([
-                cita.fecha.date().strftime("%d/%m/%Y"),
-                cita.fecha.time().strftime("%H:%M"),
-                cita.mascota.nombre,
-                cita.get_tipo_display(),
-                cita.get_estado_display()
-            ])
-        
-        # Ajustar anchos de columna para hoja de próximas citas
-        for col in range(1, 6):
-            ws_proximas.column_dimensions[get_column_letter(col)].width = 20
-        
-        # Preparar respuesta
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="dashboard_export_{datetime.now().strftime("%Y%m%d_%H%M")}.xlsx"'
-        
-        wb.save(response)
         return response
     
     return redirect('administracion:dashboard_admin')
+
+@login_required
+@staff_required(login_url='/admin/login/')
+def estadisticas_api(request):
+    # API para gráficos y estadísticas
+    if request.method == 'GET':
+        # Datos para gráfico de citas por día de la semana
+        hoy = timezone.now().date()
+        inicio_semana = hoy - timedelta(days=hoy.weekday())
+        
+        citas_por_dia = []
+        for i in range(7):
+            dia = inicio_semana + timedelta(days=i)
+            count = Cita.objects.filter(fecha__date=dia).count()
+            citas_por_dia.append({
+                'dia': dia.strftime('%A'),
+                'count': count
+            })
+        
+        # Datos para gráfico de mascotas por tipo
+        mascotas_tipo = Mascota.objects.values('tipo').annotate(total=Count('id'))
+        
+        return JsonResponse({
+            'citas_por_dia': citas_por_dia,
+            'mascotas_tipo': list(mascotas_tipo)
+        })

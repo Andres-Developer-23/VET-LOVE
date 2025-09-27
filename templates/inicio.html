@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Veterinaria HappyPets{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "img/hero-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+    }
+    
+    .service-card {
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .team-member {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .team-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+    
+    .testimonial-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .cta-section {
+        background-color: #007bff;
+        color: white;
+        padding: 60px 0;
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">Cuidamos de tu mejor amigo</h1>
+        <p class="lead mb-4">En Vet Love, ofrecemos los mejores cuidados para tus mascotas con amor y profesionalidad</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-primary btn-lg me-2">
+                <i class="fas fa-paw me-1"></i>Mis Mascotas
+            </a>
+            <a href="{% url 'citas:solicitar_cita' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-calendar-plus me-1"></i>Pedir Cita
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-2">
+                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+            </a>
+            <a href="#services" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-info-circle me-1"></i>Nuestros Servicios
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>24/7 Urgencias</h3>
+                <p class="text-muted">Servicio de urgencias disponible las 24 horas para emergencias veterinarias.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3>Expertos en animales</h3>
+                <p class="text-muted">Nuestro equipo de veterinarios especializados ofrece la mejor atención.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Cuidado con amor</h3>
+                <p class="text-muted">Tratamos a cada mascota como si fuera nuestra, con cariño y dedicación.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Nuestros Servicios</h2>
+            <p class="lead text-muted">Ofrecemos una amplia gama de servicios para el cuidado de tu mascota</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-stethoscope fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Consultas Generales</h4>
+                        <p class="card-text">Revisiones completas, diagnósticos y tratamientos para mantener sana a tu mascota.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-syringe fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Vacunación</h4>
+                        <p class="card-text">Programas completos de vacunación para perros, gatos y otras mascotas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cut fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Cirugía</h4>
+                        <p class="card-text">Intervenciones quirúrgicas con tecnología de última generación y anestesia segura.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-teeth fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Odontología</h4>
+                        <p class="card-text">Cuidado dental profesional: limpiezas, extracciones y tratamientos periodontales.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-x-ray fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Diagnóstico por Imagen</h4>
+                        <p class="card-text">Servicios de radiología, ecografía y otros métodos de diagnóstico avanzado.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-spa fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Estética</h4>
+                        <p class="card-text">Baños, cortes de pelo, limpieza de oídos y cuidado de uñas para tu mascota.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Nuestro Equipo</h2>
+            <p class="lead text-muted">Conoce a nuestros profesionales veterinarios</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'img/medi1.jpg' %}" alt="Dr. Carlos Rodríguez" class="team-img">
+                    <h4>Dr. Carlos Rodríguez</h4>
+                    <p class="text-muted">Veterinario Jefe - Especialista en cirugía</p>
+                    <p>15 años de experiencia en medicina veterinaria y cirugía de pequeños animales.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'img/medi3.jpg' %}" alt="Dra. Laura Martínez" class="team-img">
+                    <h4>Dra. Laura Martínez</h4>
+                    <p class="text-muted">Veterinaria - Especialista en dermatología</p>
+                    <p>Especializada en problemas de piel y alergias en perros y gatos.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'img/medi2.jpg' %}" alt="Dr. Javier López" class="team-img">
+                    <h4>Dr. Javier López</h4>
+                    <p class="text-muted">Veterinario - Especialista en odontología</p>
+                    <p>Experto en cuidado dental y cirugía oral para mascotas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Lo que dicen nuestros clientes</h2>
+            <p class="lead text-muted">Experiencias reales de dueños de mascotas felices</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="fst-italic">"Llevo a Max desde cachorro y siempre recibe la mejor atención. El equipo es muy profesional y cariñoso con los animales."</p>
+                    <div class="d-flex align-items-center">
+                        <strong>María González</strong>
+                        <span class="ms-auto text-muted">Dueña de Max</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="fst-italic">"Cuando Luna tuvo una emergencia, me atendieron inmediatamente. Le salvaron la vida. Estoy eternamente agradecido."</p>
+                    <div class="d-flex align-items-center">
+                        <strong>Jorge Fernández</strong>
+                        <span class="ms-auto text-muted">Dueño de Luna</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="fst-italic">"El sistema online para gestionar citas y ver el historial de mi gato es increíblemente útil. ¡Gran trabajo!"</p>
+                    <div class="d-flex align-items-center">
+                        <strong>Ana Torres</strong>
+                        <span class="ms-auto text-muted">Dueña de Simba</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2 class="mb-4">¿Necesitas ayuda para tu mascota?</h2>
+        <p class="lead mb-4">Regístrate en nuestro sistema y gestiona todas las necesidades de tu mascota en un solo lugar</p>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'citas:solicitar_cita' %}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-calendar-plus me-1"></i>Pedir Cita
+            </a>
+            <a href="{% url 'mascotas:agregar_mascota' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-plus me-1"></i>Agregar Mascota
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+            </a>
+            <a href="#contact" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-phone me-1"></i>Contactarnos
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Contacto</h2>
+            <p class="lead text-muted">Estamos aquí para ayudarte</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Información de contacto</h4>
+                        <p><i class="fas fa-map-marker-alt me-2 text-primary"></i> Cienaga magdalena-centro</p>
+                        <p><i class="fas fa-phone me-2 text-primary"></i> +57 310 5956453</p>
+                        <p><i class="fas fa-envelope me-2 text-primary"></i> info@vetlove.com</p>
+                        <p><i class="fas fa-clock me-2 text-primary"></i> Lunes a Viernes: 8:00 - 20:00</p>
+                        <p><i class="fas fa-clock me-2 text-primary"></i> Sábados: 10:00 - 14:00</p>
+                        <p><i class="fas fa-clock me-2 text-primary"></i> Urgencias: 24/7</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">¿Dónde estamos?</h4>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <!-- Mapa de ejemplo - Reemplazar con mapa real -->
+                            <div class="embed-responsive-item bg-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-map-marked-alt fa-3x text-muted"></i>
+                                <p class="ms-2">Mapa de localización</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

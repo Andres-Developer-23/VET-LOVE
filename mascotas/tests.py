@@ -1,6 +1,3 @@
-from django.test import TestCase
-
-# Create your tests here.
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -64,4 +61,4 @@ class MascotasTestCase(TestCase):
         
         self.client.login(username='testuser2', password='testpass123')
         response = self.client.get(reverse('mascotas:detalle_mascota', args=[self.mascota.id]))
-        self.assertEqual(response.status_code, 403)  # Debería ser prohibido    
+        self.assertEqual(response.status_code, 403)  # Debería ser prohibido

@@ -17,7 +17,6 @@ class Cliente(models.Model):
         default='email',
         verbose_name="Preferencias de comunicación"
     )
-    # Nuevo campo para la foto de perfil
     foto_perfil = models.ImageField(
         upload_to='clientes/fotos_perfil/',
         null=True,

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Página No Encontrada
+                </h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-search fa-5x text-warning"></i>
+                </div>
+                <h4>Error 404 - Página no encontrada</h4>
+                <p class="text-muted">La página que estás buscando no existe o ha sido movida.</p>
+                <hr>
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                    <i class="fas fa-home me-1"></i>Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

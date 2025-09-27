@@ -4,18 +4,17 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header bg-danger text-white">
+            <div class="card-header">
                 <h3 class="card-title mb-0">
                     <i class="fas fa-trash-alt me-2"></i>Eliminar Mascota
                 </h3>
             </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
-                    <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>¿Estás seguro?</h4>
-                    <p>Estás a punto de eliminar a <strong>{{ mascota.nombre }}</strong> permanentemente. Esta acción no se puede deshacer.</p>
-                    <hr>
-                    <p class="mb-0">Se eliminarán todos los registros asociados a esta mascota, incluyendo historial médico, vacunas y citas.</p>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
                 </div>
+                <h4>¿Estás seguro de que quieres eliminar a {{ mascota.nombre }}?</h4>
+                <p class="text-muted">Esta acción no se puede deshacer. Se eliminarán todos los registros asociados a esta mascota.</p>
                 
                 <div class="card mb-3">
                     <div class="card-body">
@@ -23,7 +22,6 @@
                         <p><strong>Nombre:</strong> {{ mascota.nombre }}</p>
                         <p><strong>Tipo:</strong> {{ mascota.get_tipo_display }}</p>
                         <p><strong>Raza:</strong> {{ mascota.raza|default:"No especificada" }}</p>
-                        <p><strong>Sexo:</strong> {{ mascota.get_sexo_display }}</p>
                         {% if mascota.fecha_nacimiento %}
                         <p><strong>Edad:</strong> {{ mascota.edad }} años</p>
                         {% endif %}
@@ -32,7 +30,7 @@
                 
                 <form method="post">
                     {% csrf_token %}
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <a href="{% url 'mascotas:detalle_mascota' mascota.id %}" class="btn btn-secondary me-md-2">
                             <i class="fas fa-times me-1"></i>Cancelar
                         </a>
