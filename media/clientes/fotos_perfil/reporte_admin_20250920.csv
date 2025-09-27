@@ -1,0 +1,34 @@
+﻿Reporte de Administración - Veterinaria Vet Love
+Fecha de generación:;20/09/2025 07:50:57
+Generado por:;andres bravo
+
+ESTADÍSTICAS GENERALES
+Métrica;Valor
+Total de Clientes;3
+Total de Mascotas;9
+Total de Usuarios;3
+
+ESTADÍSTICAS DEL MES ACTUAL
+Métrica;Valor
+Citas este mes;5
+Citas completadas;0
+Clientes nuevos;3
+
+CITAS POR ESTADO
+Estado;Cantidad
+cancelada;1
+programada;4
+
+MASCOTAS POR TIPO
+Tipo;Cantidad
+ave;1
+gato;2
+otro;2
+perro;2
+reptil;1
+roedor;1
+
+CITAS PARA HOY
+Hora;Mascota;Dueño;Tipo;Estado
+13:00;malu;andres bravo;urgencia;programada
+14:04;Luna;andres bravo;estetica;programada

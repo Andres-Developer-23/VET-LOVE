@@ -8,37 +8,79 @@
     .admin-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         height: 100%;
+        border: none;
+        border-radius: 15px;
     }
     
     .admin-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
     
     .stat-number {
-        font-size: 2rem;
+        font-size: 2.5rem;
         font-weight: bold;
+        margin-bottom: 0.5rem;
     }
     
     .stat-label {
         font-size: 0.9rem;
-        color: #6c757d;
+        color: #f6fafeff;
+        font-weight: 500;
     }
     
-    .border-left-primary { border-left: 4px solid #007bff !important; }
-    .border-left-success { border-left: 4px solid #28a745 !important; }
-    .border-left-info { border-left: 4px solid #17a2b8 !important; }
-    .border-left-warning { border-left: 4px solid #ffc107 !important; }
-    .border-left-danger { border-left: 4px solid #dc3545 !important; }
-    .border-left-secondary { border-left: 4px solid #6c757d !important; }
+    .stat-icon {
+        font-size: 2rem;
+        opacity: 0.8;
+        margin-bottom: 1rem;
+    }
+    
+    .card-revenue { background: linear-gradient(45deg, #007bff, #0056b3); color: white; }
+    .card-clients { background: linear-gradient(45deg, #28a745, #1e7e34); color: white; }
+    .card-pets { background: linear-gradient(45deg, #6f42c1, #563d7c); color: white; }
+    .card-appointments { background: linear-gradient(45deg, #fd7e14, #e36209); color: white; }
+    .card-completed { background: linear-gradient(45deg, #20c997, #138a63); color: white; }
+    .card-urgent { background: linear-gradient(45deg, #dc3545, #a71e2a); color: white; }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 20px 0;
+    }
     
     .table-responsive {
-        max-height: 400px;
-        overflow-y: auto;
+        border-radius: 10px;
+        overflow: hidden;
     }
     
-    .quick-actions .btn {
-        margin: 2px;
+    .badge-urgent {
+        background: linear-gradient(45deg, #dc3545, #a71e2a);
+        color: white;
+    }
+    
+    .progress {
+        height: 8px;
+        border-radius: 4px;
+    }
+    
+    .quick-action-btn {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin: 5px;
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .section-title {
+        border-left: 4px solid #007bff;
+        padding-left: 15px;
+        margin: 30px 0 20px 0;
+        font-weight: 600;
     }
 </style>
 {% endblock %}
@@ -51,278 +93,262 @@
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
             <a href="{% url 'admin:index' %}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-cog me-1"></i>Panel Admin
+                <i class="fas fa-cog me-1"></i>Panel Admin Completo
             </a>
             <form method="post" action="{% url 'administracion:exportar_datos' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-download me-1"></i>Exportar
+                <button type="submit" class="btn btn-sm btn-success">
+                    <i class="fas fa-file-excel me-1"></i>Exportar Excel
                 </button>
             </form>
+            <button class="btn btn-sm btn-info" onclick="actualizarDatos()">
+                <i class="fas fa-sync-alt me-1"></i>Actualizar
+            </button>
         </div>
     </div>
 </div>
 
-<!-- Tarjetas de estadísticas -->
+<!-- Tarjetas de estadísticas principales -->
 <div class="row">
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-primary admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-primary">{{ total_usuarios|intcomma }}</div>
-                <div class="stat-label">Usuarios Totales</div>
+        <div class="card card-revenue admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-number">${{ ingresos_mes|floatformat:0|intcomma }}</div>
+                <div class="stat-label">Ingresos del Mes</div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-success admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-success">{{ total_clientes|intcomma }}</div>
-                <div class="stat-label">Clientes</div>
+        <div class="card card-clients admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number">{{ total_clientes|intcomma }}</div>
+                <div class="stat-label">Clientes Totales</div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-info admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-info">{{ total_mascotas|intcomma }}</div>
+        <div class="card card-pets admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-paw"></i></div>
+                <div class="stat-number">{{ total_mascotas|intcomma }}</div>
                 <div class="stat-label">Mascotas</div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-warning admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-warning">{{ citas_hoy|length|intcomma }}</div>
-                <div class="stat-label">Citas Hoy</div>
+        <div class="card card-appointments admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-number">{{ citas_mes|intcomma }}</div>
+                <div class="stat-label">Citas del Mes</div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-danger admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-danger">{{ citas_pendientes|intcomma }}</div>
-                <div class="stat-label">Citas Pendientes</div>
+        <div class="card card-completed admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number">{{ citas_completadas_mes|intcomma }}</div>
+                <div class="stat-label">Completadas</div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-2 col-md-4 col-6 mb-4">
-        <div class="card border-left-secondary admin-card">
-            <div class="card-body text-center">
-                <div class="stat-number text-secondary">{{ usuarios_activos_hoy|intcomma }}</div>
-                <div class="stat-label">Usuarios Activos</div>
+        <div class="card card-urgent admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-number">{{ citas_urgentes|intcomma }}</div>
+                <div class="stat-label">Urgencias Hoy</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos principales -->
+<div class="row">
+    <!-- Gráfico de citas por estado -->
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Distribución de Citas por Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="estadoCitasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de mascotas por tipo -->
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Mascotas por Tipo</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="tipoMascotasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico de tendencia de citas -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Tendencia de Citas (Últimos 7 Días)</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="tendenciaCitasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de citas -->
+<h4 class="section-title"><i class="fas fa-calendar-day me-2"></i>Citas para Hoy</h4>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-body">
+                {% if citas_hoy %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hora</th>
+                                <th>Mascota</th>
+                                <th>Dueño</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in citas_hoy %}
+                            <tr class="{% if cita.tipo == 'urgencia' %}table-warning{% endif %}">
+                                <td><strong>{{ cita.fecha|time:"H:i" }}</strong></td>
+                                <td>{{ cita.mascota.nombre }}</td>
+                                <td>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}</td>
+                                <td>
+                                    {{ cita.get_tipo_display }}
+                                    {% if cita.tipo == 'urgencia' %}
+                                    <span class="badge badge-urgent ms-1">Urgente</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if cita.estado == 'completada' %}success{% elif cita.estado == 'cancelada' %}danger{% else %}warning{% endif %}">
+                                        {{ cita.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'admin:citas_cita_change' cita.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                    <p>No hay citas programadas para hoy</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Próximas citas -->
+<h4 class="section-title"><i class="fas fa-calendar-alt me-2"></i>Próximas Citas</h4>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-body">
+                {% if proximas_citas %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Mascota</th>
+                                <th>Dueño</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in proximas_citas %}
+                            <tr>
+                                <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+                                <td>{{ cita.fecha|time:"H:i" }}</td>
+                                <td>{{ cita.mascota.nombre }}</td>
+                                <td>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}</td>
+                                <td>{{ cita.get_tipo_display }}</td>
+                                <td>
+                                    <span class="badge bg-{% if cita.estado == 'completada' %}success{% elif cita.estado == 'cancelada' %}danger{% else %}warning{% endif %}">
+                                        {{ cita.get_estado_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                    <p>No hay próximas citas programadas</p>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Acciones rápidas -->
+<h4 class="section-title"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h4>
+
 <div class="row mb-4">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
-            </div>
-            <div class="card-body quick-actions">
-                <a href="{% url 'admin:auth_user_add' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-user-plus me-1"></i>Nuevo Usuario
-                </a>
-                <a href="{% url 'admin:clientes_cliente_add' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-user-plus me-1"></i>Nuevo Cliente
-                </a>
-                <a href="{% url 'admin:mascotas_mascota_add' %}" class="btn btn-outline-success btn-sm">
-                    <i class="fas fa-paw me-1"></i>Nueva Mascota
-                </a>
-                <a href="{% url 'admin:citas_cita_add' %}" class="btn btn-outline-info btn-sm">
-                    <i class="fas fa-calendar-plus me-1"></i>Nueva Cita
-                </a>
-                <a href="{% url 'admin:index' %}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-cog me-1"></i>Panel Completo
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Citas de hoy -->
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-calendar-day me-2"></i>Citas para Hoy ({{ hoy|date:"d/m/Y" }})
-                </h5>
-            </div>
-            <div class="card-body">
-                {% if citas_hoy %}
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Hora</th>
-                                    <th>Mascota</th>
-                                    <th>Dueño</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for cita in citas_hoy %}
-                                <tr>
-                                    <td>{{ cita.fecha|time:"H:i" }}</td>
-                                    <td>{{ cita.mascota.nombre }}</td>
-                                    <td>{{ cita.mascota.cliente.usuario.get_full_name }}</td>
-                                    <td>{{ cita.get_tipo_display }}</td>
-                                    <td>
-                                        <span class="badge bg-{% if cita.estado == 'confirmada' %}success{% else %}warning{% endif %}">
-                                            {{ cita.get_estado_display }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-calendar-check fa-3x mb-2"></i>
-                        <p>No hay citas programadas para hoy.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    
-    <!-- Próximas citas -->
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-calendar-alt me-2"></i>Próximas Citas (7 días)
-                </h5>
-            </div>
-            <div class="card-body">
-                {% if proximas_citas %}
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Mascota</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for cita in proximas_citas %}
-                                <tr>
-                                    <td>{{ cita.fecha|date:"d/m" }}</td>
-                                    <td>{{ cita.fecha|time:"H:i" }}</td>
-                                    <td>{{ cita.mascota.nombre }}</td>
-                                    <td>{{ cita.get_tipo_display }}</td>
-                                    <td>
-                                        <span class="badge bg-{% if cita.estado == 'confirmada' %}success{% else %}warning{% endif %}">
-                                            {{ cita.get_estado_display }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-calendar-times fa-3x mb-2"></i>
-                        <p>No hay próximas citas programadas.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Distribución de mascotas por tipo -->
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-chart-pie me-2"></i>Mascotas por Tipo
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="mascotasTipoChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Distribución de citas por estado -->
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-chart-bar me-2"></i>Citas por Estado
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="citasEstadoChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Información adicional -->
-<div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información del Mes</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card border-left-info mb-3">
-                            <div class="card-body">
-                                <h6 class="text-info">Citas Este Mes</h6>
-                                <h4>{{ citas_este_mes }}</h4>
-                                <p class="small">Desde {{ hoy|date:"F Y" }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card border-left-success mb-3">
-                            <div class="card-body">
-                                <h6 class="text-success">Clientes Nuevos</h6>
-                                <h4>{{ clientes_este_mes }}</h4>
-                                <p class="small">Desde {{ hoy|date:"F Y" }}</p>
-                            </div>
-                        </div>
-                    </div>
+        <div class="card admin-card">
+            <div class="card-body text-center">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <a href="{% url 'admin:auth_user_add' %}" class="btn quick-action-btn btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>Nuevo Usuario
+                    </a>
+                    <a href="{% url 'admin:clientes_cliente_add' %}" class="btn quick-action-btn btn-success">
+                        <i class="fas fa-user-plus me-2"></i>Nuevo Cliente
+                    </a>
+                    <a href="{% url 'admin:mascotas_mascota_add' %}" class="btn quick-action-btn btn-info">
+                        <i class="fas fa-paw me-2"></i>Nueva Mascota
+                    </a>
+                    <a href="{% url 'admin:citas_cita_add' %}" class="btn quick-action-btn btn-warning">
+                        <i class="fas fa-calendar-plus me-2"></i>Nueva Cita
+                    </a>
+                    <a href="{% url 'admin:index' %}" class="btn quick-action-btn btn-dark">
+                        <i class="fas fa-cog me-2"></i>Panel Completo
+                    </a>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Rango Semanal</h5>
-            </div>
-            <div class="card-body">
-                <p>Semana actual: <strong>{{ inicio_semana|date:"d/m/Y" }}</strong> al <strong>{{ fin_semana|date:"d/m/Y" }}</strong></p>
-                <div class="progress mb-3">
-                    <div class="progress-bar bg-success" role="progressbar" 
-                         style="width: {% widthratio hoy.weekday 6 100 %}%" 
-                         aria-valuenow="{{ hoy.weekday }}" aria-valuemin="0" aria-valuemax="6">
-                        Día {{ hoy.weekday|add:1 }} de 7
-                    </div>
-                </div>
-                <p class="small text-muted">Progreso de la semana actual</p>
             </div>
         </div>
     </div>
@@ -331,62 +357,195 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script>
-    // Gráfico de mascotas por tipo
-    const mascotasTipoCtx = document.getElementById('mascotasTipoChart').getContext('2d');
-    const mascotasTipoChart = new Chart(mascotasTipoCtx, {
+// Colores para los gráficos
+const colors = {
+    primary: '#007bff',
+    success: '#28a745',
+    info: '#17a2b8',
+    warning: '#ffc107',
+    danger: '#dc3545',
+    secondary: '#6c757d',
+    dark: '#343a40'
+};
+
+// Configuración global de Chart.js
+Chart.defaults.font.family = "'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+Chart.defaults.font.size = 12;
+
+// Datos iniciales
+const citasPorEstado = {{ citas_por_estado_json|safe }};
+const mascotasPorTipo = {{ mascotas_por_tipo_json|safe }};
+const citasUltimos7Dias = {{ citas_ultimos_7_dias_json|safe }};
+
+// Gráfico de citas por estado
+function renderEstadoCitasChart() {
+    const ctx = document.getElementById('estadoCitasChart').getContext('2d');
+    const data = {
+        labels: citasPorEstado.map(item => item.estado.toUpperCase()),
+        datasets: [{
+            data: citasPorEstado.map(item => item.total),
+            backgroundColor: [
+                colors.success, colors.primary, colors.warning, colors.danger, colors.info
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    new Chart(ctx, {
         type: 'doughnut',
-        data: {
-            labels: [{% for tipo in mascotas_por_tipo %}'{{ tipo.get_tipo_display }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
-            datasets: [{
-                data: [{% for tipo in mascotas_por_tipo %}{{ tipo.total }}{% if not forloop.last %}, {% endif %}{% endfor %}],
-                backgroundColor: [
-                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
-                ]
-            }]
-        },
+        data: data,
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'right',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
                 },
-                title: {
-                    display: true,
-                    text: 'Distribución de Mascotas por Tipo'
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((context.parsed / total) * 100);
+                            return `${context.label}: ${context.parsed} (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
     });
+}
+
+// Gráfico de mascotas por tipo
+function renderTipoMascotasChart() {
+    const ctx = document.getElementById('tipoMascotasChart').getContext('2d');
+    const data = {
+        labels: mascotasPorTipo.map(item => item.tipo.toUpperCase()),
+        datasets: [{
+            data: mascotasPorTipo.map(item => item.total),
+            backgroundColor: [
+                colors.primary, colors.success, colors.warning, colors.info, colors.danger
+            ],
+            borderWidth: 0
+        }]
+    };
     
-    // Gráfico de citas por estado
-    const citasEstadoCtx = document.getElementById('citasEstadoChart').getContext('2d');
-    const citasEstadoChart = new Chart(citasEstadoCtx, {
+    new Chart(ctx, {
         type: 'bar',
-        data: {
-            labels: [{% for estado in citas_por_estado %}'{{ estado.get_estado_display }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
-            datasets: [{
-                label: 'Número de Citas',
-                data: [{% for estado in citas_por_estado %}{{ estado.total }}{% if not forloop.last %}, {% endif %}{% endfor %}],
-                backgroundColor: [
-                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
-                ]
-            }]
-        },
+        data: data,
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
                 }
             },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Citas por Estado'
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
                 }
             }
         }
     });
+}
+
+// Gráfico de tendencia de citas
+function renderTendenciaCitasChart() {
+    const ctx = document.getElementById('tendenciaCitasChart').getContext('2d');
+    const data = {
+        labels: citasUltimos7Dias.map(item => item.dia),
+        datasets: [{
+            label: 'Citas por Día',
+            data: citasUltimos7Dias.map(item => item.total),
+            borderColor: colors.primary,
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    };
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Función para actualizar datos
+function actualizarDatos() {
+    fetch('{% url "administracion:estadisticas_api" %}')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Datos actualizados:', data);
+            // Aquí podrías actualizar los gráficos con los nuevos datos
+            mostrarNotificacion('Datos actualizados correctamente', 'success');
+        })
+        .catch(error => {
+            console.error('Error al actualizar:', error);
+            mostrarNotificacion('Error al actualizar datos', 'danger');
+        });
+}
+
+// Función para mostrar notificaciones
+function mostrarNotificacion(mensaje, tipo) {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
+    alert.style.cssText = 'top: 80px; right: 20px; z-index: 1050; min-width: 300px;';
+    alert.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alert);
+    
+    setTimeout(() => {
+        alert.remove();
+    }, 3000);
+}
+
+// Inicializar gráficos cuando el documento esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    renderEstadoCitasChart();
+    renderTipoMascotasChart();
+    renderTendenciaCitasChart();
+    
+    // Actualizar automáticamente cada 5 minutos
+    setInterval(actualizarDatos, 300000);
+});
 </script>
 {% endblock %}

@@ -57,8 +57,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'veterinaria_project.middleware.RestrictAdminMiddleware',  # Nuevo middleware
-    'veterinaria_project.middleware.RedirectAuthenticatedUsers',  # Nuevo middleware
+    'veterinaria_project.middleware.RestrictAdminMiddleware',
+    'veterinaria_project.middleware.RedirectAuthenticatedUsers',
+    'veterinaria_project.middleware.RedirectAdminToDashboard',  # Nuevo middleware
 ]
 
 ROOT_URLCONF = 'veterinaria_project.urls'
@@ -154,7 +155,7 @@ DEFAULT_FROM_EMAIL = 'Veterinaria HappyPets <noreply@happypets.com>'
 
 # Configuración de autenticación
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/mascotas/'
+LOGIN_REDIRECT_URL = '/redireccionar/'  # Nueva URL de redirección
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuración de sesión

@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
-from datetime import timedelta, datetime
-from django.db.models import Count, Q, Sum
+from datetime import timedelta, datetime, date
+from django.db.models import Count, Q, Sum, F
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 import csv
-from datetime import datetime
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 from clientes.models import Cliente
 from mascotas.models import Mascota
@@ -19,88 +20,103 @@ def staff_required(login_url=None):
 @login_required
 @staff_required(login_url='/admin/login/')
 def dashboard(request):
-    # Estadísticas generales
+    hoy = timezone.now().date()
+    
+    # Estadísticas principales
     total_clientes = Cliente.objects.count()
     total_mascotas = Mascota.objects.count()
     total_usuarios = User.objects.count()
     
-    # Citas de hoy
-    hoy = timezone.now().date()
+    # Citas
     citas_hoy = Cita.objects.filter(
         fecha__date=hoy, 
         estado__in=['programada', 'confirmada']
-    ).order_by('fecha')
+    ).select_related('mascota__cliente__usuario').order_by('fecha')
     
-    # Citas de la semana
-    inicio_semana = hoy - timedelta(days=hoy.weekday())
-    fin_semana = inicio_semana + timedelta(days=6)
-    citas_semana_count = Cita.objects.filter(
-        fecha__date__range=[inicio_semana, fin_semana]
+    citas_mes = Cita.objects.filter(
+        fecha__date__month=hoy.month,
+        fecha__date__year=hoy.year
     ).count()
     
-    # Próximas citas (próximos 7 días)
-    proximas_citas = Cita.objects.filter(
-        fecha__date__range=[hoy, hoy + timedelta(days=7)],
-        estado__in=['programada', 'confirmada']
-    ).order_by('fecha')[:10]
+    citas_completadas_mes = Cita.objects.filter(
+        fecha__date__month=hoy.month,
+        fecha__date__year=hoy.year,
+        estado='completada'
+    ).count()
     
+    # Clientes
+    clientes_nuevos_mes = Cliente.objects.filter(
+        fecha_registro__month=hoy.month,
+        fecha_registro__year=hoy.year
+    ).count()
+    
+    # Ingresos (asumiendo que tienes campo precio en Cita)
+    try:
+        ingresos_mes = Cita.objects.filter(
+            fecha__date__month=hoy.month,
+            fecha__date__year=hoy.year,
+            estado='completada'
+        ).aggregate(total=Sum('precio'))['total'] or 0
+    except:
+        ingresos_mes = 0
+    
+    # Datos para gráficos
     # Citas por estado
-    citas_por_estado = Cita.objects.values('estado').annotate(total=Count('id'))
+    citas_por_estado = list(Cita.objects.values('estado').annotate(
+        total=Count('id')
+    ).order_by('-total'))
     
     # Mascotas por tipo
-    mascotas_por_tipo = Mascota.objects.values('tipo').annotate(total=Count('id'))
+    mascotas_por_tipo = list(Mascota.objects.values('tipo').annotate(
+        total=Count('id')
+    ).order_by('-total'))
     
-    # Clientes recientes (últimos 7 días)
-    clientes_recientes = Cliente.objects.filter(
-        fecha_registro__date__gte=hoy - timedelta(days=7)
-    ).count()
+    # Citas últimos 7 días
+    citas_ultimos_7_dias = []
+    for i in range(6, -1, -1):
+        dia = hoy - timedelta(days=i)
+        count = Cita.objects.filter(fecha__date=dia).count()
+        citas_ultimos_7_dias.append({
+            'dia': dia.strftime('%d/%m'),
+            'total': count
+        })
     
-    # Citas urgentes (hoy y mañana)
+    # Próximas citas
+    proximas_citas = Cita.objects.filter(
+        fecha__date__gte=hoy,
+        estado__in=['programada', 'confirmada']
+    ).select_related('mascota__cliente__usuario').order_by('fecha')[:10]
+    
+    # Citas urgentes
     citas_urgentes = Cita.objects.filter(
-        fecha__date__range=[hoy, hoy + timedelta(days=1)],
-        estado__in=['programada', 'confirmada'],
-        tipo='urgencia'
-    ).count()
-    
-    # Usuarios activos hoy
-    usuarios_activos_hoy = User.objects.filter(
-        last_login__date=hoy
-    ).count()
-    
-    # Citas pendientes
-    citas_pendientes = Cita.objects.filter(
-        estado='programada',
-        fecha__date__gte=hoy
-    ).count()
-    
-    # Estadísticas mensuales
-    primer_dia_mes = hoy.replace(day=1)
-    citas_este_mes = Cita.objects.filter(
-        fecha__date__gte=primer_dia_mes
-    ).count()
-    
-    clientes_este_mes = Cliente.objects.filter(
-        fecha_registro__date__gte=primer_dia_mes
+        fecha__date=hoy,
+        tipo='urgencia',
+        estado__in=['programada', 'confirmada']
     ).count()
 
     context = {
+        # Estadísticas
         'total_clientes': total_clientes,
         'total_mascotas': total_mascotas,
         'total_usuarios': total_usuarios,
-        'citas_hoy': citas_hoy,
-        'citas_semana_count': citas_semana_count,
-        'proximas_citas': proximas_citas,
-        'citas_por_estado': citas_por_estado,
-        'mascotas_por_tipo': mascotas_por_tipo,
-        'clientes_recientes': clientes_recientes,
+        'citas_mes': citas_mes,
+        'citas_completadas_mes': citas_completadas_mes,
+        'clientes_nuevos_mes': clientes_nuevos_mes,
+        'ingresos_mes': ingresos_mes,
         'citas_urgentes': citas_urgentes,
+        
+        # Listas
+        'citas_hoy': citas_hoy,
+        'proximas_citas': proximas_citas,
+        
+        # Datos para gráficos
+        'citas_por_estado_json': json.dumps(citas_por_estado, cls=DjangoJSONEncoder),
+        'mascotas_por_tipo_json': json.dumps(mascotas_por_tipo, cls=DjangoJSONEncoder),
+        'citas_ultimos_7_dias_json': json.dumps(citas_ultimos_7_dias, cls=DjangoJSONEncoder),
+        
+        # Fechas
         'hoy': hoy,
-        'inicio_semana': inicio_semana,
-        'fin_semana': fin_semana,
-        'usuarios_activos_hoy': usuarios_activos_hoy,
-        'citas_pendientes': citas_pendientes,
-        'citas_este_mes': citas_este_mes,
-        'clientes_este_mes': clientes_este_mes,
+        'mes_actual': hoy.strftime('%B %Y'),
     }
     
     return render(request, 'administracion/dashboard.html', context)
@@ -109,44 +125,64 @@ def dashboard(request):
 @staff_required(login_url='/admin/login/')
 def exportar_datos(request):
     if request.method == 'POST':
-        # Crear respuesta CSV
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="dashboard_export_{}.csv"'.format(
-            datetime.now().strftime("%Y%m%d_%H%M")
-        )
+        # Crear respuesta Excel (CSV con formato mejorado)
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = f'attachment; filename="reporte_admin_{date.today().strftime("%Y%m%d")}.csv"'
         
-        writer = csv.writer(response)
+        response.write('\ufeff')  # BOM para UTF-8 en Excel
+        writer = csv.writer(response, delimiter=';')
         
-        # Escribir encabezados
-        writer.writerow(['Dashboard de Administración - Exportación'])
-        writer.writerow(['Fecha de exportación:', datetime.now().strftime("%d/%m/%Y %H:%M")])
+        # Encabezado del reporte
+        writer.writerow(['Reporte de Administración - Veterinaria Vet Love'])
+        writer.writerow(['Fecha de generación:', datetime.now().strftime("%d/%m/%Y %H:%M:%S")])
+        writer.writerow(['Generado por:', request.user.get_full_name() or request.user.username])
         writer.writerow([])
+        
+        # Estadísticas generales
+        writer.writerow(['ESTADÍSTICAS GENERALES'])
         writer.writerow(['Métrica', 'Valor'])
+        writer.writerow(['Total de Clientes', Cliente.objects.count()])
+        writer.writerow(['Total de Mascotas', Mascota.objects.count()])
+        writer.writerow(['Total de Usuarios', User.objects.count()])
+        writer.writerow([])
         
-        # Obtener datos
+        # Estadísticas del mes
         hoy = timezone.now().date()
+        writer.writerow(['ESTADÍSTICAS DEL MES ACTUAL'])
+        writer.writerow(['Métrica', 'Valor'])
+        writer.writerow(['Citas este mes', Cita.objects.filter(
+            fecha__date__month=hoy.month, fecha__date__year=hoy.year).count()])
+        writer.writerow(['Citas completadas', Cita.objects.filter(
+            fecha__date__month=hoy.month, fecha__date__year=hoy.year, estado='completada').count()])
+        writer.writerow(['Clientes nuevos', Cliente.objects.filter(
+            fecha_registro__month=hoy.month, fecha_registro__year=hoy.year).count()])
+        writer.writerow([])
         
-        datos_estadisticas = [
-            ('Total Clientes', Cliente.objects.count()),
-            ('Total Mascotas', Mascota.objects.count()),
-            ('Total Usuarios', User.objects.count()),
-            ('Citas Hoy', Cita.objects.filter(fecha__date=hoy, estado__in=['programada', 'confirmada']).count()),
-            ('Citas Esta Semana', Cita.objects.filter(
-                fecha__date__range=[hoy - timedelta(days=hoy.weekday()), hoy + timedelta(days=6 - hoy.weekday())]
-            ).count()),
-            ('Clientes Recientes (7 días)', Cliente.objects.filter(fecha_registro__date__gte=hoy - timedelta(days=7)).count()),
-            ('Citas Urgentes', Cita.objects.filter(
-                fecha__date__range=[hoy, hoy + timedelta(days=1)],
-                estado__in=['programada', 'confirmada'],
-                tipo='urgencia'
-            ).count()),
-            ('Usuarios Activos Hoy', User.objects.filter(last_login__date=hoy).count()),
-            ('Citas Pendientes', Cita.objects.filter(estado='programada', fecha__date__gte=hoy).count()),
-        ]
+        # Citas por estado
+        writer.writerow(['CITAS POR ESTADO'])
+        writer.writerow(['Estado', 'Cantidad'])
+        for estado in Cita.objects.values('estado').annotate(total=Count('id')):
+            writer.writerow([estado['estado'], estado['total']])
+        writer.writerow([])
         
-        # Escribir datos
-        for metrica, valor in datos_estadisticas:
-            writer.writerow([metrica, valor])
+        # Mascotas por tipo
+        writer.writerow(['MASCOTAS POR TIPO'])
+        writer.writerow(['Tipo', 'Cantidad'])
+        for tipo in Mascota.objects.values('tipo').annotate(total=Count('id')):
+            writer.writerow([tipo['tipo'], tipo['total']])
+        writer.writerow([])
+        
+        # Citas de hoy
+        writer.writerow(['CITAS PARA HOY'])
+        writer.writerow(['Hora', 'Mascota', 'Dueño', 'Tipo', 'Estado'])
+        for cita in Cita.objects.filter(fecha__date=hoy).select_related('mascota__cliente__usuario'):
+            writer.writerow([
+                cita.fecha.strftime("%H:%M"),
+                cita.mascota.nombre,
+                cita.mascota.cliente.usuario.get_full_name() or cita.mascota.cliente.usuario.username,
+                cita.tipo,
+                cita.estado
+            ])
         
         return response
     
@@ -155,25 +191,39 @@ def exportar_datos(request):
 @login_required
 @staff_required(login_url='/admin/login/')
 def estadisticas_api(request):
-    # API para gráficos y estadísticas
     if request.method == 'GET':
-        # Datos para gráfico de citas por día de la semana
         hoy = timezone.now().date()
-        inicio_semana = hoy - timedelta(days=hoy.weekday())
         
-        citas_por_dia = []
+        # Citas por día de la semana (últimas 4 semanas)
+        datos_semana = []
+        dias_semana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+        
         for i in range(7):
-            dia = inicio_semana + timedelta(days=i)
-            count = Cita.objects.filter(fecha__date=dia).count()
-            citas_por_dia.append({
-                'dia': dia.strftime('%A'),
-                'count': count
+            # Promedio de las últimas 4 semanas para este día
+            citas_dia = Cita.objects.filter(
+                fecha__week_day=i+2,  # Django: 2=Lunes, 3=Martes, etc.
+                fecha__date__gte=hoy - timedelta(weeks=4)
+            ).count()
+            promedio = citas_dia / 4
+            
+            datos_semana.append({
+                'dia': dias_semana[i],
+                'promedio': round(promedio, 1)
             })
         
-        # Datos para gráfico de mascotas por tipo
-        mascotas_tipo = Mascota.objects.values('tipo').annotate(total=Count('id'))
+        # Citas últimos 30 días
+        citas_30_dias = []
+        for i in range(29, -1, -1):
+            fecha = hoy - timedelta(days=i)
+            count = Cita.objects.filter(fecha__date=fecha).count()
+            citas_30_dias.append({
+                'fecha': fecha.strftime('%d/%m'),
+                'total': count
+            })
         
         return JsonResponse({
-            'citas_por_dia': citas_por_dia,
-            'mascotas_tipo': list(mascotas_tipo)
+            'citas_semana': datos_semana,
+            'citas_30_dias': citas_30_dias,
+            'mascotas_tipo': list(Mascota.objects.values('tipo').annotate(total=Count('id'))),
+            'citas_estado': list(Cita.objects.values('estado').annotate(total=Count('id')))
         })
