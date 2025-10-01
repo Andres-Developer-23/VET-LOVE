@@ -112,6 +112,23 @@
             background-color: #f8d7da;
             border-left: 4px solid #dc3545;
         }
+        
+        /* NUEVOS ESTILOS PARA EL CARRITO */
+        .cart-badge {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .cart-widget {
+            position: relative;
+            display: inline-block;
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -158,6 +175,11 @@
                             <i class="fas fa-calendar-alt me-1"></i>Citas
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:tienda_producto_changelist' %}">
+                            <i class="fas fa-shopping-bag me-1"></i>Tienda
+                        </a>
+                    </li>
                     {% else %}
                     <!-- MENÚ PARA USUARIOS NORMALES -->
                     <li class="nav-item">
@@ -170,6 +192,12 @@
                             <i class="fas fa-calendar-alt me-1"></i>Mis Citas
                         </a>
                     </li>
+                    <!-- NUEVO MENÚ TIENDA -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tienda:lista_productos' %}">
+                            <i class="fas fa-shopping-bag me-1"></i>Tienda
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'clientes:perfil_cliente' %}">
                             <i class="fas fa-user me-1"></i>Mi Perfil
@@ -180,6 +208,16 @@
                 
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
+                    <!-- Widget del Carrito (solo para usuarios no admin) -->
+                    {% if not user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{% url 'tienda:ver_carrito' %}">
+                            <i class="fas fa-shopping-cart me-1"></i>Carrito
+                            <span id="cart-count" class="cart-badge">0</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle me-1"></i>{{ user.get_full_name|default:user.username }}
@@ -194,6 +232,10 @@
                                 <i class="fas fa-cog me-1"></i>Panel Admin
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'tienda:mis_ordenes' %}">
+                                <i class="fas fa-clipboard-list me-1"></i>Mis Órdenes
+                            </a></li>
                             {% endif %}
                             <li><a class="dropdown-item" href="{% url 'clientes:perfil_cliente' %}">
                                 <i class="fas fa-user me-1"></i>Mi Perfil
@@ -286,6 +328,33 @@
                 }
             });
         });
+        
+        // Actualizar contador del carrito
+        {% if user.is_authenticated and not user.is_staff %}
+        function actualizarCarritoWidget() {
+            fetch('{% url "tienda:carrito_widget" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const cartCount = document.getElementById('cart-count');
+                    if (cartCount) {
+                        cartCount.textContent = data.cantidad_total;
+                        // Ocultar badge si no hay items
+                        if (data.cantidad_total === 0) {
+                            cartCount.style.display = 'none';
+                        } else {
+                            cartCount.style.display = 'flex';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        // Actualizar al cargar la página
+        actualizarCarritoWidget();
+        
+        // Actualizar cada 30 segundos
+        setInterval(actualizarCarritoWidget, 30000);
+        {% endif %}
     });
     </script>
     

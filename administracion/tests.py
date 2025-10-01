@@ -33,4 +33,4 @@ class AdministracionTestCase(TestCase):
     
     def test_dashboard_sin_autenticar(self):
         response = self.client.get(reverse('administracion:dashboard_admin'))
-        self.assertEqual(response.status_code, 302)  # Redirección a login  
+        self.assertEqual(response.status_code, 302)  # Redirección a login

@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Gestión de Categorías</h5>
+                <div>
+                    <a href="{% url 'admin:tienda_categoria_add' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus me-1"></i>Nueva Categoría
+                    </a>
+                    <a href="{% url 'admin:tienda_categoria_changelist' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>Ver Todas
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for cat in productos_por_categoria %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">{{ cat.categoria__nombre|default:"Sin Categoría" }}</h6>
+                                <div class="h3 text-primary">{{ cat.total }}</div>
+                                <small class="text-muted">Productos</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

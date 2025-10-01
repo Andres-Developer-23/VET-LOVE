@@ -1,0 +1,276 @@
+{% load humanize %}
+
+<style>
+    .product-image-small {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .action-btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .search-box {
+        max-width: 300px;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .badge-oferta {
+        background: linear-gradient(45deg, #dc3545, #a71e2a);
+        color: white;
+    }
+    
+    .badge-lowstock {
+        background: linear-gradient(45deg, #ffc107, #e0a800);
+        color: white;
+    }
+    
+    .table-warning {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-boxes me-2"></i>Gestión de Productos</h5>
+                <div>
+                    <a href="{% url 'admin:tienda_producto_add' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus me-1"></i>Nuevo Producto
+                    </a>
+                    <a href="{% url 'admin:tienda_producto_changelist' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>Ver Todos
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Búsqueda y filtros -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control search-box" placeholder="Buscar productos..." id="searchProductos">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="filter-buttons">
+                            <button class="btn btn-outline-primary btn-sm active" data-filter="all">Todos</button>
+                            <button class="btn btn-outline-success btn-sm" data-filter="activo">Activos</button>
+                            <button class="btn btn-outline-warning btn-sm" data-filter="stock-bajo">Stock Bajo</button>
+                            <button class="btn btn-outline-info btn-sm" data-filter="destacado">Destacados</button>
+                            <button class="btn btn-outline-danger btn-sm" data-filter="oferta">En Oferta</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de productos -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_destacados %}
+                            <tr class="producto-item {% if producto.stock <= producto.stock_minimo %}table-warning{% endif %}" 
+                                data-categoria="{{ producto.categoria.nombre|lower }}"
+                                data-estado="{% if producto.activo %}activo{% else %}inactivo{% endif %}"
+                                data-stock="{% if producto.stock <= producto.stock_minimo %}stock-bajo{% endif %}"
+                                data-destacado="{% if producto.destacado %}destacado{% endif %}"
+                                data-oferta="{% if producto.en_oferta %}oferta{% endif %}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if producto.imagen %}
+                                        <img src="{{ producto.imagen.url }}" class="product-image-small me-3" alt="{{ producto.nombre }}">
+                                        {% else %}
+                                        <div class="product-image-small me-3 bg-light d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-box text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ producto.nombre }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ producto.descripcion|truncatewords:5|default:"Sin descripción" }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if producto.en_oferta %}
+                                    <span class="text-danger fw-bold">${{ producto.precio_final|default:producto.precio|floatformat:0 }}</span>
+                                    <small class="text-muted text-decoration-line-through d-block">${{ producto.precio|floatformat:0 }}</small>
+                                    {% else %}
+                                    <span class="fw-bold">${{ producto.precio|floatformat:0 }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">{{ producto.stock }}</span>
+                                        {% if producto.stock <= producto.stock_minimo %}
+                                        <span class="badge badge-lowstock">Bajo</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ producto.categoria.nombre|default:"Sin categoría" }}</td>
+                                <td>
+                                    <span class="badge bg-{% if producto.activo %}success{% else %}danger{% endif %}">
+                                        {{ producto.activo|yesno:"Activo,Inactivo" }}
+                                    </span>
+                                    {% if producto.destacado %}
+                                    <span class="badge bg-warning mt-1">Destacado</span>
+                                    {% endif %}
+                                    {% if producto.en_oferta %}
+                                    <span class="badge badge-oferta mt-1">Oferta</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'admin:tienda_producto_change' producto.id %}" class="btn btn-outline-primary btn-sm action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'tienda:detalle_producto' producto.slug|default:producto.id %}" class="btn btn-outline-info btn-sm action-btn" title="Ver en Tienda" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if producto.activo %}
+                                        <form method="post" action="{% url 'admin:tienda_producto_changelist' %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-warning btn-sm action-btn" title="Desactivar" name="action" value="desactivar">
+                                                <i class="fas fa-pause"></i>
+                                            </button>
+                                            <input type="hidden" name="select_across" value="0">
+                                            <input type="hidden" name="index" value="0">
+                                            <input type="hidden" name="_selected_action" value="{{ producto.id }}">
+                                        </form>
+                                        {% else %}
+                                        <form method="post" action="{% url 'admin:tienda_producto_changelist' %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-success btn-sm action-btn" title="Activar" name="action" value="activar">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            <input type="hidden" name="select_across" value="0">
+                                            <input type="hidden" name="index" value="0">
+                                            <input type="hidden" name="_selected_action" value="{{ producto.id }}">
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <i class="fas fa-box-open fa-2x mb-2"></i>
+                                    <p>No hay productos destacados</p>
+                                    <a href="{% url 'admin:tienda_producto_add' %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Crear Primer Producto
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Productos con stock bajo -->
+                {% if productos_bajo_stock %}
+                <div class="mt-4">
+                    <h6 class="text-warning mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Productos con Stock Bajo
+                    </h6>
+                    <div class="row">
+                        {% for producto in productos_bajo_stock %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong class="text-dark">{{ producto.nombre }}</strong>
+                                            <br>
+                                            <small class="text-muted">Stock: {{ producto.stock }} / Mín: {{ producto.stock_minimo }}</small>
+                                        </div>
+                                        <span class="badge bg-warning">Bajo Stock</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Script para filtros y búsqueda
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchProductos');
+    const filterButtons = document.querySelectorAll('.filter-buttons button');
+    const productItems = document.querySelectorAll('.producto-item');
+    
+    // Función de búsqueda
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            productItems.forEach(item => {
+                const productName = item.querySelector('strong').textContent.toLowerCase();
+                const productDesc = item.querySelector('small') ? item.querySelector('small').textContent.toLowerCase() : '';
+                
+                if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // Función de filtros
+    if (filterButtons.length > 0) {
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Actualizar botones activos
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Aplicar filtro
+                productItems.forEach(item => {
+                    if (filter === 'all') {
+                        item.style.display = '';
+                    } else {
+                        const hasFilter = item.getAttribute(`data-${filter}`) !== null && 
+                                        item.getAttribute(`data-${filter}`) !== 'false' &&
+                                        item.getAttribute(`data-${filter}`) !== '';
+                        item.style.display = hasFilter ? '' : 'none';
+                    }
+                });
+            });
+        });
+    }
+    
+    // Mostrar notificación si hay productos con stock bajo
+    const lowStockItems = document.querySelectorAll('[data-stock="stock-bajo"]');
+    if (lowStockItems.length > 0) {
+        console.log(`⚠️ ${lowStockItems.length} productos con stock bajo`);
+    }
+});
+</script>

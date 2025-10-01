@@ -12,6 +12,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from clientes.models import Cliente
 from mascotas.models import Mascota
 from citas.models import Cita
+from tienda.models import Producto, Categoria, Orden
 from django.contrib.auth.models import User
 
 def staff_required(login_url=None):
@@ -22,7 +23,7 @@ def staff_required(login_url=None):
 def dashboard(request):
     hoy = timezone.now().date()
     
-    # Estadísticas principales
+    # ESTADÍSTICAS EXISTENTES
     total_clientes = Cliente.objects.count()
     total_mascotas = Mascota.objects.count()
     total_usuarios = User.objects.count()
@@ -60,7 +61,37 @@ def dashboard(request):
     except:
         ingresos_mes = 0
     
-    # Datos para gráficos
+    # NUEVAS ESTADÍSTICAS DE LA TIENDA
+    total_productos = Producto.objects.filter(activo=True).count()
+    total_categorias = Categoria.objects.filter(activo=True).count()
+    total_ordenes = Orden.objects.count()
+    
+    # Estadísticas de ventas de la tienda
+    try:
+        ventas_mes_tienda = Orden.objects.filter(
+            fecha_creacion__month=hoy.month,
+            fecha_creacion__year=hoy.year,
+            estado__in=['entregada', 'enviada', 'en_proceso']
+        ).aggregate(total=Sum('total'))['total'] or 0
+    except:
+        ventas_mes_tienda = 0
+    
+    ordenes_pendientes = Orden.objects.filter(estado='pendiente').count()
+    productos_stock_bajo = Producto.objects.filter(stock__lte=F('stock_minimo'), activo=True).count()
+    
+    # Órdenes recientes
+    ordenes_recientes = Orden.objects.select_related('usuario').order_by('-fecha_creacion')[:5]
+    
+    # Productos destacados
+    productos_destacados = Producto.objects.filter(destacado=True, activo=True)[:5]
+    
+    # Productos con stock bajo
+    productos_bajo_stock = Producto.objects.filter(
+        stock__lte=F('stock_minimo'), 
+        activo=True
+    ).order_by('stock')[:5]
+    
+    # DATOS PARA GRÁFICOS EXISTENTES
     # Citas por estado
     citas_por_estado = list(Cita.objects.values('estado').annotate(
         total=Count('id')
@@ -81,6 +112,32 @@ def dashboard(request):
             'total': count
         })
     
+    # NUEVOS DATOS PARA GRÁFICOS DE TIENDA
+    # Productos por categoría
+    productos_por_categoria = list(Producto.objects.filter(activo=True).values(
+        'categoria__nombre'
+    ).annotate(
+        total=Count('id')
+    ).order_by('-total'))
+    
+    # Órdenes por estado
+    ordenes_por_estado = list(Orden.objects.values('estado').annotate(
+        total=Count('id')
+    ).order_by('-total'))
+    
+    # Ventas últimos 7 días (tienda)
+    ventas_ultimos_7_dias = []
+    for i in range(6, -1, -1):
+        dia = hoy - timedelta(days=i)
+        ventas_dia = Orden.objects.filter(
+            fecha_creacion__date=dia,
+            estado__in=['entregada', 'enviada', 'en_proceso']
+        ).aggregate(total=Sum('total'))['total'] or 0
+        ventas_ultimos_7_dias.append({
+            'dia': dia.strftime('%d/%m'),
+            'total': float(ventas_dia)
+        })
+    
     # Próximas citas
     proximas_citas = Cita.objects.filter(
         fecha__date__gte=hoy,
@@ -95,7 +152,7 @@ def dashboard(request):
     ).count()
 
     context = {
-        # Estadísticas
+        # ESTADÍSTICAS EXISTENTES
         'total_clientes': total_clientes,
         'total_mascotas': total_mascotas,
         'total_usuarios': total_usuarios,
@@ -105,16 +162,32 @@ def dashboard(request):
         'ingresos_mes': ingresos_mes,
         'citas_urgentes': citas_urgentes,
         
-        # Listas
+        # NUEVAS ESTADÍSTICAS TIENDA
+        'total_productos': total_productos,
+        'total_categorias': total_categorias,
+        'total_ordenes': total_ordenes,
+        'ventas_mes_tienda': ventas_mes_tienda,
+        'ordenes_pendientes': ordenes_pendientes,
+        'productos_stock_bajo': productos_stock_bajo,
+        'ordenes_recientes': ordenes_recientes,
+        'productos_destacados': productos_destacados,
+        'productos_bajo_stock': productos_bajo_stock,
+        
+        # LISTAS EXISTENTES
         'citas_hoy': citas_hoy,
         'proximas_citas': proximas_citas,
         
-        # Datos para gráficos
+        # DATOS PARA GRÁFICOS EXISTENTES
         'citas_por_estado_json': json.dumps(citas_por_estado, cls=DjangoJSONEncoder),
         'mascotas_por_tipo_json': json.dumps(mascotas_por_tipo, cls=DjangoJSONEncoder),
         'citas_ultimos_7_dias_json': json.dumps(citas_ultimos_7_dias, cls=DjangoJSONEncoder),
         
-        # Fechas
+        # NUEVOS DATOS PARA GRÁFICOS DE TIENDA
+        'productos_por_categoria_json': json.dumps(productos_por_categoria, cls=DjangoJSONEncoder),
+        'ordenes_por_estado_json': json.dumps(ordenes_por_estado, cls=DjangoJSONEncoder),
+        'ventas_ultimos_7_dias_json': json.dumps(ventas_ultimos_7_dias, cls=DjangoJSONEncoder),
+        
+        # FECHAS EXISTENTES
         'hoy': hoy,
         'mes_actual': hoy.strftime('%B %Y'),
     }
@@ -144,6 +217,9 @@ def exportar_datos(request):
         writer.writerow(['Total de Clientes', Cliente.objects.count()])
         writer.writerow(['Total de Mascotas', Mascota.objects.count()])
         writer.writerow(['Total de Usuarios', User.objects.count()])
+        writer.writerow(['Total de Productos', Producto.objects.filter(activo=True).count()])
+        writer.writerow(['Total de Categorías', Categoria.objects.filter(activo=True).count()])
+        writer.writerow(['Total de Órdenes', Orden.objects.count()])
         writer.writerow([])
         
         # Estadísticas del mes
@@ -156,6 +232,15 @@ def exportar_datos(request):
             fecha__date__month=hoy.month, fecha__date__year=hoy.year, estado='completada').count()])
         writer.writerow(['Clientes nuevos', Cliente.objects.filter(
             fecha_registro__month=hoy.month, fecha_registro__year=hoy.year).count()])
+        
+        # Estadísticas de tienda del mes
+        ventas_mes = Orden.objects.filter(
+            fecha_creacion__month=hoy.month, 
+            fecha_creacion__year=hoy.year
+        ).aggregate(total=Sum('total'))['total'] or 0
+        writer.writerow(['Ventas tienda', ventas_mes])
+        writer.writerow(['Órdenes tienda', Orden.objects.filter(
+            fecha_creacion__month=hoy.month, fecha_creacion__year=hoy.year).count()])
         writer.writerow([])
         
         # Citas por estado
@@ -172,6 +257,28 @@ def exportar_datos(request):
             writer.writerow([tipo['tipo'], tipo['total']])
         writer.writerow([])
         
+        # Productos por categoría
+        writer.writerow(['PRODUCTOS POR CATEGORÍA'])
+        writer.writerow(['Categoría', 'Cantidad'])
+        for cat in Producto.objects.filter(activo=True).values('categoria__nombre').annotate(total=Count('id')):
+            writer.writerow([cat['categoria__nombre'], cat['total']])
+        writer.writerow([])
+        
+        # Órdenes por estado
+        writer.writerow(['ÓRDENES POR ESTADO'])
+        writer.writerow(['Estado', 'Cantidad'])
+        for estado in Orden.objects.values('estado').annotate(total=Count('id')):
+            writer.writerow([estado['estado'], estado['total']])
+        writer.writerow([])
+        
+        # Productos con stock bajo
+        productos_bajo_stock = Producto.objects.filter(stock__lte=F('stock_minimo'), activo=True)
+        writer.writerow(['PRODUCTOS CON STOCK BAJO'])
+        writer.writerow(['Producto', 'Stock Actual', 'Stock Mínimo'])
+        for producto in productos_bajo_stock:
+            writer.writerow([producto.nombre, producto.stock, producto.stock_minimo])
+        writer.writerow([])
+        
         # Citas de hoy
         writer.writerow(['CITAS PARA HOY'])
         writer.writerow(['Hora', 'Mascota', 'Dueño', 'Tipo', 'Estado'])
@@ -182,6 +289,30 @@ def exportar_datos(request):
                 cita.mascota.cliente.usuario.get_full_name() or cita.mascota.cliente.usuario.username,
                 cita.tipo,
                 cita.estado
+            ])
+        writer.writerow([])
+        
+        # Órdenes pendientes
+        writer.writerow(['ÓRDENES PENDIENTES'])
+        writer.writerow(['Número Orden', 'Cliente', 'Total', 'Fecha'])
+        for orden in Orden.objects.filter(estado='pendiente').select_related('usuario'):
+            writer.writerow([
+                orden.numero_orden,
+                orden.usuario.get_full_name() or orden.usuario.username,
+                orden.total,
+                orden.fecha_creacion.strftime("%d/%m/%Y")
+            ])
+        writer.writerow([])
+        
+        # Productos destacados
+        writer.writerow(['PRODUCTOS DESTACADOS'])
+        writer.writerow(['Producto', 'Precio', 'Stock', 'Categoría'])
+        for producto in Producto.objects.filter(destacado=True, activo=True):
+            writer.writerow([
+                producto.nombre,
+                producto.precio,
+                producto.stock,
+                producto.categoria.nombre
             ])
         
         return response
@@ -221,9 +352,25 @@ def estadisticas_api(request):
                 'total': count
             })
         
+        # Ventas últimos 30 días (tienda)
+        ventas_30_dias = []
+        for i in range(29, -1, -1):
+            fecha = hoy - timedelta(days=i)
+            ventas_dia = Orden.objects.filter(
+                fecha_creacion__date=fecha,
+                estado__in=['entregada', 'enviada', 'en_proceso']
+            ).aggregate(total=Sum('total'))['total'] or 0
+            ventas_30_dias.append({
+                'fecha': fecha.strftime('%d/%m'),
+                'total': float(ventas_dia)
+            })
+        
         return JsonResponse({
             'citas_semana': datos_semana,
             'citas_30_dias': citas_30_dias,
+            'ventas_30_dias': ventas_30_dias,
             'mascotas_tipo': list(Mascota.objects.values('tipo').annotate(total=Count('id'))),
-            'citas_estado': list(Cita.objects.values('estado').annotate(total=Count('id')))
+            'citas_estado': list(Cita.objects.values('estado').annotate(total=Count('id'))),
+            'productos_categoria': list(Producto.objects.filter(activo=True).values('categoria__nombre').annotate(total=Count('id'))),
+            'ordenes_estado': list(Orden.objects.values('estado').annotate(total=Count('id')))
         })

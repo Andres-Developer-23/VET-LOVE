@@ -36,12 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',  # Para formato de números y fechas más amigables
     
     # Aplicaciones locales
     'clientes',
     'mascotas', 
     'citas',
     'administracion',
+    'tienda',
     
     # Aplicaciones de terceros
     'crispy_forms',
@@ -295,10 +297,8 @@ DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y H:i'
 TIME_FORMAT = 'H:i'
 
-# Configuración de verificación de aplicaciones
-INSTALLED_APPS += [
-    'django.contrib.humanize',  # Para formato de números y fechas más amigables
-]
+# NOTA: La línea duplicada 'django.contrib.humanize' ha sido eliminada
+# Ya está incluida en la lista principal de INSTALLED_APPS
 
 # Configuración para el manejo de errores
 if DEBUG:
@@ -352,3 +352,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'tu-email@tu-dominio.com'
 EMAIL_HOST_PASSWORD = 'tu-password-de-email'
 """
+
+# Configuración para el carrito de compras
+CART_SESSION_ID = 'cart'

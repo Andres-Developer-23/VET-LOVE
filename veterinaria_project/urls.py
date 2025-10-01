@@ -20,6 +20,7 @@ urlpatterns = [
     path('clientes/', include('clientes.urls')),
     path('citas/', include('citas.urls')),
     path('administracion/', include('administracion.urls')),
+    path('tienda/', include('tienda.urls')),  # NUEVA URL
     path('accounts/', include('django.contrib.auth.urls')),
     path('redireccionar/', redireccionar_despues_login, name='redireccionar'),
 ]

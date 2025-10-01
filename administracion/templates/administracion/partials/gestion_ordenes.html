@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Gestión de Órdenes</h5>
+                <div>
+                    <a href="{% url 'admin:tienda_orden_changelist' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>Ver Todas
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Orden #</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for orden in ordenes_recientes %}
+                            <tr>
+                                <td><strong>{{ orden.numero_orden }}</strong></td>
+                                <td>{{ orden.usuario.get_full_name|default:orden.usuario.username }}</td>
+                                <td>{{ orden.fecha_creacion|date:"d/m/Y" }}</td>
+                                <td><strong>${{ orden.total }}</strong></td>
+                                <td>
+                                    <span class="badge 
+                                        {% if orden.estado == 'entregada' %}bg-success
+                                        {% elif orden.estado == 'enviada' %}bg-info
+                                        {% elif orden.estado == 'en_proceso' %}bg-warning
+                                        {% elif orden.estado == 'pendiente' %}bg-secondary
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ orden.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'admin:tienda_orden_change' orden.id %}" class="btn btn-outline-primary btn-sm action-btn" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'tienda:detalle_orden' orden.numero_orden %}" class="btn btn-outline-info btn-sm action-btn" title="Ver Detalles" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if orden.estado == 'pendiente' %}
+                                        <form method="post" action="{% url 'admin:tienda_orden_changelist' %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-success btn-sm action-btn" title="Confirmar" name="action" value="confirmar">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <input type="hidden" name="select_across" value="0">
+                                            <input type="hidden" name="index" value="0">
+                                            <input type="hidden" name="_selected_action" value="{{ orden.id }}">
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

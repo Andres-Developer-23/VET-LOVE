@@ -1,0 +1,429 @@
+{% load humanize %}
+
+<!-- Tarjetas de estadísticas principales -->
+<div class="row mt-4">
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-revenue admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-number">${{ ingresos_mes|floatformat:0 }}</div>
+                <div class="stat-label">Ingresos del Mes</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-clients admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number">{{ total_clientes }}</div>
+                <div class="stat-label">Clientes Totales</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-pets admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-paw"></i></div>
+                <div class="stat-number">{{ total_mascotas }}</div>
+                <div class="stat-label">Mascotas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-appointments admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-number">{{ citas_mes }}</div>
+                <div class="stat-label">Citas del Mes</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-sales admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="stat-number">${{ ventas_mes_tienda|floatformat:0 }}</div>
+                <div class="stat-label">Ventas Tienda</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-products admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                <div class="stat-number">{{ total_productos }}</div>
+                <div class="stat-label">Productos</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos principales -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Distribución de Citas por Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="estadoCitasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Mascotas por Tipo</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="tipoMascotasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Más gráficos -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Productos por Categoría</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="productosCategoriaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Órdenes por Estado</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="ordenesEstadoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos de tendencia -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Tendencia de Citas (Últimos 7 Días)</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="tendenciaCitasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Tendencia de Ventas (Últimos 7 Días)</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="tendenciaVentasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gráficos para la pestaña de resumen
+function renderEstadoCitasChart() {
+    const ctx = document.getElementById('estadoCitasChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: citasPorEstado.map(item => item.estado.toUpperCase()),
+        datasets: [{
+            data: citasPorEstado.map(item => item.total),
+            backgroundColor: [
+                colors.success, colors.primary, colors.warning, colors.danger, colors.info
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((context.parsed / total) * 100);
+                            return `${context.label}: ${context.parsed} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderTipoMascotasChart() {
+    const ctx = document.getElementById('tipoMascotasChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: mascotasPorTipo.map(item => item.tipo.toUpperCase()),
+        datasets: [{
+            data: mascotasPorTipo.map(item => item.total),
+            backgroundColor: [
+                colors.primary, colors.success, colors.warning, colors.info, colors.danger
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderProductosCategoriaChart() {
+    const ctx = document.getElementById('productosCategoriaChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: productosPorCategoria.map(item => item.categoria__nombre?.toUpperCase() || 'SIN CATEGORÍA'),
+        datasets: [{
+            data: productosPorCategoria.map(item => item.total),
+            backgroundColor: [
+                colors.teal, colors.orange, colors.pink, colors.purple, colors.info, colors.warning
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderOrdenesEstadoChart() {
+    const ctx = document.getElementById('ordenesEstadoChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: ordenesPorEstado.map(item => item.estado.toUpperCase()),
+        datasets: [{
+            data: ordenesPorEstado.map(item => item.total),
+            backgroundColor: [
+                colors.success, colors.info, colors.warning, colors.secondary, colors.danger
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderTendenciaCitasChart() {
+    const ctx = document.getElementById('tendenciaCitasChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: citasUltimos7Dias.map(item => item.dia),
+        datasets: [{
+            label: 'Citas por Día',
+            data: citasUltimos7Dias.map(item => item.total),
+            borderColor: colors.primary,
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderTendenciaVentasChart() {
+    const ctx = document.getElementById('tendenciaVentasChart');
+    if (!ctx) return;
+    
+    const context = ctx.getContext('2d');
+    const data = {
+        labels: ventasUltimos7Dias.map(item => item.dia),
+        datasets: [{
+            label: 'Ventas por Día',
+            data: ventasUltimos7Dias.map(item => item.total),
+            borderColor: colors.purple,
+            backgroundColor: 'rgba(111, 66, 193, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    };
+    
+    new Chart(context, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Inicializar gráficos cuando la pestaña esté activa
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar gráficos inmediatamente para la pestaña activa
+    renderEstadoCitasChart();
+    renderTipoMascotasChart();
+    renderProductosCategoriaChart();
+    renderOrdenesEstadoChart();
+    renderTendenciaCitasChart();
+    renderTendenciaVentasChart();
+});
+</script>

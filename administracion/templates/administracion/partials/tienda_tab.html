@@ -1,0 +1,79 @@
+{% load humanize %}
+
+<div class="row mt-4">
+    <!-- Estadísticas rápidas de tienda -->
+    <div class="col-12 mb-4">
+        <div class="card admin-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Resumen de Tienda</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-primary">{{ total_productos }}</div>
+                        <small class="text-muted">Productos Activos</small>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-success">${{ ventas_mes_tienda|floatformat:0 }}</div>
+                        <small class="text-muted">Ventas del Mes</small>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-warning">{{ ordenes_pendientes }}</div>
+                        <small class="text-muted">Órdenes Pendientes</small>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-danger">{{ productos_stock_bajo }}</div>
+                        <small class="text-muted">Stock Bajo</small>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-info">{{ total_ordenes }}</div>
+                        <small class="text-muted">Total Órdenes</small>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="h4 text-secondary">{{ total_categorias }}</div>
+                        <small class="text-muted">Categorías</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gestión de Productos -->
+{% include 'administracion/partials/gestion_productos.html' %}
+
+<!-- Gestión de Órdenes -->
+{% include 'administracion/partials/gestion_ordenes.html' %}
+
+<!-- Gestión de Categorías -->
+{% include 'administracion/partials/gestion_categorias.html' %}
+
+<!-- Acciones Rápidas Tienda -->
+<div class="row">
+    <div class="col-12">
+        <div class="card admin-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas - Tienda</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <a href="{% url 'admin:tienda_producto_add' %}" class="btn quick-action-btn btn-danger">
+                        <i class="fas fa-box me-2"></i>Nuevo Producto
+                    </a>
+                    <a href="{% url 'admin:tienda_categoria_add' %}" class="btn quick-action-btn btn-dark">
+                        <i class="fas fa-tags me-2"></i>Nueva Categoría
+                    </a>
+                    <a href="{% url 'admin:tienda_orden_changelist' %}" class="btn quick-action-btn btn-secondary">
+                        <i class="fas fa-clipboard-list me-2"></i>Gestionar Órdenes
+                    </a>
+                    <a href="{% url 'tienda:lista_productos' %}" class="btn quick-action-btn btn-info" target="_blank">
+                        <i class="fas fa-store me-2"></i>Ver Tienda
+                    </a>
+                    <a href="{% url 'admin:tienda_producto_changelist' %}?stock__lte=F('stock_minimo')" class="btn quick-action-btn btn-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Stock Bajo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
