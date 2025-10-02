@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Cita
+from .forms import CitaAdminForm
 
 @admin.register(Cita)
 class CitaAdmin(admin.ModelAdmin):

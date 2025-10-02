@@ -32,8 +32,10 @@ class CitasTestCase(TestCase):
         self.cita = Cita.objects.create(
             mascota=self.mascota,
             fecha=timezone.now() + timedelta(days=1),
-            tipo='consulta',
+            tipo='consulta_general',
+            prioridad='normal',
             motivo='Consulta de rutina',
+            sintomas='Ninguno en particular',
             estado='programada'
         )
         
@@ -42,6 +44,8 @@ class CitasTestCase(TestCase):
     def test_creacion_cita(self):
         self.assertEqual(self.cita.mascota.nombre, 'Firulais')
         self.assertEqual(self.cita.estado, 'programada')
+        self.assertEqual(self.cita.prioridad, 'normal')
+        self.assertEqual(self.cita.tipo, 'consulta_general')
     
     def test_vista_solicitar_cita(self):
         self.client.login(username='testuser', password='testpass123')
@@ -60,3 +64,23 @@ class CitasTestCase(TestCase):
         self.cita.refresh_from_db()
         self.assertEqual(self.cita.estado, 'cancelada')
         self.assertRedirects(response, reverse('citas:mis_citas'))
+    
+    def test_confirmar_cita(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(reverse('citas:confirmar_cita', args=[self.cita.id]))
+        self.cita.refresh_from_db()
+        self.assertEqual(self.cita.estado, 'confirmada')
+        self.assertTrue(self.cita.confirmada_por_cliente)
+        self.assertRedirects(response, reverse('citas:mis_citas'))
+    
+    def test_puede_ser_cancelada(self):
+        self.assertTrue(self.cita.puede_ser_cancelada())
+        
+        # Probar con cita completada
+        cita_completada = Cita.objects.create(
+            mascota=self.mascota,
+            fecha=timezone.now() + timedelta(days=1),
+            tipo='vacunacion',
+            estado='completada'
+        )
+        self.assertFalse(cita_completada.puede_ser_cancelada())
