@@ -1,10 +1,139 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+/* Estilos para el modal de confirmación */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    border-radius: 15px 15px 0 0;
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+.modal-footer {
+    border-radius: 0 0 15px 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+#btnConfirmarCita {
+    min-width: 180px;
+    font-weight: 600;
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.border {
+    border: 1px solid #dee2e6 !important;
+}
+
+.rounded {
+    border-radius: 8px !important;
+}
+
+/* Animación para el modal */
+.modal.fade .modal-dialog {
+    transform: translate(0, -50px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translate(0, 0);
+}
+
+/* Estilo para los badges de prioridad */
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* Mejoras visuales para la información en el modal */
+#modalMascotaInfo, #modalCitaInfo, #modalContactoInfo, #modalMotivoInfo {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+}
+
+/* Estilos para el botón de solicitar cita */
+#btnSolicitarCita {
+    font-weight: 600;
+    padding: 10px 25px;
+}
+
+/* Mejora visual para los alerts */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-left: 4px solid #0dcaf0;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+/* Efectos hover para botones */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Estados de loading */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2><i class="fas fa-calendar-plus me-2"></i>Solicitar Nueva Cita</h2>
+    <div class="col-md-10">
+        <h2><i class="fas fa-calendar-plus me-2"></i>Solicitar Nueva Cita Veterinaria</h2>
         
         {% if messages %}
             {% for message in messages %}
@@ -16,11 +145,11 @@
         {% endif %}
         
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Formulario de Cita</h5>
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-file-medical me-2"></i>Formulario de Cita Médica</h5>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" id="citaForm">
                     {% csrf_token %}
                     
                     {% if form.non_field_errors %}
@@ -31,60 +160,209 @@
                     </div>
                     {% endif %}
                     
-                    <div class="mb-3">
-                        <label for="id_mascota" class="form-label">Mascota</label>
-                        {{ form.mascota }}
-                        {% if form.mascota.errors %}
-                        <div class="text-danger">
-                            {% for error in form.mascota.errors %}
-                                {{ error }}
-                            {% endfor %}
+                    <!-- Información de la Mascota -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-paw me-2"></i>Información del Paciente</h6>
                         </div>
-                        {% endif %}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_mascota" class="form-label">Mascota Paciente *</label>
+                                        {{ form.mascota }}
+                                        {% if form.mascota.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.mascota.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Información de la Mascota</label>
+                                        <div id="info_mascota" class="p-3 border rounded bg-light">
+                                            <small class="text-muted">Selecciona una mascota para ver su información completa</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="id_fecha" class="form-label">Fecha y Hora</label>
-                        {{ form.fecha }}
-                        {% if form.fecha.errors %}
-                        <div class="text-danger">
-                            {% for error in form.fecha.errors %}
-                                {{ error }}
-                            {% endfor %}
+                    <!-- Detalles de la Cita -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Detalles de la Cita</h6>
                         </div>
-                        {% endif %}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_fecha" class="form-label">Fecha y Hora Preferidas *</label>
+                                        {{ form.fecha }}
+                                        {% if form.fecha.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.fecha.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_tipo" class="form-label">Tipo de Consulta *</label>
+                                        {{ form.tipo }}
+                                        {% if form.tipo.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.tipo.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_prioridad" class="form-label">Nivel de Urgencia *</label>
+                                        {{ form.prioridad }}
+                                        {% if form.prioridad.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.prioridad.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="alert alert-warning border">
+                                        <small>
+                                            <strong><i class="fas fa-exclamation-triangle me-1"></i>Nota:</strong><br>
+                                            Las citas marcadas como <strong>Urgentes</strong> o <strong>Emergencias</strong> requieren descripción de síntomas.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="id_tipo" class="form-label">Tipo de Cita</label>
-                        {{ form.tipo }}
-                        {% if form.tipo.errors %}
-                        <div class="text-danger">
-                            {% for error in form.tipo.errors %}
-                                {{ error }}
-                            {% endfor %}
+                    <!-- Información de Contacto -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-phone me-2"></i>Información de Contacto</h6>
                         </div>
-                        {% endif %}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_telefono_contacto" class="form-label">Teléfono de Contacto *</label>
+                                        {{ form.telefono_contacto }}
+                                        {% if form.telefono_contacto.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.telefono_contacto.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_email_contacto" class="form-label">Email de Contacto *</label>
+                                        {{ form.email_contacto }}
+                                        {% if form.email_contacto.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.email_contacto.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="id_motivo" class="form-label">Motivo de la Consulta</label>
-                        {{ form.motivo }}
-                        {% if form.motivo.errors %}
-                        <div class="text-danger">
-                            {% for error in form.motivo.errors %}
-                                {{ error }}
-                            {% endfor %}
+                    <!-- Información Médica -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Información Médica</h6>
                         </div>
-                        {% endif %}
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="id_motivo" class="form-label">Motivo Principal de la Consulta *</label>
+                                {{ form.motivo }}
+                                {% if form.motivo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.motivo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_sintomas" class="form-label">Síntomas Presentados</label>
+                                {{ form.sintomas }}
+                                <div class="form-text">Describa todos los síntomas que ha observado en su mascota.</div>
+                                {% if form.sintomas.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.sintomas.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_antecedentes" class="form-label">Antecedentes Médicos Relevantes</label>
+                                        {{ form.antecedentes }}
+                                        <div class="form-text">Enfermedades previas, cirugías, condiciones crónicas.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_medicamentos_actuales" class="form-label">Medicamentos Actuales</label>
+                                        {{ form.medicamentos_actuales }}
+                                        <div class="form-text">Medicamentos, suplementos o tratamientos actuales.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_alergias" class="form-label">Alergias Conocidas</label>
+                                {{ form.alergias }}
+                                <div class="form-text">Alergias a medicamentos, alimentos, etc.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Información importante:</h6>
+                        <ul class="mb-0">
+                            <li>Los campos marcados con * son obligatorios</li>
+                            <li>Para emergencias fuera de horario, llame al: <strong>555-EMERGENCIA (555-36373642)</strong></li>
+                            <li>Llegue 15 minutos antes de su cita para completar el registro</li>
+                            <li>Traiga el carnet de vacunación de su mascota si está disponible</li>
+                            <li>Si su mascota no tiene información de edad completa, por favor actualícela en la sección de mascotas</li>
+                        </ul>
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-secondary me-md-2">
+                        <a href="{% url 'citas:mis_citas' %}" class="btn btn-secondary me-md-2">
                             <i class="fas fa-times me-1"></i>Cancelar
                         </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-calendar-check me-1"></i>Solicitar Cita
+                        <button type="button" class="btn btn-primary" id="btnSolicitarCita" data-bs-toggle="modal" data-bs-target="#confirmacionModal">
+                            <i class="fas fa-calendar-check me-1"></i>Solicitar Cita Médica
                         </button>
                     </div>
                 </form>
@@ -92,18 +370,363 @@
         </div>
         
         <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información importante</h5>
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Horarios y Políticas</h5>
             </div>
             <div class="card-body">
-                <ul class="mb-0">
-                    <li><strong>Horario de atención:</strong> Lunes a Sábado de 8:00 am a 6:00 pm</li>
-                    <li><strong>Puntualidad:</strong> Por favor arrive 10 minutos antes de su cita</li>
-                    <li><strong>Cancelaciones:</strong> Avise con al menos 4 horas de anticipación</li>
-                    <li><strong>Emergencias:</strong> Para urgencias fuera de horario, llame al: 555-1234</li>
-                </ul>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Horario de Atención:</h6>
+                        <ul>
+                            <li><strong>Lunes a Viernes:</strong> 8:00 am - 8:00 pm</li>
+                            <li><strong>Sábados:</strong> 8:00 am - 2:00 pm</li>
+                            <li><strong>Domingos:</strong> Cerrado (Solo Emergencias)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Políticas de la Clínica:</h6>
+                        <ul>
+                            <li><strong>Puntualidad:</strong> Llegue 15 minutos antes</li>
+                            <li><strong>Cancelaciones:</strong> Mínimo 4 horas de anticipación</li>
+                            <li><strong>No show:</strong> 3 inasistencias pueden suspender el servicio</li>
+                            <li><strong>Pagos:</strong> Se aceptan todas las tarjetas y efectivo</li>
+                            <li><strong>Documentación:</strong> Traer carnet de vacunación</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="confirmacionModalLabel">
+                    <i class="fas fa-calendar-check me-2"></i>Confirmar Cita Veterinaria
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle me-2"></i>Revise los detalles de su cita antes de confirmar:</h6>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Información del Paciente:</h6>
+                        <div id="modalMascotaInfo" class="mb-3 p-2 border rounded bg-light">
+                            <!-- Información de la mascota se llenará con JavaScript -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Detalles de la Cita:</h6>
+                        <div id="modalCitaInfo" class="mb-3 p-2 border rounded bg-light">
+                            <!-- Información de la cita se llenará con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Información de Contacto:</h6>
+                        <div id="modalContactoInfo" class="mb-3 p-2 border rounded bg-light">
+                            <!-- Información de contacto se llenará con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Motivo y Síntomas:</h6>
+                        <div id="modalMotivoInfo" class="mb-3 p-2 border rounded bg-light">
+                            <!-- Información del motivo se llenará con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Importante:</strong> Al confirmar, acepta nuestras políticas de cancelación y asistencia. 
+                        Las cancelaciones deben realizarse con al menos 4 horas de anticipación.
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancelar Cita
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarCita">
+                    <i class="fas fa-check me-1"></i>Confirmar y Solicitar Cita
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mascotaSelect = document.getElementById('id_mascota');
+    const infoMascotaDiv = document.getElementById('info_mascota');
+    const prioridadSelect = document.getElementById('id_prioridad');
+    const sintomasField = document.getElementById('id_sintomas');
+    const btnSolicitarCita = document.getElementById('btnSolicitarCita');
+    const btnConfirmarCita = document.getElementById('btnConfirmarCita');
+    const citaForm = document.getElementById('citaForm');
+    const confirmacionModal = document.getElementById('confirmacionModal');
+    
+    // Elementos del modal
+    const modalMascotaInfo = document.getElementById('modalMascotaInfo');
+    const modalCitaInfo = document.getElementById('modalCitaInfo');
+    const modalContactoInfo = document.getElementById('modalContactoInfo');
+    const modalMotivoInfo = document.getElementById('modalMotivoInfo');
+    
+    // Datos de las mascotas
+    const mascotasData = {
+        {% for mascota in mascotas %}
+        '{{ mascota.id }}': {
+            'nombre': '{{ mascota.nombre }}',
+            'especie': '{{ mascota.get_especie_display }}',
+            'raza': '{{ mascota.raza|default:"No especificada" }}',
+            'edad_aproximada': '{{ mascota.edad_aproximada|default:"No especificada" }}',
+            'fecha_nacimiento': '{{ mascota.fecha_nacimiento|date:"d/m/Y"|default:"No especificada" }}',
+            'peso': '{{ mascota.peso|default:"No especificado" }}',
+            'sexo': '{{ mascota.get_sexo_display|default:"No especificado" }}',
+            'color': '{{ mascota.color|default:"No especificado" }}'
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+    
+    // Opciones de tipos de consulta
+    const tipoOptions = {
+        'consulta_general': 'Consulta General',
+        'vacunacion': 'Vacunación',
+        'desparasitacion': 'Desparasitación',
+        'urgencia': 'Urgencia',
+        'cirugia': 'Cirugía',
+        'estetica': 'Estética/Baño',
+        'odontologia': 'Odontología',
+        'analisis': 'Análisis Clínicos',
+        'radiologia': 'Radiología',
+        'ecografia': 'Ecografía',
+        'control': 'Control de Peso',
+        'comportamiento': 'Consulta de Comportamiento',
+        'nutricion': 'Consulta Nutricional'
+    };
+    
+    // Opciones de prioridad
+    const prioridadOptions = {
+        'normal': 'Normal',
+        'urgente': 'Urgente',
+        'emergencia': 'Emergencia'
+    };
+    
+    function actualizarInfoMascota() {
+        const mascotaId = mascotaSelect.value;
+        
+        if (mascotaId && mascotasData[mascotaId]) {
+            const mascota = mascotasData[mascotaId];
+            
+            let html = `
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="mb-2">${mascota.nombre} - ${mascota.especie}</h6>
+                    </div>
+                </div>
+                <div class="row">
+            `;
+            
+            // Información básica
+            if (mascota.raza !== 'No especificada') {
+                html += `<div class="col-6"><small><strong>Raza:</strong> ${mascota.raza}</small></div>`;
+            }
+            
+            if (mascota.sexo !== 'No especificado') {
+                html += `<div class="col-6"><small><strong>Sexo:</strong> ${mascota.sexo}</small></div>`;
+            }
+            
+            // Información de edad
+            let infoEdad = '';
+            if (mascota.fecha_nacimiento !== 'No especificada') {
+                infoEdad = `Nacimiento: ${mascota.fecha_nacimiento}`;
+            } else if (mascota.edad_aproximada !== 'No especificada') {
+                infoEdad = `Edad: ${mascota.edad_aproximada}`;
+            } else {
+                infoEdad = '<span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Edad no especificada</span>';
+            }
+            
+            html += `<div class="col-6"><small><strong>${infoEdad}</strong></small></div>`;
+            
+            // Peso y color
+            if (mascota.peso !== 'No especificado') {
+                html += `<div class="col-6"><small><strong>Peso:</strong> ${mascota.peso} kg</small></div>`;
+            }
+            
+            if (mascota.color !== 'No especificado') {
+                html += `<div class="col-6"><small><strong>Color:</strong> ${mascota.color}</small></div>`;
+            }
+            
+            html += `</div>`;
+            
+            infoMascotaDiv.innerHTML = html;
+            
+        } else {
+            infoMascotaDiv.innerHTML = '<small class="text-muted">Selecciona una mascota para ver su información completa</small>';
+        }
+    }
+    
+    function actualizarRequerimientos() {
+        if (prioridadSelect.value === 'urgente' || prioridadSelect.value === 'emergencia') {
+            sintomasField.required = true;
+            sintomasField.parentElement.querySelector('.form-label').innerHTML = 
+                'Síntomas Presentados <span class="text-danger">*</span>';
+            sintomasField.parentElement.querySelector('.form-text').innerHTML = 
+                'Para citas urgentes o de emergencia, es obligatorio describir los síntomas.';
+        } else {
+            sintomasField.required = false;
+            sintomasField.parentElement.querySelector('.form-label').innerHTML = 
+                'Síntomas Presentados';
+            sintomasField.parentElement.querySelector('.form-text').innerHTML = 
+                'Describa todos los síntomas que ha observado en su mascota.';
+        }
+    }
+    
+    function llenarModalConfirmacion() {
+        // Obtener valores del formulario
+        const mascotaId = mascotaSelect.value;
+        const fecha = document.getElementById('id_fecha').value;
+        const tipo = document.getElementById('id_tipo').value;
+        const prioridad = document.getElementById('id_prioridad').value;
+        const motivo = document.getElementById('id_motivo').value;
+        const sintomas = document.getElementById('id_sintomas').value;
+        const telefono = document.getElementById('id_telefono_contacto').value;
+        const email = document.getElementById('id_email_contacto').value;
+        const antecedentes = document.getElementById('id_antecedentes').value;
+        const medicamentos = document.getElementById('id_medicamentos_actuales').value;
+        const alergias = document.getElementById('id_alergias').value;
+        
+        // Información de la mascota
+        if (mascotaId && mascotasData[mascotaId]) {
+            const mascota = mascotasData[mascotaId];
+            modalMascotaInfo.innerHTML = `
+                <strong>${mascota.nombre}</strong> - ${mascota.especie}<br>
+                <small>Raza: ${mascota.raza} | Edad: ${mascota.edad_aproximada}</small><br>
+                <small>Peso: ${mascota.peso} kg | Sexo: ${mascota.sexo}</small>
+            `;
+        } else {
+            modalMascotaInfo.innerHTML = '<span class="text-danger">No se ha seleccionado una mascota</span>';
+        }
+        
+        // Información de la cita
+        const fechaFormateada = new Date(fecha).toLocaleString('es-ES', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        modalCitaInfo.innerHTML = `
+            <strong>Fecha y Hora:</strong> ${fechaFormateada}<br>
+            <strong>Tipo de Consulta:</strong> ${tipoOptions[tipo] || tipo}<br>
+            <strong>Prioridad:</strong> <span class="badge bg-${prioridad === 'emergencia' ? 'danger' : prioridad === 'urgente' ? 'warning' : 'secondary'}">${prioridadOptions[prioridad] || prioridad}</span>
+        `;
+        
+        // Información de contacto
+        modalContactoInfo.innerHTML = `
+            <strong>Teléfono:</strong> ${telefono}<br>
+            <strong>Email:</strong> ${email}
+        `;
+        
+        // Información del motivo y síntomas
+        let motivoHTML = `<strong>Motivo:</strong> ${motivo || 'No especificado'}`;
+        
+        if (sintomas) {
+            motivoHTML += `<br><strong>Síntomas:</strong> ${sintomas}`;
+        }
+        
+        if (antecedentes) {
+            motivoHTML += `<br><strong>Antecedentes:</strong> ${antecedentes}`;
+        }
+        
+        if (medicamentos) {
+            motivoHTML += `<br><strong>Medicamentos:</strong> ${medicamentos}`;
+        }
+        
+        if (alergias) {
+            motivoHTML += `<br><strong>Alergias:</strong> ${alergias}`;
+        }
+        
+        modalMotivoInfo.innerHTML = motivoHTML;
+    }
+    
+    function validarFormulario() {
+        // Validaciones básicas
+        const camposRequeridos = [
+            'id_mascota', 'id_fecha', 'id_tipo', 'id_prioridad', 
+            'id_motivo', 'id_telefono_contacto', 'id_email_contacto'
+        ];
+        
+        for (let campoId of camposRequeridos) {
+            const campo = document.getElementById(campoId);
+            if (!campo.value.trim()) {
+                campo.focus();
+                return false;
+            }
+        }
+        
+        // Validación específica para prioridades urgentes
+        if ((prioridadSelect.value === 'urgente' || prioridadSelect.value === 'emergencia') && 
+            !sintomasField.value.trim()) {
+            sintomasField.focus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Event listeners
+    mascotaSelect.addEventListener('change', actualizarInfoMascota);
+    prioridadSelect.addEventListener('change', actualizarRequerimientos);
+    
+    // Cuando se hace clic en "Solicitar Cita Médica"
+    btnSolicitarCita.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        if (validarFormulario()) {
+            llenarModalConfirmacion();
+        } else {
+            alert('Por favor complete todos los campos obligatorios antes de solicitar la cita.');
+        }
+    });
+    
+    // Cuando se confirma la cita en el modal
+    btnConfirmarCita.addEventListener('click', function() {
+        // Mostrar loading
+        btnConfirmarCita.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Confirmando...';
+        btnConfirmarCita.disabled = true;
+        
+        // Cerrar el modal
+        const modal = bootstrap.Modal.getInstance(confirmacionModal);
+        modal.hide();
+        
+        // Enviar el formulario
+        citaForm.submit();
+    });
+    
+    // Resetear el botón cuando se cierra el modal
+    confirmacionModal.addEventListener('hidden.bs.modal', function () {
+        btnConfirmarCita.innerHTML = '<i class="fas fa-check me-1"></i>Confirmar y Solicitar Cita';
+        btnConfirmarCita.disabled = false;
+    });
+    
+    // Ejecutar al cargar
+    actualizarInfoMascota();
+    actualizarRequerimientos();
+});
+</script>
+{% endblock %}  

@@ -21,12 +21,14 @@ class Command(BaseCommand):
         
         for cita in citas:
             # Enviar email de recordatorio
-            subject = f'Recordatorio de cita para {cita.mascota.nombre}'
+            subject = f'Recordatorio de cita veterinaria para {cita.mascota.nombre}'
             
             context = {
                 'cita': cita,
                 'cliente': cita.mascota.cliente,
                 'mascota': cita.mascota,
+                'tipo_display': cita.get_tipo_display(),
+                'prioridad_display': cita.get_prioridad_display(),
             }
             
             html_message = render_to_string('citas/emails/recordatorio_cita.html', context)
@@ -36,7 +38,7 @@ class Command(BaseCommand):
                 send_mail(
                     subject,
                     plain_message,
-                    'veterinaria@mimascota.com',  # Remitente
+                    'clinica@veterinariaejemplo.com',  # Remitente profesional
                     [cita.mascota.cliente.usuario.email],  # Destinatario
                     html_message=html_message,
                     fail_silently=False,
@@ -47,9 +49,13 @@ class Command(BaseCommand):
                 cita.save()
                 
                 self.stdout.write(
-                    self.style.SUCCESS(f'Recordatorio enviado para cita de {cita.mascota.nombre}')
+                    self.style.SUCCESS(f'Recordatorio enviado para cita de {cita.mascota.nombre} con {cita.mascota.cliente.usuario.get_full_name()}')
                 )
             except Exception as e:
                 self.stdout.write(
                     self.style.ERROR(f'Error enviando recordatorio: {str(e)}')
                 )
+        
+        self.stdout.write(
+            self.style.SUCCESS(f'Proceso de recordatorios completado. {citas.count()} recordatorios enviados.')
+        )
