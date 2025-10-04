@@ -30,7 +30,7 @@ def lista_mascotas(request):
 @login_required
 def agregar_mascota(request):
     if not hasattr(request.user, 'cliente'):
-        messages.error(request, 'Debes completar tu perfil antes de agregar una mascota.')
+        messages.error(request, 'Debes completar tu perfil de cliente antes de agregar una mascota.')
         return redirect('clientes:crear_perfil_cliente')
     
     if request.method == 'POST':
@@ -39,12 +39,17 @@ def agregar_mascota(request):
             mascota = form.save(commit=False)
             mascota.cliente = request.user.cliente
             mascota.save()
-            messages.success(request, f'{mascota.nombre} ha sido agregado(a) correctamente.')
+            messages.success(request, f'{mascota.nombre} ha sido registrado(a) correctamente en el sistema veterinario.')
             return redirect('mascotas:lista_mascotas')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
     else:
         form = MascotaForm()
     
-    return render(request, 'mascotas/agregar_mascota.html', {'form': form})
+    return render(request, 'mascotas/agregar_mascota.html', {
+        'form': form,
+        'titulo': 'Registro de Nueva Mascota'
+    })
 
 @login_required
 def detalle_mascota(request, mascota_id):
@@ -56,7 +61,7 @@ def detalle_mascota(request, mascota_id):
     
     historial = mascota.historial_medico.all()
     vacunas = mascota.vacunas.all()
-    citas = mascota.citas.all()
+    citas = mascota.citas.all() if hasattr(mascota, 'citas') else []
     
     return render(request, 'mascotas/detalle_mascota.html', {
         'mascota': mascota,
@@ -77,12 +82,18 @@ def editar_mascota(request, mascota_id):
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
         if form.is_valid():
             form.save()
-            messages.success(request, f'La información de {mascota.nombre} ha sido actualizada.')
+            messages.success(request, f'La información de {mascota.nombre} ha sido actualizada en el sistema.')
             return redirect('mascotas:detalle_mascota', mascota_id=mascota.id)
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
     else:
         form = MascotaForm(instance=mascota)
     
-    return render(request, 'mascotas/editar_mascota.html', {'form': form, 'mascota': mascota})
+    return render(request, 'mascotas/editar_mascota.html', {
+        'form': form, 
+        'mascota': mascota,
+        'titulo': 'Editar Información de Mascota'
+    })
 
 @login_required
 def eliminar_mascota(request, mascota_id):
@@ -95,7 +106,7 @@ def eliminar_mascota(request, mascota_id):
     if request.method == 'POST':
         nombre = mascota.nombre
         mascota.delete()
-        messages.success(request, f'{nombre} ha sido eliminado(a) correctamente.')
+        messages.success(request, f'{nombre} ha sido eliminado(a) del sistema veterinario.')
         return redirect('mascotas:lista_mascotas')
     
     return render(request, 'mascotas/eliminar_mascota.html', {'mascota': mascota})
@@ -114,12 +125,18 @@ def agregar_historial(request, mascota_id):
             historial = form.save(commit=False)
             historial.mascota = mascota
             historial.save()
-            messages.success(request, 'El historial médico ha sido agregado correctamente.')
+            messages.success(request, 'El historial médico ha sido registrado correctamente.')
             return redirect('mascotas:detalle_mascota', mascota_id=mascota.id)
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
     else:
         form = HistorialMedicoForm()
     
-    return render(request, 'mascotas/agregar_historial.html', {'form': form, 'mascota': mascota})
+    return render(request, 'mascotas/agregar_historial.html', {
+        'form': form, 
+        'mascota': mascota,
+        'titulo': 'Nuevo Registro Médico'
+    })
 
 @login_required
 def agregar_vacuna(request, mascota_id):
@@ -135,9 +152,15 @@ def agregar_vacuna(request, mascota_id):
             vacuna = form.save(commit=False)
             vacuna.mascota = mascota
             vacuna.save()
-            messages.success(request, 'La vacuna ha sido registrada correctamente.')
+            messages.success(request, 'La vacuna ha sido registrada correctamente en el cartón de vacunación.')
             return redirect('mascotas:detalle_mascota', mascota_id=mascota.id)
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
     else:
         form = VacunaForm()
     
-    return render(request, 'mascotas/agregar_vacuna.html', {'form': form, 'mascota': mascota})
+    return render(request, 'mascotas/agregar_vacuna.html', {
+        'form': form, 
+        'mascota': mascota,
+        'titulo': 'Registrar Nueva Vacuna'
+    })

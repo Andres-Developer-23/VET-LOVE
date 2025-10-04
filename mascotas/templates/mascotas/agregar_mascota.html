@@ -1,94 +1,807 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Registro de Mascota - Sistema Veterinario Profesional{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #2563eb;
+        --dark-blue: #1e40af;
+        --light-blue: #dbeafe;
+        --soft-green: #10b981;
+        --dark-green: #047857;
+        --warm-orange: #f59e0b;
+        --dark-orange: #d97706;
+        --soft-purple: #8b5cf6;
+        --dark-purple: #7c3aed;
+        --neutral-gray: #6b7280;
+        --light-gray: #f8fafc;
+    }
+
+    .form-section {
+        background: linear-gradient(135deg, var(--light-blue) 0%, #ffffff 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .form-section:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header {
+        color: var(--dark-blue);
+        border-bottom: 2px solid var(--primary-blue);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border: none;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+
+    .form-card .card-header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+        color: white;
+        border: none;
+        padding: 1.5rem 2rem;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: #ef4444;
+        font-weight: bold;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        outline: none;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: var(--neutral-gray);
+        margin-top: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--primary-blue) 100%);
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f8fafc;
+        border-color: var(--neutral-gray);
+    }
+
+    .alert-section {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        color: #92400e;
+    }
+
+    .progress-bar {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+    }
+
+    .floating-label {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .floating-label label {
+        font-weight: 600;
+        color: var(--dark-blue);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .field-errors {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* Estilos específicos para checkboxes */
+    .checkbox-group {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.25rem;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .checkbox-group:hover {
+        border-color: var(--primary-blue);
+        background: #ffffff;
+    }
+
+    .form-check {
+        margin-bottom: 0.75rem;
+        padding-left: 0;
+    }
+
+    .form-check-label {
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+    }
+
+    .form-check-input {
+        margin-right: 0.75rem;
+        transform: scale(1.1);
+    }
+
+    /* Colores específicos para cada sección */
+    .section-medical {
+        border-left: 4px solid var(--soft-green);
+    }
+
+    .section-medical .section-header {
+        color: var(--dark-green);
+        border-bottom-color: var(--soft-green);
+    }
+
+    .section-prevention {
+        border-left: 4px solid var(--warm-orange);
+    }
+
+    .section-prevention .section-header {
+        color: var(--dark-orange);
+        border-bottom-color: var(--warm-orange);
+    }
+
+    .section-additional {
+        border-left: 4px solid var(--soft-purple);
+    }
+
+    .section-additional .section-header {
+        color: var(--dark-purple);
+        border-bottom-color: var(--soft-purple);
+    }
+
+    /* Mejoras visuales para el header */
+    .page-header {
+        background: linear-gradient(135deg, var(--light-blue) 0%, #ffffff 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Iconos con mejor contraste */
+    .form-label i {
+        color: var(--primary-blue);
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Mejoras para dispositivos móviles */
+    @media (max-width: 768px) {
+        .form-section {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-card .card-header {
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .btn-primary, .btn-outline-secondary {
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+
+    /* Estados de hover para mejor UX */
+    .form-control:hover, .form-select:hover {
+        border-color: #cbd5e1;
+    }
+
+    /* Placeholders más sutiles */
+    .form-control::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    /* Mejora para campos de fecha */
+    input[type="date"] {
+        color: #374151;
+    }
+
+    input[type="date"]:focus {
+        color: #111827;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-plus-circle me-2"></i>Agregar Nueva Mascota
-                </h3>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            
+            <!-- Header -->
+            <div class="page-header text-center">
+                <h1 class="display-5 fw-bold text-dark mb-3">
+                    <i class="fas fa-paw me-3" style="color: var(--primary-blue);"></i>Registro de Paciente Veterinario
+                </h1>
+                <p class="lead text-muted mb-4">Complete la información médica completa para garantizar la mejor atención para su mascota</p>
+                
+                <!-- Progress Bar -->
+                <div class="progress mb-3" style="height: 6px; border-radius: 10px; background-color: #e2e8f0;">
+                    <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <small class="text-muted">Paso 1 de 1 - Información completa del paciente</small>
             </div>
-            <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.nombre|as_crispy_field }}
+
+            <div class="form-card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-file-medical-alt me-2"></i>
+                        Formulario de Registro Médico Completo
+                    </h4>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" novalidate id="mascotaForm">
+                        {% csrf_token %}
+                        
+                        <!-- Mostrar errores no asociados a campos específicos -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-warning alert-section mb-4">
+                                <h5 class="alert-heading mb-3">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Correcciones Requeridas
+                                </h5>
+                                <ul class="mb-0 ps-3">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
+                        <div class="form-section">
+                            <h3 class="section-header">
+                                <i class="fas fa-id-card me-2"></i>
+                                Información Básica del Paciente
+                            </h3>
+                            <div class="row g-4">
+                                <!-- Nombre -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.nombre.id_for_label }}" class="form-label">
+                                            <i class="fas fa-paw me-2"></i>Nombre de la Mascota
+                                        </label>
+                                        {{ form.nombre }}
+                                        {% if form.nombre.help_text %}
+                                            <div class="help-text">{{ form.nombre.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.nombre.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.nombre.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Tipo -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.tipo.id_for_label }}" class="form-label">
+                                            <i class="fas fa-dog me-2"></i>Especie
+                                        </label>
+                                        {{ form.tipo }}
+                                        {% if form.tipo.help_text %}
+                                            <div class="help-text">{{ form.tipo.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.tipo.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.tipo.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Raza -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.raza.id_for_label }}" class="form-label">
+                                            <i class="fas fa-dna me-2"></i>Raza o Cruce
+                                        </label>
+                                        {{ form.raza }}
+                                        {% if form.raza.help_text %}
+                                            <div class="help-text">{{ form.raza.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.raza.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.raza.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Sexo -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.sexo.id_for_label }}" class="form-label">
+                                            <i class="fas fa-venus-mars me-2"></i>Sexo
+                                        </label>
+                                        {{ form.sexo }}
+                                        {% if form.sexo.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.sexo.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Fecha Nacimiento -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label">
+                                            <i class="fas fa-birthday-cake me-2"></i>Fecha de Nacimiento
+                                        </label>
+                                        {{ form.fecha_nacimiento }}
+                                        {% if form.fecha_nacimiento.help_text %}
+                                            <div class="help-text">{{ form.fecha_nacimiento.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.fecha_nacimiento.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.fecha_nacimiento.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Peso Actual -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.peso_actual.id_for_label }}" class="form-label">
+                                            <i class="fas fa-weight-scale me-2"></i>Peso Actual (kg)
+                                        </label>
+                                        {{ form.peso_actual }}
+                                        {% if form.peso_actual.help_text %}
+                                            <div class="help-text">{{ form.peso_actual.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.peso_actual.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.peso_actual.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.tipo|as_crispy_field }}
+
+                        <!-- SECCIÓN 2: INFORMACIÓN MÉDICA CRÍTICA -->
+                        <div class="form-section section-medical">
+                            <h3 class="section-header">
+                                <i class="fas fa-heartbeat me-2"></i>
+                                Información Médica Crítica
+                            </h3>
+                            <div class="row g-4">
+                                <!-- Medicación Actual -->
+                                <div class="col-12">
+                                    <div class="floating-label">
+                                        <label for="{{ form.medicacion_actual.id_for_label }}" class="form-label">
+                                            <i class="fas fa-pills me-2"></i>Medicación Actual
+                                        </label>
+                                        {{ form.medicacion_actual }}
+                                        {% if form.medicacion_actual.help_text %}
+                                            <div class="help-text">{{ form.medicacion_actual.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.medicacion_actual.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.medicacion_actual.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Alergias -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label class="form-label">
+                                            <i class="fas fa-allergies me-2"></i>Alergias Conocidas
+                                        </label>
+                                        <div class="checkbox-group">
+                                            {% for checkbox in form.alergias_urgentes %}
+                                                <div class="form-check">
+                                                    {{ checkbox.tag }}
+                                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                        {{ checkbox.choice_label }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% if form.alergias_urgentes.help_text %}
+                                            <div class="help-text">{{ form.alergias_urgentes.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.alergias_urgentes.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.alergias_urgentes.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Detalle Alergias -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.alergias_detalle.id_for_label }}" class="form-label">
+                                            Detalle de Alergias
+                                        </label>
+                                        {{ form.alergias_detalle }}
+                                        {% if form.alergias_detalle.help_text %}
+                                            <div class="help-text">{{ form.alergias_detalle.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.alergias_detalle.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.alergias_detalle.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Enfermedades Crónicas -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label class="form-label">
+                                            <i class="fas fa-file-medical me-2"></i>Condiciones Médicas Preexistentes
+                                        </label>
+                                        <div class="checkbox-group">
+                                            {% for checkbox in form.enfermedades_cronicas %}
+                                                <div class="form-check">
+                                                    {{ checkbox.tag }}
+                                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                        {{ checkbox.choice_label }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% if form.enfermedades_cronicas.help_text %}
+                                            <div class="help-text">{{ form.enfermedades_cronicas.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.enfermedades_cronicas.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.enfermedades_cronicas.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Detalle Enfermedades -->
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.enfermedades_detalle.id_for_label }}" class="form-label">
+                                            Detalle de Tratamientos
+                                        </label>
+                                        {{ form.enfermedades_detalle }}
+                                        {% if form.enfermedades_detalle.help_text %}
+                                            <div class="help-text">{{ form.enfermedades_detalle.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.enfermedades_detalle.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.enfermedades_detalle.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.raza|as_crispy_field }}
+
+                        <!-- SECCIÓN 3: PREVENCIÓN Y CONTROL -->
+                        <div class="form-section section-prevention">
+                            <h3 class="section-header">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Prevención y Control Sanitario
+                            </h3>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.estado_vacunacion.id_for_label }}" class="form-label">
+                                            <i class="fas fa-syringe me-2"></i>Estado de Vacunación
+                                        </label>
+                                        {{ form.estado_vacunacion }}
+                                        {% if form.estado_vacunacion.help_text %}
+                                            <div class="help-text">{{ form.estado_vacunacion.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.estado_vacunacion.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.estado_vacunacion.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.fecha_ultima_vacuna.id_for_label }}" class="form-label">
+                                            Fecha de Última Vacuna
+                                        </label>
+                                        {{ form.fecha_ultima_vacuna }}
+                                        {% if form.fecha_ultima_vacuna.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.fecha_ultima_vacuna.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.desparasitacion.id_for_label }}" class="form-label">
+                                            <i class="fas fa-bug me-2"></i>Estado de Desparasitación
+                                        </label>
+                                        {{ form.desparasitacion }}
+                                        {% if form.desparasitacion.help_text %}
+                                            <div class="help-text">{{ form.desparasitacion.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.desparasitacion.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.desparasitacion.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.fecha_ultima_desparasitacion.id_for_label }}" class="form-label">
+                                            Fecha de Última Desparasitación
+                                        </label>
+                                        {{ form.fecha_ultima_desparasitacion }}
+                                        {% if form.fecha_ultima_desparasitacion.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.fecha_ultima_desparasitacion.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.sexo|as_crispy_field }}
+
+                        <!-- SECCIÓN 4: INFORMACIÓN ADICIONAL -->
+                        <div class="form-section section-additional">
+                            <h3 class="section-header">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Información Adicional y Contactos
+                            </h3>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.comportamiento_consulta.id_for_label }}" class="form-label">
+                                            <i class="fas fa-heart me-2"></i>Comportamiento en Consulta
+                                        </label>
+                                        {{ form.comportamiento_consulta }}
+                                        {% if form.comportamiento_consulta.help_text %}
+                                            <div class="help-text">{{ form.comportamiento_consulta.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.comportamiento_consulta.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.comportamiento_consulta.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.veterinario_habitual.id_for_label }}" class="form-label">
+                                            <i class="fas fa-hospital me-2"></i>Veterinario o Clínica Habitual
+                                        </label>
+                                        {{ form.veterinario_habitual }}
+                                        {% if form.veterinario_habitual.help_text %}
+                                            <div class="help-text">{{ form.veterinario_habitual.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.veterinario_habitual.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.veterinario_habitual.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.telefono_emergencia.id_for_label }}" class="form-label">
+                                            <i class="fas fa-phone-alt me-2"></i>Teléfono de Emergencias
+                                        </label>
+                                        {{ form.telefono_emergencia }}
+                                        {% if form.telefono_emergencia.help_text %}
+                                            <div class="help-text">{{ form.telefono_emergencia.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.telefono_emergencia.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.telefono_emergencia.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="floating-label">
+                                        <label for="{{ form.foto.id_for_label }}" class="form-label">
+                                            <i class="fas fa-camera me-2"></i>Fotografía
+                                        </label>
+                                        {{ form.foto }}
+                                        {% if form.foto.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.foto.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="floating-label">
+                                        <label for="{{ form.caracteristicas.id_for_label }}" class="form-label">
+                                            <i class="fas fa-search me-2"></i>Señas Particulares
+                                        </label>
+                                        {{ form.caracteristicas }}
+                                        {% if form.caracteristicas.help_text %}
+                                            <div class="help-text">{{ form.caracteristicas.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.caracteristicas.errors %}
+                                            <div class="field-errors">
+                                                {% for error in form.caracteristicas.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.fecha_nacimiento|as_crispy_field }}
-                            </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                            <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Registrar Paciente
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.foto|as_crispy_field }}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.caracteristicas|as_crispy_field }}
-                    </div>
-                    
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-secondary me-md-2">
-                            <i class="fas fa-times me-1"></i>Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i>Guardar Mascota
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-        
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información importante</h5>
-            </div>
-            <div class="card-body">
-                <ul class="mb-0">
-                    <li>Proporciona información precisa sobre tu mascota para un mejor servicio veterinario.</li>
-                    <li>La foto es opcional pero recomendada para una identificación más fácil.</li>
-                    <li>Las características especiales ayudarán a los veterinarios a conocer mejor a tu mascota.</li>
-                </ul>
+            
+            <!-- Información Adicional -->
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    <i class="fas fa-lock me-2"></i>
+                    Toda la información proporcionada está protegida y será utilizada exclusivamente para fines médicos veterinarios.
+                </p>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar clase required-field a labels de campos obligatorios
+        const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+        requiredFields.forEach(field => {
+            const label = document.querySelector(`label[for="${field.id}"]`);
+            if (label) {
+                label.classList.add('required-field');
+            }
+        });
+        
+        // Mejorar la experiencia de usuario en campos de fecha
+        const dateFields = document.querySelectorAll('input[type="date"]');
+        dateFields.forEach(field => {
+            field.addEventListener('focus', function() {
+                this.showPicker && this.showPicker();
+            });
+        });
+
+        // Animación suave al hacer scroll a secciones con errores
+        const errorFields = document.querySelectorAll('.field-errors');
+        if (errorFields.length > 0) {
+            const firstError = errorFields[0].closest('.floating-label');
+            if (firstError) {
+                firstError.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+        }
+    });
+</script>
 {% endblock %}
