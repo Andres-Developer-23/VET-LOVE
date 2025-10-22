@@ -56,15 +56,15 @@ def test_psql_connection(bin_path):
     return False
 
 def main():
-    print("🔍 Verificando PostgreSQL en Windows")
+    print(" Verificando PostgreSQL en Windows")
     print("=" * 40)
 
     # Buscar instalaciones
     installations = check_postgresql_paths()
 
     if not installations:
-        print("❌ No se encontraron instalaciones de PostgreSQL")
-        print("\n📋 Instrucciones de instalación:")
+        print(" No se encontraron instalaciones de PostgreSQL")
+        print("\n Instrucciones de instalación:")
         print("1. Ve a: https://www.postgresql.org/download/windows/")
         print("2. Descarga e instala PostgreSQL")
         print("3. Durante la instalación:")
@@ -73,33 +73,33 @@ def main():
         print("4. Reinicia este script")
         return 1
 
-    print(f"✅ Encontradas {len(installations)} instalación(es) de PostgreSQL:")
+    print(f" Encontradas {len(installations)} instalación(es) de PostgreSQL:")
     for version, path in installations:
         print(f"   Versión {version}: {path}")
 
     # Probar conexiones
-    print("\n🔍 Probando conexiones...")
+    print("\n Probando conexiones...")
     working_installations = []
 
     for version, bin_path in installations:
-        print(f"\n📋 Probando PostgreSQL {version}...")
+        print(f"\n Probando PostgreSQL {version}...")
 
         # Verificar si el servicio está ejecutándose
         if test_postgresql_connection(bin_path):
-            print("   ✅ Servicio PostgreSQL ejecutándose")
+            print("    Servicio PostgreSQL ejecutándose")
             working_installations.append((version, bin_path))
         else:
-            print("   ❌ Servicio PostgreSQL no responde")
+            print("    Servicio PostgreSQL no responde")
 
         # Intentar conexión con psql
         if test_psql_connection(bin_path):
-            print("   ✅ Conexión psql exitosa")
+            print("    Conexión psql exitosa")
         else:
-            print("   ⚠️  Conexión psql requiere configuración")
+            print("    Conexión psql requiere configuración")
 
     if working_installations:
-        print(f"\n🎉 ¡PostgreSQL está funcionando! ({len(working_installations)} instalación(es))")
-        print("\n📋 Próximos pasos:")
+        print(f"\n ¡PostgreSQL está funcionando! ({len(working_installations)} instalación(es))")
+        print("\n Próximos pasos:")
         print("1. Crear base de datos:")
         version, bin_path = working_installations[0]  # Usar la primera
         psql_path = os.path.join(bin_path, "psql.exe")
@@ -113,8 +113,8 @@ def main():
 
         return 0
     else:
-        print("\n❌ PostgreSQL instalado pero no funcionando")
-        print("\n🔧 Posibles soluciones:")
+        print("\n PostgreSQL instalado pero no funcionando")
+        print("\n Posibles soluciones:")
         print("1. Inicia el servicio PostgreSQL:")
         print("   - Abre 'services.msc'")
         print("   - Busca 'postgresql' y haz clic derecho > Iniciar")
