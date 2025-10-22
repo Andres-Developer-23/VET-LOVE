@@ -2,11 +2,22 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-paw me-2"></i>Mis Mascotas</h1>
+    <h1><i class="fas fa-paw me-2"></i>{% if es_admin %}Todas las Mascotas{% else %}Mis Mascotas{% endif %}</h1>
+    {% if not es_admin or user.cliente %}
     <a href="{% url 'mascotas:agregar_mascota' %}" class="btn btn-primary">
         <i class="fas fa-plus me-1"></i>Agregar Mascota
     </a>
+    {% endif %}
 </div>
+
+{% if es_admin %}
+<div class="alert alert-info mb-4">
+    <i class="fas fa-shield-alt me-2"></i><strong>Modo Administrador:</strong> Estás viendo todas las mascotas del sistema.
+    {% if not user.cliente %}
+    Para agregar mascotas, primero <a href="{% url 'clientes:crear_perfil_cliente' %}" class="alert-link">crea un perfil de cliente</a>.
+    {% endif %}
+</div>
+{% endif %}
 
 {% if not es_cliente %}
 <div class="alert alert-warning">
@@ -35,6 +46,9 @@
                     <strong>Tipo:</strong> {{ mascota.get_tipo_display }}<br>
                     <strong>Raza:</strong> {{ mascota.raza|default:"No especificada" }}<br>
                     <strong>Edad:</strong> {% if mascota.edad %}{{ mascota.edad }} años{% else %}No especificada{% endif %}
+                    {% if es_admin %}
+                    <br><strong>Dueño:</strong> {{ mascota.cliente.usuario.get_full_name|default:mascota.cliente.usuario.username }}
+                    {% endif %}
                 </p>
             </div>
             <div class="card-footer">

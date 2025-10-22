@@ -1,115 +1,100 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0 text-center">
-                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
-                </h3>
+<section class="login-hero">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-6 col-xl-5">
+        <div class="card login-card">
+          <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-3">
+              <div class="brand-badge"><i class="fas fa-paw"></i></div>
+              <h3 class="mb-1">Bienvenido a Vet Love</h3>
+              <p class="text-muted mb-0">Inicia sesión para continuar</p>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Usuario</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.username.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.password.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-grid gap-2 mb-3">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
-                        </button>
-                    </div>
-                    
-                    <div class="text-center mb-3">
-                        <a href="{% url 'password_reset' %}" class="text-decoration-none">
-                            <i class="fas fa-key me-1"></i>¿Olvidaste tu contraseña?
-                        </a>
-                    </div>
-                </form>
-                
-                <hr>
-                
-                <div class="text-center">
-                    <p class="mb-2">¿No tienes una cuenta?</p>
-                    <a href="{% url 'clientes:registro_usuario' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-user-plus me-1"></i>Crear Cuenta
-                    </a>
+            <form method="post" novalidate>
+              {% csrf_token %}
+
+              {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+              </div>
+              {% endif %}
+
+              <div class="mb-3">
+                {{ form.username|as_crispy_field }}
+              </div>
+
+              <div class="mb-2 position-relative">
+                {{ form.password|as_crispy_field }}
+                <span class="toggle-password" id="togglePassword" role="button" tabindex="0" aria-label="Mostrar/ocultar contraseña" aria-pressed="false"><i class="fas fa-eye"></i></span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="1" id="rememberMe">
+                  <label class="form-check-label" for="rememberMe">Recordarme</label>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <a href="{% url 'password_reset' %}" class="text-decoration-none small"><i class="fas fa-key me-1"></i>¿Olvidaste tu contraseña?</a>
+              </div>
 
-<!-- Modal Términos y Condiciones -->
+              <button type="submit" class="btn btn-primary btn-lg w-100 mb-2"><i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión</button>
+              <a href="{% url 'clientes:registro_usuario' %}" class="btn btn-outline-primary w-100"><i class="fas fa-user-plus me-1"></i> Crear Cuenta</a>
+
+              <div class="text-center mt-3">
+                <small class="form-hint">Protegemos tus datos con cifrado TLS/HTTPS</small>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modales informativos -->
 <div class="modal fade" id="terminosModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Términos y Condiciones</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <h4>Términos y Condiciones de Uso</h4>
-                <p>Al usar nuestros servicios, aceptas nuestros términos y condiciones.</p>
-                <!-- Contenido simplificado -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Términos y Condiciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <h4>Términos y Condiciones de Uso</h4>
+        <p>Al usar nuestros servicios, aceptas nuestros términos y condiciones.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- Modal Política de Privacidad -->
 <div class="modal fade" id="privacidadModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Política de Privacidad</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <h4>Política de Privacidad</h4>
-                <p>Respetamos tu privacidad y protegemos tus datos personales.</p>
-                <!-- Contenido simplificado -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Política de Privacidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <h4>Política de Privacidad</h4>
+        <p>Respetamos tu privacidad y protegemos tus datos personales.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
+  </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}

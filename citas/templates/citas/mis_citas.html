@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-calendar-alt me-2"></i>Mis Citas Veterinarias</h1>
+    <h1><i class="fas fa-calendar-alt me-2"></i>{% if es_admin %}Todas las Citas{% else %}Mis Citas Veterinarias{% endif %}</h1>
+    {% if not es_admin or user.cliente %}
     <a href="{% url 'citas:solicitar_cita' %}" class="btn btn-primary">
         <i class="fas fa-plus me-1"></i>Solicitar Nueva Cita
     </a>
+    {% endif %}
 </div>
+
+{% if es_admin %}
+<div class="alert alert-info mb-4">
+    <i class="fas fa-shield-alt me-2"></i><strong>Modo Administrador:</strong> Estás viendo todas las citas del sistema.
+    {% if not user.cliente %}
+    Para solicitar citas, primero <a href="{% url 'clientes:crear_perfil_cliente' %}" class="alert-link">crea un perfil de cliente</a>.
+    {% endif %}
+</div>
+{% endif %}
 
 {% if not tiene_perfil %}
 <div class="alert alert-warning">
@@ -24,6 +36,7 @@
             <tr>
                 <th>Fecha y Hora</th>
                 <th>Mascota</th>
+                {% if es_admin %}<th>Cliente</th>{% endif %}
                 <th>Tipo</th>
                 <th>Prioridad</th>
                 <th>Estado</th>
@@ -40,8 +53,14 @@
                 </td>
                 <td>
                     <strong>{{ cita.mascota.nombre }}</strong><br>
-                    <small class="text-muted">{{ cita.mascota.get_especie_display }}</small>
+                    <small class="text-muted">{{ cita.mascota.get_tipo_display }}</small>
                 </td>
+                {% if es_admin %}
+                <td>
+                    <strong>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}</strong><br>
+                    <small class="text-muted">{{ cita.mascota.cliente.telefono|default:"Sin teléfono" }}</small>
+                </td>
+                {% endif %}
                 <td>{{ cita.get_tipo_display }}</td>
                 <td>
                     <span class="badge bg-{% if cita.prioridad == 'emergencia' %}danger{% elif cita.prioridad == 'urgente' %}warning{% else %}secondary{% endif %}">
@@ -62,10 +81,12 @@
                         {# ELIMINAMOS EL BOTÓN CONFIRMAR - Ya no es necesario porque se confirma en el modal #}
                         
                         {% if cita.estado == 'confirmada' or cita.estado == 'programada' %}
-                        <a href="{% url 'citas:cancelar_cita' cita.id %}" class="btn btn-danger" 
-                           onclick="return confirm('¿Estás seguro de que quieres cancelar esta cita?')">
+                        <button type="button" class="btn btn-danger btn-cancelar-cita"
+                                data-cita-id="{{ cita.id }}"
+                                data-cita-fecha="{{ cita.fecha|date:'d/m/Y H:i' }}"
+                                data-mascota="{{ cita.mascota.nombre }}">
                             <i class="fas fa-times me-1"></i>Cancelar
-                        </a>
+                        </button>
                         {% else %}
                         <span class="text-muted">No disponible</span>
                         {% endif %}
@@ -74,7 +95,7 @@
             </tr>
             {% if cita.sintomas %}
             <tr class="bg-light">
-                <td colspan="7">
+                <td colspan="{% if es_admin %}8{% else %}7{% endif %}">
                     <small><strong>Síntomas:</strong> {{ cita.sintomas|truncatewords:20 }}</small>
                 </td>
             </tr>
@@ -104,4 +125,131 @@
     </div>
     {% endfor %}
 {% endif %}
+
+<!-- Modal de Confirmación de Cancelación -->
+<div class="modal fade" id="modalCancelarCita" tabindex="-1" aria-labelledby="modalCancelarCitaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalCancelarCitaLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cancelación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>¿Estás seguro de que quieres cancelar esta cita?</h6>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Detalles de la cita a cancelar:</h6>
+                        <div id="citaDetalleCancelacion">
+                            <!-- Los detalles se llenarán con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Política de cancelación:</strong> Las citas deben cancelarse con al menos 4 horas de anticipación.
+                        Si cancelas con menos tiempo, podrías perder el derecho a reagendar.
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Mantener Cita
+                </button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarCancelacion">
+                    <i class="fas fa-check me-1"></i>Sí, Cancelar Cita
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// Funcionalidad para cancelar citas
+document.addEventListener('DOMContentLoaded', function() {
+    const modalCancelar = new bootstrap.Modal(document.getElementById('modalCancelarCita'));
+    const btnConfirmarCancelacion = document.getElementById('btnConfirmarCancelacion');
+    const citaDetalleCancelacion = document.getElementById('citaDetalleCancelacion');
+    let citaIdActual = null;
+
+    // Función para mostrar alerta
+    function mostrarAlerta(mensaje, tipo = 'info') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+        setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Event listeners para botones de cancelar
+    document.querySelectorAll('.btn-cancelar-cita').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const citaId = this.getAttribute('data-cita-id');
+            const citaFecha = this.getAttribute('data-cita-fecha');
+            const mascotaNombre = this.getAttribute('data-mascota');
+
+            citaIdActual = citaId;
+
+            // Llenar detalles en el modal
+            citaDetalleCancelacion.innerHTML = `
+                <strong>Fecha y Hora:</strong> ${citaFecha}<br>
+                <strong>Mascota:</strong> ${mascotaNombre}<br>
+                <strong>ID de Cita:</strong> #${citaId}
+            `;
+
+            modalCancelar.show();
+        });
+    });
+
+    // Confirmar cancelación
+    btnConfirmarCancelacion.addEventListener('click', function() {
+        if (!citaIdActual) return;
+
+        // Mostrar loading
+        btnConfirmarCancelacion.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Cancelando...';
+        btnConfirmarCancelacion.disabled = true;
+
+        // Cerrar modal
+        modalCancelar.hide();
+
+        // Crear formulario y enviar
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `{% url 'citas:cancelar_cita' 0 %}`.replace('0', citaIdActual);  // URL de Django
+
+        // Agregar CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken.value;
+            form.appendChild(csrfInput);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    });
+
+    // Resetear modal cuando se cierra
+    document.getElementById('modalCancelarCita').addEventListener('hidden.bs.modal', function() {
+        btnConfirmarCancelacion.innerHTML = '<i class="fas fa-check me-1"></i>Sí, Cancelar Cita';
+        btnConfirmarCancelacion.disabled = false;
+        citaIdActual = null;
+    });
+
+    console.log('Funcionalidad de cancelar citas inicializada correctamente');
+});
+</script>
+{% endblock %}
 {% endblock %}

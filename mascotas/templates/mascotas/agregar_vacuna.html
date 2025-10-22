@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -48,6 +49,36 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.lote|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.laboratorio|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.via_aplicacion|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.sitio_aplicacion|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.reacciones_adversas|as_crispy_field }}
+                    </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="{% url 'mascotas:detalle_mascota' mascota.id %}" class="btn btn-secondary me-md-2">
@@ -75,4 +106,8 @@
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script src="{% static 'mascotas/js/agregar_vacuna.js' %}"></script>
+{% endblock %}
 {% endblock %}

@@ -1,0 +1,101 @@
+.admin-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    border: none;
+    border-radius: 15px;
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #f6fafeff;
+    font-weight: 500;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+}
+
+.card-revenue { background: linear-gradient(45deg, #007bff, #0056b3); color: white; }
+.card-clients { background: linear-gradient(45deg, #28a745, #1e7e34); color: white; }
+.card-pets { background: linear-gradient(45deg, #6f42c1, #563d7c); color: white; }
+.card-appointments { background: linear-gradient(45deg, #fd7e14, #e36209); color: white; }
+.card-completed { background: linear-gradient(45deg, #20c997, #138a63); color: white; }
+.card-urgent { background: linear-gradient(45deg, #dc3545, #a71e2a); color: white; }
+.card-products { background: linear-gradient(45deg, #17a2b8, #138496); color: white; }
+.card-sales { background: linear-gradient(45deg, #6610f2, #520dc2); color: white; }
+.card-orders { background: linear-gradient(45deg, #e83e8c, #d91a72); color: white; }
+.card-lowstock { background: linear-gradient(45deg, #ffc107, #e0a800); color: white; }
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 20px 0;
+}
+
+.chart-container-sm {
+    position: relative;
+    height: 250px;
+    margin: 15px 0;
+}
+
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.badge-urgent {
+    background: linear-gradient(45deg, #dc3545, #a71e2a);
+    color: white;
+}
+
+.badge-lowstock {
+    background: linear-gradient(45deg, #ffc107, #e0a800);
+    color: white;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.quick-action-btn {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 5px;
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.section-title {
+    border-left: 4px solid #007bff;
+    padding-left: 15px;
+    margin: 30px 0 20px 0;
+    font-weight: 600;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: 600;
+    border-bottom: 3px solid #007bff;
+}

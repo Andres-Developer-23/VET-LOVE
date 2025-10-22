@@ -34,7 +34,7 @@ class ClienteTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='testuser',
-            password='testpass123',
+            password='estpass123t',
             email='test@example.com'
         )
         self.cliente = Cliente.objects.create(

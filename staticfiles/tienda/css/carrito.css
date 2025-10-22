@@ -1,0 +1,13 @@
+/* Estilos para el carrito de compras */
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+.quantity-input {
+    width: 80px;
+}
+.summary-card {
+    position: sticky;
+    top: 100px;
+}

@@ -4,16 +4,17 @@ import os
 
 class Cliente(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuario")
+    cedula = models.CharField(max_length=20, unique=True, null=True, blank=True, verbose_name="Cédula")
     telefono = models.CharField(max_length=15, verbose_name="Teléfono")
     direccion = models.TextField(verbose_name="Dirección")
     fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de registro")
     preferencias_comunicacion = models.CharField(
-        max_length=20, 
+        max_length=20,
         choices=[
             ('email', 'Email'),
             ('sms', 'SMS'),
             ('whatsapp', 'WhatsApp')
-        ], 
+        ],
         default='email',
         verbose_name="Preferencias de comunicación"
     )

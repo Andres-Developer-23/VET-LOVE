@@ -4,68 +4,270 @@
 {% block title %}Inicio - Veterinaria Vet Love{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inicio.css' %}">
+
 <style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "img/hero-bg.jpg" %}');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 100px 0;
-        text-align: center;
+/* Estilos para el carrusel de promociones */
+#promocionesCarousel .carousel-item {
+    min-height: 400px;
+    background: linear-gradient(135deg, rgba(0,123,255,0.9), rgba(0,123,255,0.7));
+}
+
+#promocionesCarousel .badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+}
+
+#promocionesCarousel .btn-light {
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#promocionesCarousel .btn-light:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Estilos para categorías de mascotas */
+.pet-category-card {
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pet-category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.pet-icon {
+    transition: transform 0.3s ease;
+}
+
+.pet-category-card:hover .pet-icon {
+    transform: scale(1.1);
+}
+
+.pet-category-card .card-body {
+    padding: 2rem 1.5rem;
+}
+
+/* Estilos para el carrusel de productos */
+#productosCarousel .product-card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#productosCarousel .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+#productosCarousel .card-body i {
+    transition: transform 0.3s ease;
+}
+
+#productosCarousel .product-card:hover .card-body i {
+    transform: scale(1.1);
+}
+
+/* Estilos de las cards de productos (iguales a la tienda) */
+.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.badge-oferta {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    z-index: 10;
+}
+
+.precio-original {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.price-section {
+    flex: 1;
+}
+
+.stock-info {
+    flex-shrink: 0;
+}
+
+.add-to-cart-btn {
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    transform: scale(1.02);
+}
+
+/* Indicadores del carrusel */
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+/* Controles del carrusel */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Estilos para carrusel de banners */
+#bannersCarousel .carousel-item {
+    min-height: 350px;
+}
+
+.banner-slide {
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.banner-slide:hover {
+    transform: scale(1.02);
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
+    z-index: 1;
+}
+
+.z-index-2 {
+    z-index: 2;
+}
+
+#bannersCarousel .carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: rgba(255,255,255,0.5);
+    border: 2px solid rgba(255,255,255,0.8);
+}
+
+#bannersCarousel .carousel-indicators .active {
+    background-color: white;
+}
+
+#bannersCarousel .carousel-control-prev,
+#bannersCarousel .carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+}
+
+#bannersCarousel .carousel-control-prev:hover,
+#bannersCarousel .carousel-control-next:hover {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #promocionesCarousel .carousel-item {
+        min-height: 300px;
     }
-    
-    .service-card {
-        transition: transform 0.3s ease;
-        height: 100%;
+
+    #promocionesCarousel .display-4 {
+        font-size: 2rem;
     }
-    
-    .service-card:hover {
-        transform: translateY(-5px);
+
+    #productosCarousel .col-md-4 {
+        margin-bottom: 2rem;
     }
-    
-    .team-member {
-        text-align: center;
-        margin-bottom: 30px;
+
+    .pet-category-card .card-body {
+        padding: 1.5rem 1rem;
     }
-    
-    .team-img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 15px;
+
+    .pet-category-card .fa-4x {
+        font-size: 2.5rem !important;
     }
-    
-    .testimonial-card {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
+
+    .banner-card {
+        margin-bottom: 1rem;
     }
-    
-    .cta-section {
-        background-color: #007bff;
-        color: white;
-        padding: 60px 0;
+
+    #bannersCarousel .carousel-item {
+        min-height: 250px;
     }
-    
-    .feature-icon {
-        font-size: 3rem;
-        color: #007bff;
-        margin-bottom: 20px;
+
+    #bannersCarousel .banner-slide {
+        min-height: 250px;
+        padding: 2rem 1rem !important;
     }
-    
-    .admin-redirect {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 100px 0;
-        text-align: center;
+
+    #bannersCarousel .fa-4x {
+        font-size: 2.5rem !important;
     }
+
+    #bannersCarousel h3 {
+        font-size: 1.5rem !important;
+    }
+
+    #bannersCarousel .lead {
+        font-size: 1rem !important;
+    }
+
+    #bannersCarousel .btn-lg {
+        font-size: 0.9rem !important;
+        padding: 0.5rem 1rem !important;
+    }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated and user.is_staff %}
+{% if user.is_authenticated and user.is_staff and not preview_mode %}
     <!-- Redirigir automáticamente al dashboard si es admin -->
     <div class="admin-redirect">
         <div class="container">
@@ -80,11 +282,7 @@
             </a>
         </div>
     </div>
-    <script>
-        setTimeout(function() {
-            window.location.href = "{% url 'administracion:dashboard_admin' %}";
-        }, 2000);
-    </script>
+    <script src="{% static 'js/inicio.js' %}"></script>
 {% else %}
     <!-- CONTENIDO NORMAL PARA USUARIOS NO ADMIN -->
     <!-- Hero Section -->
@@ -135,6 +333,164 @@
                     <h3>Cuidado con amor</h3>
                     <p class="text-muted">Tratamos a cada mascota como si fuera nuestra, con cariño y dedicación.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrusel de Promociones -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold"><i class="fas fa-fire me-2"></i>Ofertas Especiales</h2>
+                <p class="lead">¡No te pierdas estas promociones exclusivas para tus mascotas!</p>
+            </div>
+
+            <div id="promocionesCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#promocionesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#promocionesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#promocionesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+
+                <div class="carousel-inner rounded shadow-lg">
+                    {% for producto in productos_promocion %}
+                    {% if forloop.first %}
+                    <!-- Promoción 1 -->
+                    <div class="carousel-item active">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="p-4">
+                                    <div class="badge bg-warning text-dark mb-3 fs-6">¡OFERTA LIMITADA!</div>
+                                    <h3 class="fw-bold mb-3">{{ producto.nombre }}</h3>
+                                    <p class="lead mb-4">{{ producto.descripcion|truncatewords:20 }}</p>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <span class="text-decoration-line-through text-muted fs-5 me-3">${{ producto.precio|floatformat:0 }}</span>
+                                        <span class="fw-bold fs-4 text-warning">${{ producto.precio_final|floatformat:0 }}</span>
+                                        <span class="badge bg-danger ms-2">{{ producto.porcentaje_descuento }}% OFF</span>
+                                    </div>
+                                    <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-light btn-lg me-3">
+                                        <i class="fas fa-shopping-cart me-2"></i>Comprar Ahora
+                                    </a>
+                                    <small class="text-light">Válido hasta agotar existencias</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-center">
+                                    {% if producto.imagen %}
+                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid rounded shadow-lg" style="max-height: 300px; object-fit: cover;">
+                                    {% else %}
+                                    <i class="fas fa-utensils fa-8x text-white opacity-25"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif forloop.counter == 2 %}
+                    <!-- Promoción 2 -->
+                    <div class="carousel-item">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="p-4">
+                                    <div class="badge bg-danger text-white mb-3 fs-6">¡PACK COMPLETO!</div>
+                                    <h3 class="fw-bold mb-3">{{ producto.nombre }}</h3>
+                                    <p class="lead mb-4">{{ producto.descripcion|truncatewords:20 }}</p>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <span class="fw-bold fs-4 text-warning">${{ producto.precio_final|floatformat:0 }}</span>
+                                        <small class="text-light ms-2">(Valor normal: ${{ producto.precio|floatformat:0 }})</small>
+                                        <span class="badge bg-danger ms-2">{{ producto.porcentaje_descuento }}% OFF</span>
+                                    </div>
+                                    <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-light btn-lg me-3">
+                                        <i class="fas fa-gift me-2"></i>Ver Producto
+                                    </a>
+                                    <small class="text-light">Incluye envío gratuito</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-center">
+                                    {% if producto.imagen %}
+                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid rounded shadow-lg" style="max-height: 300px; object-fit: cover;">
+                                    {% else %}
+                                    <i class="fas fa-shower fa-8x text-white opacity-25"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif forloop.counter == 3 %}
+                    <!-- Promoción 3 -->
+                    <div class="carousel-item">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="p-4">
+                                    <div class="badge bg-success text-white mb-3 fs-6">¡NUEVO!</div>
+                                    <h3 class="fw-bold mb-3">{{ producto.nombre }}</h3>
+                                    <p class="lead mb-4">{{ producto.descripcion|truncatewords:20 }}</p>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <span class="fw-bold fs-4 text-warning">${{ producto.precio_final|floatformat:0 }}</span>
+                                        <small class="text-light ms-2">Hasta 3 cuotas sin interés</small>
+                                        <span class="badge bg-danger ms-2">{{ producto.porcentaje_descuento }}% OFF</span>
+                                    </div>
+                                    <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-light btn-lg me-3">
+                                        <i class="fas fa-gamepad me-2"></i>Ver Producto
+                                    </a>
+                                    <small class="text-light">Envío gratis en compras superiores a $50.000</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-center">
+                                    {% if producto.imagen %}
+                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid rounded shadow-lg" style="max-height: 300px; object-fit: cover;">
+                                    {% else %}
+                                    <i class="fas fa-bone fa-8x text-white opacity-25"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if not productos_promocion or productos_promocion|length < 3 %}
+                    <!-- Promociones por defecto si no hay suficientes productos -->
+                    {% if not productos_promocion %}
+                    <!-- Promoción 1 por defecto -->
+                    <div class="carousel-item active">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <div class="p-4">
+                                    <div class="badge bg-warning text-dark mb-3 fs-6">¡OFERTA LIMITADA!</div>
+                                    <h3 class="fw-bold mb-3">50% OFF en Alimentos Premium</h3>
+                                    <p class="lead mb-4">Nutrición de primera calidad para tu mascota con descuento especial. Solo por tiempo limitado.</p>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <span class="text-decoration-line-through text-muted fs-5 me-3">$120.000</span>
+                                        <span class="fw-bold fs-4 text-warning">$60.000</span>
+                                    </div>
+                                    <a href="{% url 'tienda:lista_productos' %}?tipo=alimento" class="btn btn-light btn-lg me-3">
+                                        <i class="fas fa-shopping-cart me-2"></i>Comprar Ahora
+                                    </a>
+                                    <small class="text-light">Válido hasta agotar existencias</small>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-center">
+                                    <i class="fas fa-utensils fa-8x text-white opacity-25"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Controles del carrusel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#promocionesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#promocionesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
             </div>
         </div>
     </section>
@@ -250,6 +606,325 @@
         </div>
     </section>
 
+    <!-- Categorías por Tipo de Mascota -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Compra por Tipo de Mascota</h2>
+                <p class="lead text-muted">Encuentra productos específicos para tu mascota</p>
+            </div>
+
+            <div class="row">
+                <!-- Perros -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}?tipo_mascota=perro" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-dog fa-4x text-primary"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Perros</h5>
+                                <p class="card-text text-muted">Alimentos, juguetes y accesorios para tu perro</p>
+                                <span class="btn btn-primary mt-3">Ver Productos para Perros</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Gatos -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}?tipo_mascota=gato" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-cat fa-4x text-success"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Gatos</h5>
+                                <p class="card-text text-muted">Nutrición especializada y productos para felinos</p>
+                                <span class="btn btn-success mt-3">Ver Productos para Gatos</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Aves -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}?tipo_mascota=ave" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-dove fa-4x text-info"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Aves</h5>
+                                <p class="card-text text-muted">Semillas, jaulas y accesorios para aves</p>
+                                <span class="btn btn-info mt-3">Ver Productos para Aves</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Roedores -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}?tipo_mascota=roedor" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-mouse fa-4x text-warning"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Roedores</h5>
+                                <p class="card-text text-muted">Alimentos y hábitats para hámsters y conejos</p>
+                                <span class="btn btn-warning mt-3">Ver Productos para Roedores</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Reptiles -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}?tipo_mascota=reptil" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-dragon fa-4x text-danger"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Reptiles</h5>
+                                <p class="card-text text-muted">Terrarios, calefactores y alimentos para reptiles</p>
+                                <span class="btn btn-danger mt-3">Ver Productos para Reptiles</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Todos los Productos -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="{% url 'tienda:lista_productos' %}" class="text-decoration-none">
+                        <div class="card pet-category-card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="pet-icon mb-3">
+                                    <i class="fas fa-store fa-4x text-secondary"></i>
+                                </div>
+                                <h5 class="card-title fw-bold">Todos los Productos</h5>
+                                <p class="card-text text-muted">Explora nuestro catálogo completo</p>
+                                <span class="btn btn-secondary mt-3">Ver Todos los Productos</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Productos Destacados</h2>
+                <p class="lead text-muted">Los productos más populares entre nuestros clientes</p>
+            </div>
+
+            <div id="productosCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#productosCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#productosCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="row">
+                            {% for producto in productos_destacados|slice:":3" %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <a href="{% url 'tienda:detalle_producto' producto.id %}" class="product-link">
+                                    <div class="card product-card h-100">
+                                        <div class="position-relative">
+                                            {% if producto.en_oferta %}
+                                            <span class="badge bg-danger badge-oferta">-{{ producto.porcentaje_descuento }}%</span>
+                                            {% endif %}
+
+                                            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/300x200/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
+                                                 class="card-img-top product-image" alt="{{ producto.nombre }}">
+                                        </div>
+
+                                        <div class="card-body d-flex flex-column">
+                                            <!-- Badges superiores -->
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <span class="badge bg-secondary mb-1">{{ producto.get_tipo_display }}</span>
+                                                    {% if producto.destacado %}
+                                                    <span class="badge bg-info ms-1">Destacado</span>
+                                                    {% endif %}
+                                                </div>
+                                                {% if producto.stock_bajo and producto.stock > 0 %}
+                                                <span class="badge bg-warning">¡Últimas unidades!</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Título y categoría -->
+                                            <h6 class="card-title mb-1">{{ producto.nombre }}</h6>
+                                            <small class="text-muted mb-2">
+                                                <i class="fas fa-tag me-1"></i>{{ producto.categoria.nombre }}
+                                            </small>
+
+                                            <!-- Descripción -->
+                                            <p class="card-text text-muted small flex-grow-1 mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
+
+                                            <!-- Información de precio y stock -->
+                                            <div class="mt-auto">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <div class="price-section">
+                                                        {% if producto.en_oferta %}
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="precio-original">${{ producto.precio }}</span>
+                                                            <span class="h6 text-danger ms-2 mb-0">${{ producto.precio_final }}</span>
+                                                        </div>
+                                                        {% else %}
+                                                        <span class="h6 text-primary mb-0">${{ producto.precio_final }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="stock-info text-end">
+                                                        {% if producto.stock > 0 %}
+                                                        <small class="text-success fw-bold">
+                                                            <i class="fas fa-check-circle me-1"></i>{{ producto.stock }} disp.
+                                                        </small>
+                                                        {% else %}
+                                                        <small class="text-danger fw-bold">
+                                                            <i class="fas fa-times-circle me-1"></i>Agotado
+                                                        </small>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Botón de acción -->
+                                                {% if producto.stock > 0 %}
+                                                <form method="post" action="{% url 'tienda:agregar_al_carrito' producto.id %}" class="d-inline w-100" onsubmit="event.stopPropagation();">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="cantidad" value="1">
+                                                    <button type="submit" class="btn btn-primary btn-sm w-100 add-to-cart-btn">
+                                                        <i class="fas fa-cart-plus me-1"></i>Agregar al Carrito
+                                                    </button>
+                                                </form>
+                                                {% else %}
+                                                <button class="btn btn-secondary btn-sm w-100" disabled onclick="event.stopPropagation();">
+                                                    <i class="fas fa-ban me-1"></i>Sin Stock
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="row">
+                            {% for producto in productos_destacados|slice:"3:6" %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <a href="{% url 'tienda:detalle_producto' producto.id %}" class="product-link">
+                                    <div class="card product-card h-100">
+                                        <div class="position-relative">
+                                            {% if producto.en_oferta %}
+                                            <span class="badge bg-danger badge-oferta">-{{ producto.porcentaje_descuento }}%</span>
+                                            {% endif %}
+
+                                            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/300x200/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
+                                                 class="card-img-top product-image" alt="{{ producto.nombre }}">
+                                        </div>
+
+                                        <div class="card-body d-flex flex-column">
+                                            <!-- Badges superiores -->
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <span class="badge bg-secondary mb-1">{{ producto.get_tipo_display }}</span>
+                                                    {% if producto.destacado %}
+                                                    <span class="badge bg-info ms-1">Destacado</span>
+                                                    {% endif %}
+                                                </div>
+                                                {% if producto.stock_bajo and producto.stock > 0 %}
+                                                <span class="badge bg-warning">¡Últimas unidades!</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Título y categoría -->
+                                            <h6 class="card-title mb-1">{{ producto.nombre }}</h6>
+                                            <small class="text-muted mb-2">
+                                                <i class="fas fa-tag me-1"></i>{{ producto.categoria.nombre }}
+                                            </small>
+
+                                            <!-- Descripción -->
+                                            <p class="card-text text-muted small flex-grow-1 mb-3">{{ producto.descripcion|truncatewords:15 }}</p>
+
+                                            <!-- Información de precio y stock -->
+                                            <div class="mt-auto">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <div class="price-section">
+                                                        {% if producto.en_oferta %}
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="precio-original">${{ producto.precio }}</span>
+                                                            <span class="h6 text-danger ms-2 mb-0">${{ producto.precio_final }}</span>
+                                                        </div>
+                                                        {% else %}
+                                                        <span class="h6 text-primary mb-0">${{ producto.precio_final }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="stock-info text-end">
+                                                        {% if producto.stock > 0 %}
+                                                        <small class="text-success fw-bold">
+                                                            <i class="fas fa-check-circle me-1"></i>{{ producto.stock }} disp.
+                                                        </small>
+                                                        {% else %}
+                                                        <small class="text-danger fw-bold">
+                                                            <i class="fas fa-times-circle me-1"></i>Agotado
+                                                        </small>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Botón de acción -->
+                                                {% if producto.stock > 0 %}
+                                                <form method="post" action="{% url 'tienda:agregar_al_carrito' producto.id %}" class="d-inline w-100" onsubmit="event.stopPropagation();">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="cantidad" value="1">
+                                                    <button type="submit" class="btn btn-primary btn-sm w-100 add-to-cart-btn">
+                                                        <i class="fas fa-cart-plus me-1"></i>Agregar al Carrito
+                                                    </button>
+                                                </form>
+                                                {% else %}
+                                                <button class="btn btn-secondary btn-sm w-100" disabled onclick="event.stopPropagation();">
+                                                    <i class="fas fa-ban me-1"></i>Sin Stock
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controles del carrusel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#productosCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productosCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'tienda:lista_productos' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-store me-2"></i>Ver Todos los Productos
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Testimonials Section -->
     <section class="py-5 bg-light">
         <div class="container">
@@ -313,12 +988,127 @@
         </div>
     </section>
 
+    <!-- Carrusel de Banners Publicitarios -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold"><i class="fas fa-bullhorn me-2"></i>Promociones Especiales</h2>
+                <p class="lead text-muted">Descubre nuestras mejores ofertas y servicios exclusivos</p>
+            </div>
+
+            <div id="bannersCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#bannersCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#bannersCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#bannersCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#bannersCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
+
+                <div class="carousel-inner rounded shadow-lg">
+                    <!-- Banner 1: Envío Gratis -->
+                    <div class="carousel-item active">
+                        <a href="{% url 'tienda:lista_productos' %}" class="text-decoration-none">
+                            <div class="banner-slide bg-primary text-white p-5 text-center position-relative overflow-hidden">
+                                <div class="banner-overlay"></div>
+                                <div class="position-relative z-index-2">
+                                    <i class="fas fa-truck fa-4x mb-4"></i>
+                                    <h3 class="fw-bold mb-3">Envío Gratis Nacional</h3>
+                                    <p class="lead mb-4">En todas tus compras superiores a $80.000. ¡Llevamos tus productos hasta la puerta de tu casa!</p>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <span class="badge bg-light text-primary fs-6 px-3 py-2">Envío Express</span>
+                                        <span class="badge bg-light text-primary fs-6 px-3 py-2">24-48 horas</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="btn btn-light btn-lg">Ver Productos con Envío Gratis <i class="fas fa-arrow-right ms-2"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Banner 2: Pago Seguro -->
+                    <div class="carousel-item">
+                        <a href="{% url 'tienda:lista_productos' %}" class="text-decoration-none">
+                            <div class="banner-slide bg-success text-white p-5 text-center position-relative overflow-hidden">
+                                <div class="banner-overlay"></div>
+                                <div class="position-relative z-index-2">
+                                    <i class="fas fa-shield-alt fa-4x mb-4"></i>
+                                    <h3 class="fw-bold mb-3">Pago 100% Seguro</h3>
+                                    <p class="lead mb-4">Transacciones protegidas con Epayco. Tu dinero y datos personales están completamente seguros.</p>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <span class="badge bg-light text-success fs-6 px-3 py-2">SSL Encriptado</span>
+                                        <span class="badge bg-light text-success fs-6 px-3 py-2">Certificado PCI</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="btn btn-light btn-lg">Comprar con Confianza <i class="fas fa-arrow-right ms-2"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Banner 3: Atención 24/7 -->
+                    <div class="carousel-item">
+                        <a href="{% url 'citas:solicitar_cita' %}" class="text-decoration-none">
+                            <div class="banner-slide bg-info text-white p-5 text-center position-relative overflow-hidden">
+                                <div class="banner-overlay"></div>
+                                <div class="position-relative z-index-2">
+                                    <i class="fas fa-clock fa-4x mb-4"></i>
+                                    <h3 class="fw-bold mb-3">Emergencias 24/7</h3>
+                                    <p class="lead mb-4">Servicio de urgencias veterinarias disponible las 24 horas del día, todos los días del año.</p>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <span class="badge bg-light text-info fs-6 px-3 py-2">Atención Inmediata</span>
+                                        <span class="badge bg-light text-info fs-6 px-3 py-2">+57 310 5956453</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="btn btn-light btn-lg">Llamar Ahora <i class="fas fa-phone ms-2"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Banner 4: Servicios Integrales -->
+                    <div class="carousel-item">
+                        <a href="{% url 'mascotas:lista_mascotas' %}" class="text-decoration-none">
+                            <div class="banner-slide bg-warning text-dark p-5 text-center position-relative overflow-hidden">
+                                <div class="banner-overlay"></div>
+                                <div class="position-relative z-index-2">
+                                    <i class="fas fa-heart fa-4x mb-4 text-danger"></i>
+                                    <h3 class="fw-bold mb-3">Cuidado Integral</h3>
+                                    <p class="lead mb-4">Gestiona la salud completa de tu mascota: citas, vacunas, historial médico y tienda online en un solo lugar.</p>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <span class="badge bg-danger text-white fs-6 px-3 py-2">Todo en Uno</span>
+                                        <span class="badge bg-danger text-white fs-6 px-3 py-2">Fácil y Rápido</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <span class="btn btn-danger btn-lg">Comenzar Ahora <i class="fas fa-arrow-right ms-2"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Controles del carrusel -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#bannersCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#bannersCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container text-center">
             <h2 class="mb-4">¿Necesitas ayuda para tu mascota?</h2>
             <p class="lead mb-4">Regístrate en nuestro sistema y gestiona todas las necesidades de tu mascota en un solo lugar</p>
-            
+
             {% if user.is_authenticated %}
                 <a href="{% url 'citas:solicitar_cita' %}" class="btn btn-light btn-lg me-3">
                     <i class="fas fa-calendar-plus me-1"></i>Pedir Cita

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load math_filters %}
+
+{% block title %}Checkout - Veterinaria Vet Love{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 mb-0">
+                    <i class="fas fa-credit-card me-2"></i>Finalizar Compra
+                </h1>
+                <a href="{% url 'tienda:ver_carrito' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i>Volver al Carrito
+                </a>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-truck me-2"></i>Información de Envío
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- CAMBIO IMPORTANTE: Eliminar action del formulario -->
+                            <form method="post">
+                                {% csrf_token %}
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Dirección de Envío</label>
+                                    {{ form.direccion_envio }}
+                                    {% if form.direccion_envio.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.direccion_envio.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Notas Adicionales</label>
+                                    {{ form.notas }}
+                                    <div class="form-text">
+                                        Instrucciones especiales para la entrega o comentarios sobre tu pedido.
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Información importante:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li>El tiempo de entrega es de 2-3 días hábiles</li>
+                                        <li>El horario de entrega es de 8:00 am a 6:00 pm</li>
+                                        <li>Debes estar presente para recibir el pedido</li>
+                                    </ul>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success btn-lg w-100">
+                                    <i class="fas fa-check-circle me-2"></i>Confirmar Pedido
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Resumen del Pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h6>Productos ({{ carrito.cantidad_total }})</h6>
+                                {% for item in carrito.items.all %}
+                                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                                    <div>
+                                        <small class="fw-bold">{{ item.producto.nombre }}</small>
+                                        <br>
+                                        <small class="text-muted">{{ item.cantidad }} x ${{ item.producto.precio_final }}</small>
+                                    </div>
+                                    <small class="fw-bold">${{ item.subtotal }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Subtotal:</span>
+                                    <span>${{ carrito.total }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Envío:</span>
+                                    <span class="text-success">
+                                        {% if carrito.total >= 50000 %}
+                                        Gratis
+                                        {% else %}
+                                        $5.000
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Impuestos (19%):</span>
+                                    <span>${{ carrito.total|multiply:0.19|floatformat:2 }}</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Total:</strong>
+                                    <strong class="h5 text-primary">
+                                        ${% if carrito.total >= 50000 %}{{ carrito.total|add:carrito.total|multiply:0.19|floatformat:2 }}{% else %}{{ carrito.total|add:5000|add:carrito.total|multiply:0.19|floatformat:2 }}{% endif %}
+                                    </strong>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-success small">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                <strong>Compra protegida</strong>
+                                <p class="mb-0 mt-1">Tu transacción es segura y tus datos están encriptados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

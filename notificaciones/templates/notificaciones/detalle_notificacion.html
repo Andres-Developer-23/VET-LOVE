@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de Notificación{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'notificaciones:lista' %}">Notificaciones</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ notificacion.titulo }}</li>
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fas fa-bell me-2"></i>{{ notificacion.titulo }}
+                    </h4>
+                </div>
+                <div>
+                    {% if user.is_staff %}
+                        {% if not notificacion.leida %}
+                        <span class="badge bg-primary">Nueva</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Leída</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Mensaje principal -->
+                <div class="mb-4">
+                    <div class="alert alert-light border">
+                        <h5 class="alert-heading mb-3">{{ notificacion.titulo }}</h5>
+                        <p class="mb-0">{{ notificacion.mensaje|linebreaks }}</p>
+                    </div>
+                </div>
+
+                <!-- Enlace relacionado -->
+                {% if notificacion.url_relacionada %}
+                <div class="mb-4">
+                    <a href="{{ notificacion.url_relacionada }}" class="btn btn-outline-primary" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i>Ver Detalles Relacionados
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Información técnica solo para administradores -->
+                {% if user.is_staff %}
+                <hr>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-tag me-2"></i>Tipo de Notificación</h6>
+                        <p class="mb-0">
+                            <span class="badge bg-info">{{ notificacion.get_tipo_display }}</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Prioridad</h6>
+                        <p class="mb-0">
+                            {% if notificacion.prioridad == 'urgente' %}
+                                <span class="badge bg-danger">{{ notificacion.get_prioridad_display }}</span>
+                            {% elif notificacion.prioridad == 'alta' %}
+                                <span class="badge bg-warning">{{ notificacion.get_prioridad_display }}</span>
+                            {% elif notificacion.prioridad == 'normal' %}
+                                <span class="badge bg-primary">{{ notificacion.get_prioridad_display }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ notificacion.get_prioridad_display }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-calendar me-2"></i>Fecha de Creación</h6>
+                        <p class="mb-0">{{ notificacion.fecha_creacion|date:"d/m/Y H:i:s" }}</p>
+                    </div>
+                </div>
+
+                <!-- Información adicional para administradores -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-clock me-2"></i>Estado de Lectura</h6>
+                        <p class="mb-0">
+                            {% if notificacion.leida %}
+                            <span class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>Leída
+                            </span>
+                            {% if notificacion.fecha_lectura %}
+                            <br><small class="text-muted">Leída el {{ notificacion.fecha_lectura|date:"d/m/Y H:i" }}</small>
+                            {% endif %}
+                            {% else %}
+                            <span class="text-warning">
+                                <i class="fas fa-exclamation-circle me-1"></i>No leída
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-envelope me-2"></i>Envío por Email</h6>
+                        <p class="mb-0">
+                            {% if notificacion.enviada_por_email %}
+                            <span class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>Enviada
+                            </span>
+                            {% if notificacion.fecha_envio %}
+                            <br><small class="text-muted">Enviada el {{ notificacion.fecha_envio|date:"d/m/Y H:i" }}</small>
+                            {% endif %}
+                            {% else %}
+                            <span class="text-muted">
+                                <i class="fas fa-times-circle me-1"></i>No enviada
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-history me-2"></i>Tiempo Transcurrido</h6>
+                        <p class="mb-0">
+                            {% load humanize %}
+                            <small class="text-muted">{{ notificacion.fecha_creacion|naturaltime }}</small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Información del cliente para administradores -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6><i class="fas fa-user me-2"></i>Destinatario</h6>
+                        <p class="mb-0">{{ notificacion.cliente.usuario.get_full_name|default:notificacion.cliente.usuario.username }}</p>
+                        <small class="text-muted">{{ notificacion.cliente.usuario.email }}</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'notificaciones:lista' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver a Notificaciones
+                    </a>
+                    <div>
+                        {% if not notificacion.leida %}
+                        <button class="btn btn-success marcar-leida-detalle" data-id="{{ notificacion.id }}">
+                            <i class="fas fa-check me-1"></i>Marcar como Leída
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar marcar como leída desde el detalle
+    const btnMarcarLeida = document.querySelector('.marcar-leida-detalle');
+    if (btnMarcarLeida) {
+        btnMarcarLeida.addEventListener('click', function() {
+            const notificacionId = this.dataset.id;
+
+            fetch(`/notificaciones/marcar-leida/${notificacionId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar el badge
+                    const badge = document.querySelector('.badge.bg-primary');
+                    if (badge) {
+                        badge.className = 'badge bg-secondary';
+                        badge.textContent = 'Leída';
+                    }
+
+                    // Ocultar el botón
+                    this.style.display = 'none';
+
+                    // Actualizar contador en el navbar
+                    const contador = document.getElementById('notificaciones-count');
+                    if (contador && data.total_no_leidas !== undefined) {
+                        contador.textContent = data.total_no_leidas > 99 ? '99+' : data.total_no_leidas;
+                        if (data.total_no_leidas === 0) {
+                            contador.style.display = 'none';
+                        }
+                    }
+
+                    // Mostrar mensaje de éxito
+                    showAlert('Notificación marcada como leída', 'success');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Error al marcar la notificación como leída', 'danger');
+            });
+        });
+    }
+
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+
+        // No auto-remover - el usuario debe cerrar manualmente o recargar la página
+        // Esto evita que el mensaje desaparezca mientras el usuario lo está leyendo
+    }
+});
+</script>
+{% endblock %}

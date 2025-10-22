@@ -3,131 +3,7 @@
 {% load static %}
 
 {% block extra_css %}
-<style>
-/* Estilos para el modal de confirmación */
-.modal-content {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.modal-header {
-    border-radius: 15px 15px 0 0;
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-}
-
-.modal-footer {
-    border-radius: 0 0 15px 15px;
-    border-top: 1px solid #dee2e6;
-}
-
-#btnConfirmarCita {
-    min-width: 180px;
-    font-weight: 600;
-}
-
-.bg-light {
-    background-color: #f8f9fa !important;
-}
-
-.border {
-    border: 1px solid #dee2e6 !important;
-}
-
-.rounded {
-    border-radius: 8px !important;
-}
-
-/* Animación para el modal */
-.modal.fade .modal-dialog {
-    transform: translate(0, -50px);
-    transition: transform 0.3s ease-out;
-}
-
-.modal.show .modal-dialog {
-    transform: translate(0, 0);
-}
-
-/* Estilo para los badges de prioridad */
-.badge.bg-danger {
-    background-color: #dc3545 !important;
-}
-
-.badge.bg-warning {
-    background-color: #ffc107 !important;
-    color: #000 !important;
-}
-
-.badge.bg-secondary {
-    background-color: #6c757d !important;
-}
-
-/* Mejoras visuales para la información en el modal */
-#modalMascotaInfo, #modalCitaInfo, #modalContactoInfo, #modalMotivoInfo {
-    background-color: #f8f9fa;
-    border-left: 4px solid #0d6efd;
-}
-
-/* Estilos para el botón de solicitar cita */
-#btnSolicitarCita {
-    font-weight: 600;
-    padding: 10px 25px;
-}
-
-/* Mejora visual para los alerts */
-.alert {
-    border: none;
-    border-radius: 8px;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    border-left: 4px solid #0dcaf0;
-}
-
-.alert-warning {
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
-}
-
-/* Efectos hover para botones */
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-}
-
-.btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-    transition: all 0.3s ease;
-}
-
-/* Estados de loading */
-.btn-loading {
-    position: relative;
-    color: transparent !important;
-}
-
-.btn-loading::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 50%;
-    left: 50%;
-    margin-left: -10px;
-    margin-top: -10px;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-</style>
+<link rel="stylesheet" href="{% static 'citas/css/solicitar_cita.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -169,7 +45,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_mascota" class="form-label">Mascota Paciente *</label>
+                                        <label for="id_mascota" class="form-label">Mascota Paciente</label>
                                         {{ form.mascota }}
                                         {% if form.mascota.errors %}
                                         <div class="text-danger">
@@ -201,7 +77,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_fecha" class="form-label">Fecha y Hora Preferidas *</label>
+                                        <label for="id_fecha" class="form-label">Fecha y Hora Preferidas</label>
                                         {{ form.fecha }}
                                         {% if form.fecha.errors %}
                                         <div class="text-danger">
@@ -214,7 +90,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_tipo" class="form-label">Tipo de Consulta *</label>
+                                        <label for="id_tipo" class="form-label">Tipo de Consulta</label>
                                         {{ form.tipo }}
                                         {% if form.tipo.errors %}
                                         <div class="text-danger">
@@ -230,7 +106,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_prioridad" class="form-label">Nivel de Urgencia *</label>
+                                        <label for="id_prioridad" class="form-label">Nivel de Urgencia</label>
                                         {{ form.prioridad }}
                                         {% if form.prioridad.errors %}
                                         <div class="text-danger">
@@ -262,7 +138,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_telefono_contacto" class="form-label">Teléfono de Contacto *</label>
+                                        <label for="id_telefono_contacto" class="form-label">Teléfono de Contacto</label>
                                         {{ form.telefono_contacto }}
                                         {% if form.telefono_contacto.errors %}
                                         <div class="text-danger">
@@ -275,7 +151,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="id_email_contacto" class="form-label">Email de Contacto *</label>
+                                        <label for="id_email_contacto" class="form-label">Email de Contacto</label>
                                         {{ form.email_contacto }}
                                         {% if form.email_contacto.errors %}
                                         <div class="text-danger">
@@ -297,7 +173,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="id_motivo" class="form-label">Motivo Principal de la Consulta *</label>
+                                <label for="id_motivo" class="form-label">Motivo Principal de la Consulta</label>
                                 {{ form.motivo }}
                                 {% if form.motivo.errors %}
                                 <div class="text-danger">
@@ -349,7 +225,7 @@
                     <div class="alert alert-info">
                         <h6><i class="fas fa-info-circle me-2"></i>Información importante:</h6>
                         <ul class="mb-0">
-                            <li>Los campos marcados con * son obligatorios</li>
+                            <li>Todos los campos marcados como requeridos son obligatorios</li>
                             <li>Para emergencias fuera de horario, llame al: <strong>555-EMERGENCIA (555-36373642)</strong></li>
                             <li>Llegue 15 minutos antes de su cita para completar el registro</li>
                             <li>Traiga el carnet de vacunación de su mascota si está disponible</li>
@@ -361,7 +237,7 @@
                         <a href="{% url 'citas:mis_citas' %}" class="btn btn-secondary me-md-2">
                             <i class="fas fa-times me-1"></i>Cancelar
                         </a>
-                        <button type="button" class="btn btn-primary" id="btnSolicitarCita" data-bs-toggle="modal" data-bs-target="#confirmacionModal">
+                        <button type="button" class="btn btn-primary" id="btnSolicitarCita">
                             <i class="fas fa-calendar-check me-1"></i>Solicitar Cita Médica
                         </button>
                     </div>
@@ -467,266 +343,24 @@
     </div>
 </div>
 
+{% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const mascotaSelect = document.getElementById('id_mascota');
-    const infoMascotaDiv = document.getElementById('info_mascota');
-    const prioridadSelect = document.getElementById('id_prioridad');
-    const sintomasField = document.getElementById('id_sintomas');
-    const btnSolicitarCita = document.getElementById('btnSolicitarCita');
-    const btnConfirmarCita = document.getElementById('btnConfirmarCita');
-    const citaForm = document.getElementById('citaForm');
-    const confirmacionModal = document.getElementById('confirmacionModal');
-    
-    // Elementos del modal
-    const modalMascotaInfo = document.getElementById('modalMascotaInfo');
-    const modalCitaInfo = document.getElementById('modalCitaInfo');
-    const modalContactoInfo = document.getElementById('modalContactoInfo');
-    const modalMotivoInfo = document.getElementById('modalMotivoInfo');
-    
-    // Datos de las mascotas
-    const mascotasData = {
-        {% for mascota in mascotas %}
-        '{{ mascota.id }}': {
-            'nombre': '{{ mascota.nombre }}',
-            'especie': '{{ mascota.get_especie_display }}',
-            'raza': '{{ mascota.raza|default:"No especificada" }}',
-            'edad_aproximada': '{{ mascota.edad_aproximada|default:"No especificada" }}',
-            'fecha_nacimiento': '{{ mascota.fecha_nacimiento|date:"d/m/Y"|default:"No especificada" }}',
-            'peso': '{{ mascota.peso|default:"No especificado" }}',
-            'sexo': '{{ mascota.get_sexo_display|default:"No especificado" }}',
-            'color': '{{ mascota.color|default:"No especificado" }}'
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    };
-    
-    // Opciones de tipos de consulta
-    const tipoOptions = {
-        'consulta_general': 'Consulta General',
-        'vacunacion': 'Vacunación',
-        'desparasitacion': 'Desparasitación',
-        'urgencia': 'Urgencia',
-        'cirugia': 'Cirugía',
-        'estetica': 'Estética/Baño',
-        'odontologia': 'Odontología',
-        'analisis': 'Análisis Clínicos',
-        'radiologia': 'Radiología',
-        'ecografia': 'Ecografía',
-        'control': 'Control de Peso',
-        'comportamiento': 'Consulta de Comportamiento',
-        'nutricion': 'Consulta Nutricional'
-    };
-    
-    // Opciones de prioridad
-    const prioridadOptions = {
-        'normal': 'Normal',
-        'urgente': 'Urgente',
-        'emergencia': 'Emergencia'
-    };
-    
-    function actualizarInfoMascota() {
-        const mascotaId = mascotaSelect.value;
-        
-        if (mascotaId && mascotasData[mascotaId]) {
-            const mascota = mascotasData[mascotaId];
-            
-            let html = `
-                <div class="row">
-                    <div class="col-12">
-                        <h6 class="mb-2">${mascota.nombre} - ${mascota.especie}</h6>
-                    </div>
-                </div>
-                <div class="row">
-            `;
-            
-            // Información básica
-            if (mascota.raza !== 'No especificada') {
-                html += `<div class="col-6"><small><strong>Raza:</strong> ${mascota.raza}</small></div>`;
-            }
-            
-            if (mascota.sexo !== 'No especificado') {
-                html += `<div class="col-6"><small><strong>Sexo:</strong> ${mascota.sexo}</small></div>`;
-            }
-            
-            // Información de edad
-            let infoEdad = '';
-            if (mascota.fecha_nacimiento !== 'No especificada') {
-                infoEdad = `Nacimiento: ${mascota.fecha_nacimiento}`;
-            } else if (mascota.edad_aproximada !== 'No especificada') {
-                infoEdad = `Edad: ${mascota.edad_aproximada}`;
-            } else {
-                infoEdad = '<span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Edad no especificada</span>';
-            }
-            
-            html += `<div class="col-6"><small><strong>${infoEdad}</strong></small></div>`;
-            
-            // Peso y color
-            if (mascota.peso !== 'No especificado') {
-                html += `<div class="col-6"><small><strong>Peso:</strong> ${mascota.peso} kg</small></div>`;
-            }
-            
-            if (mascota.color !== 'No especificado') {
-                html += `<div class="col-6"><small><strong>Color:</strong> ${mascota.color}</small></div>`;
-            }
-            
-            html += `</div>`;
-            
-            infoMascotaDiv.innerHTML = html;
-            
-        } else {
-            infoMascotaDiv.innerHTML = '<small class="text-muted">Selecciona una mascota para ver su información completa</small>';
-        }
-    }
-    
-    function actualizarRequerimientos() {
-        if (prioridadSelect.value === 'urgente' || prioridadSelect.value === 'emergencia') {
-            sintomasField.required = true;
-            sintomasField.parentElement.querySelector('.form-label').innerHTML = 
-                'Síntomas Presentados <span class="text-danger">*</span>';
-            sintomasField.parentElement.querySelector('.form-text').innerHTML = 
-                'Para citas urgentes o de emergencia, es obligatorio describir los síntomas.';
-        } else {
-            sintomasField.required = false;
-            sintomasField.parentElement.querySelector('.form-label').innerHTML = 
-                'Síntomas Presentados';
-            sintomasField.parentElement.querySelector('.form-text').innerHTML = 
-                'Describa todos los síntomas que ha observado en su mascota.';
-        }
-    }
-    
-    function llenarModalConfirmacion() {
-        // Obtener valores del formulario
-        const mascotaId = mascotaSelect.value;
-        const fecha = document.getElementById('id_fecha').value;
-        const tipo = document.getElementById('id_tipo').value;
-        const prioridad = document.getElementById('id_prioridad').value;
-        const motivo = document.getElementById('id_motivo').value;
-        const sintomas = document.getElementById('id_sintomas').value;
-        const telefono = document.getElementById('id_telefono_contacto').value;
-        const email = document.getElementById('id_email_contacto').value;
-        const antecedentes = document.getElementById('id_antecedentes').value;
-        const medicamentos = document.getElementById('id_medicamentos_actuales').value;
-        const alergias = document.getElementById('id_alergias').value;
-        
-        // Información de la mascota
-        if (mascotaId && mascotasData[mascotaId]) {
-            const mascota = mascotasData[mascotaId];
-            modalMascotaInfo.innerHTML = `
-                <strong>${mascota.nombre}</strong> - ${mascota.especie}<br>
-                <small>Raza: ${mascota.raza} | Edad: ${mascota.edad_aproximada}</small><br>
-                <small>Peso: ${mascota.peso} kg | Sexo: ${mascota.sexo}</small>
-            `;
-        } else {
-            modalMascotaInfo.innerHTML = '<span class="text-danger">No se ha seleccionado una mascota</span>';
-        }
-        
-        // Información de la cita
-        const fechaFormateada = new Date(fecha).toLocaleString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        modalCitaInfo.innerHTML = `
-            <strong>Fecha y Hora:</strong> ${fechaFormateada}<br>
-            <strong>Tipo de Consulta:</strong> ${tipoOptions[tipo] || tipo}<br>
-            <strong>Prioridad:</strong> <span class="badge bg-${prioridad === 'emergencia' ? 'danger' : prioridad === 'urgente' ? 'warning' : 'secondary'}">${prioridadOptions[prioridad] || prioridad}</span>
-        `;
-        
-        // Información de contacto
-        modalContactoInfo.innerHTML = `
-            <strong>Teléfono:</strong> ${telefono}<br>
-            <strong>Email:</strong> ${email}
-        `;
-        
-        // Información del motivo y síntomas
-        let motivoHTML = `<strong>Motivo:</strong> ${motivo || 'No especificado'}`;
-        
-        if (sintomas) {
-            motivoHTML += `<br><strong>Síntomas:</strong> ${sintomas}`;
-        }
-        
-        if (antecedentes) {
-            motivoHTML += `<br><strong>Antecedentes:</strong> ${antecedentes}`;
-        }
-        
-        if (medicamentos) {
-            motivoHTML += `<br><strong>Medicamentos:</strong> ${medicamentos}`;
-        }
-        
-        if (alergias) {
-            motivoHTML += `<br><strong>Alergias:</strong> ${alergias}`;
-        }
-        
-        modalMotivoInfo.innerHTML = motivoHTML;
-    }
-    
-    function validarFormulario() {
-        // Validaciones básicas
-        const camposRequeridos = [
-            'id_mascota', 'id_fecha', 'id_tipo', 'id_prioridad', 
-            'id_motivo', 'id_telefono_contacto', 'id_email_contacto'
-        ];
-        
-        for (let campoId of camposRequeridos) {
-            const campo = document.getElementById(campoId);
-            if (!campo.value.trim()) {
-                campo.focus();
-                return false;
-            }
-        }
-        
-        // Validación específica para prioridades urgentes
-        if ((prioridadSelect.value === 'urgente' || prioridadSelect.value === 'emergencia') && 
-            !sintomasField.value.trim()) {
-            sintomasField.focus();
-            return false;
-        }
-        
-        return true;
-    }
-    
-    // Event listeners
-    mascotaSelect.addEventListener('change', actualizarInfoMascota);
-    prioridadSelect.addEventListener('change', actualizarRequerimientos);
-    
-    // Cuando se hace clic en "Solicitar Cita Médica"
-    btnSolicitarCita.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        if (validarFormulario()) {
-            llenarModalConfirmacion();
-        } else {
-            alert('Por favor complete todos los campos obligatorios antes de solicitar la cita.');
-        }
-    });
-    
-    // Cuando se confirma la cita en el modal
-    btnConfirmarCita.addEventListener('click', function() {
-        // Mostrar loading
-        btnConfirmarCita.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Confirmando...';
-        btnConfirmarCita.disabled = true;
-        
-        // Cerrar el modal
-        const modal = bootstrap.Modal.getInstance(confirmacionModal);
-        modal.hide();
-        
-        // Enviar el formulario
-        citaForm.submit();
-    });
-    
-    // Resetear el botón cuando se cierra el modal
-    confirmacionModal.addEventListener('hidden.bs.modal', function () {
-        btnConfirmarCita.innerHTML = '<i class="fas fa-check me-1"></i>Confirmar y Solicitar Cita';
-        btnConfirmarCita.disabled = false;
-    });
-    
-    // Ejecutar al cargar
-    actualizarInfoMascota();
-    actualizarRequerimientos();
-});
+// Datos dinámicos para el JavaScript
+window.mascotasData = {
+    {% for mascota in mascotas %}
+    '{{ mascota.id }}': {
+        'nombre': '{{ mascota.nombre }}',
+        'especie': '{{ mascota.get_tipo_display }}',
+        'raza': '{{ mascota.raza|default:"No especificada" }}',
+        'edad': '{{ mascota.edad|default_if_none:"No especificada" }}',
+        'fecha_nacimiento': '{{ mascota.fecha_nacimiento|date:"d/m/Y"|default:"No especificada" }}',
+        'peso': '{{ mascota.peso_actual|default:"No especificado" }}',
+        'sexo': '{{ mascota.get_sexo_display|default:"No especificado" }}',
+        'color': '{{ mascota.color|default:"No especificado" }}'
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
 </script>
+<script src="{% static 'citas/js/solicitar_cita.js' %}"></script>
+{% endblock %}
 {% endblock %}  

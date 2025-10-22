@@ -1,0 +1,827 @@
+/* Estilos para el carnet oficial de identificación animal */
+
+/* Configuración general del carnet */
+.carnet-oficial {
+    font-family: 'Arial', sans-serif;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border: 2px solid #000;
+    position: relative;
+    overflow: hidden;
+
+    /* Efectos 3D principales */
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.3),
+        0 1px 8px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
+    transition: all 0.6s ease;
+
+    /* Efecto de profundidad */
+    transform: rotateX(2deg) rotateY(-1deg);
+}
+
+.carnet-oficial:hover {
+    transform: rotateX(0deg) rotateY(0deg) translateY(-8px) scale(1.01);
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.5),
+        0 12px 35px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        inset 0 -3px 0 rgba(0,0,0,0.25),
+        0 0 40px rgba(30, 58, 138, 0.2);
+    animation: card-float 2s ease-in-out infinite;
+}
+
+@keyframes card-float {
+    0%, 100% {
+        transform: rotateX(0deg) rotateY(0deg) translateY(-8px) scale(1.01);
+    }
+    50% {
+        transform: rotateX(0deg) rotateY(0deg) translateY(-12px) scale(1.01);
+    }
+}
+
+/* ===========================================
+   ESTILOS PARA EL FRENTE DEL CARNET
+   =========================================== */
+
+.carnet-frente {
+    page-break-after: always;
+}
+
+/* Encabezado oficial con bandera */
+.encabezado-oficial {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #000;
+    position: relative;
+
+    /* Efectos 3D para el encabezado */
+    box-shadow:
+        inset 0 2px 4px rgba(255,255,255,0.3),
+        inset 0 -2px 4px rgba(0,0,0,0.3),
+        0 2px 8px rgba(0,0,0,0.2);
+    transform: translateZ(10px);
+}
+
+.bandera-colombia {
+    display: flex;
+    width: 60px;
+    height: 40px;
+    border: 1px solid #fff;
+}
+
+.bandera-franja {
+    flex: 1;
+}
+
+.bandera-franja.amarilla { background: #FFCD00; }
+.bandera-franja.azul { background: #0033A0; }
+.bandera-franja.roja { background: #C8102E; }
+
+.titulo-principal {
+    text-align: center;
+    flex: 1;
+}
+
+.republica {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+    letter-spacing: 1px;
+
+    /* Efecto 3D para texto */
+    text-shadow:
+        1px 1px 0px rgba(0,0,0,0.8),
+        2px 2px 4px rgba(0,0,0,0.4);
+    transform: translateZ(5px);
+}
+
+.ministerio {
+    font-size: 12px;
+    margin: 0 0 2px 0;
+    opacity: 0.9;
+
+    /* Efecto 3D sutil */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    transform: translateZ(3px);
+}
+
+.titulo-carnet {
+    font-size: 14px;
+    margin: 0;
+    font-weight: bold;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    padding-top: 2px;
+
+    /* Efecto 3D para título */
+    text-shadow:
+        1px 1px 0px rgba(0,0,0,0.6),
+        0 0 8px rgba(255,255,255,0.3);
+    transform: translateZ(4px);
+}
+
+.escudo-nacional {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+}
+
+.escudo-placeholder {
+    font-size: 24px;
+    color: #1e3a8a;
+}
+
+/* Número de identificación */
+.numero-identificacion {
+    background: #f8f9fa;
+    padding: 10px 20px;
+    text-align: center;
+    border-bottom: 2px solid #000;
+    font-family: 'Courier New', monospace;
+}
+
+.numero-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #495057;
+    margin-right: 10px;
+}
+
+.numero-valor {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    letter-spacing: 2px;
+}
+
+/* Área principal con foto e información */
+.area-principal {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.foto-mascota {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.foto-retrato {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #000;
+    display: block;
+
+    /* Efectos 3D para la foto */
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+    transform: translateZ(15px);
+    transition: transform 0.3s ease;
+}
+
+.foto-retrato:hover {
+    transform: translateZ(20px) scale(1.02);
+}
+
+.foto-placeholder-oficial {
+    width: 120px;
+    height: 150px;
+    background: #f8f9fa;
+    border: 3px solid #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+
+    /* Efectos 3D para placeholder */
+    box-shadow:
+        inset 0 2px 4px rgba(0,0,0,0.1),
+        0 2px 8px rgba(0,0,0,0.2);
+    transform: translateZ(10px);
+}
+
+.foto-marco {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid #000;
+    pointer-events: none;
+
+    /* Efecto 3D para el marco */
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.5),
+        inset 0 0 0 1px rgba(0,0,0,0.3);
+}
+
+.info-mascota {
+    flex: 1;
+}
+
+.seccion-titulo-oficial {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 3px;
+}
+
+.campo-info {
+    display: flex;
+    margin-bottom: 6px;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.campo-info:last-child {
+    margin-bottom: 0;
+}
+
+.campo-label {
+    font-weight: bold;
+    font-size: 10px;
+    color: #000;
+    min-width: 100px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.campo-valor {
+    font-size: 11px;
+    color: #000;
+    flex-grow: 1;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+}
+
+/* Información del propietario */
+.info-propietario {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.info-propietario .seccion-titulo-oficial {
+    color: #495057;
+    border-bottom-color: #495057;
+}
+
+/* Elementos de seguridad */
+.elementos-seguridad {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+}
+
+.firma-digital {
+    flex: 1;
+    text-align: center;
+}
+
+.firma-digital .firma-linea {
+    width: 100px;
+    height: 1px;
+    background: #000;
+    margin: 0 auto 3px;
+}
+
+.firma-digital .firma-texto {
+    font-size: 8px;
+    font-weight: bold;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+/* Microtexto de seguridad */
+.microtexto-seguridad {
+    background: repeating-linear-gradient(
+        90deg,
+        #000 0px,
+        #000 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    padding: 5px 20px;
+    border-top: 1px solid #000;
+}
+
+.microtexto {
+    font-size: 6px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+/* ===========================================
+   ESTILOS PARA EL REVERSO DEL CARNET
+   =========================================== */
+
+.carnet-reverso {
+    background: #fff;
+}
+
+/* Encabezado del reverso */
+.reverso-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #000;
+
+    /* Efectos 3D para encabezado reverso */
+    box-shadow:
+        inset 0 2px 4px rgba(255,255,255,0.3),
+        inset 0 -2px 4px rgba(0,0,0,0.3),
+        0 2px 8px rgba(0,0,0,0.2);
+    transform: translateZ(8px);
+}
+
+.titulo-reverso {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.codigo-barras {
+    flex-shrink: 0;
+}
+
+.barras-placeholder {
+    display: flex;
+    align-items: flex-end;
+    height: 40px;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 2px;
+
+    /* Efectos 3D para código de barras */
+    box-shadow:
+        0 2px 6px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    transform: translateZ(8px);
+    transition: transform 0.3s ease;
+}
+
+.barras-placeholder:hover {
+    transform: translateZ(12px) scale(1.02);
+}
+
+.barra-negra {
+    width: 3px;
+    background: #000;
+    margin: 0 1px;
+}
+
+.barra-blanca {
+    width: 3px;
+    background: #fff;
+    margin: 0 1px;
+}
+
+.codigo-numero {
+    font-size: 8px;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    margin-top: 2px;
+    color: #000;
+}
+
+/* Información médica en el reverso */
+.info-medica-reverso {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.seccion-titulo-reverso {
+    font-size: 11px;
+    font-weight: bold;
+    color: #495057;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 3px;
+}
+
+.campo-medico {
+    display: flex;
+    margin-bottom: 6px;
+    align-items: center;
+}
+
+.campo-medico:last-child {
+    margin-bottom: 0;
+}
+
+.campo-label-medico {
+    font-weight: bold;
+    font-size: 9px;
+    color: #6c757d;
+    min-width: 120px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.campo-valor-medico {
+    font-size: 10px;
+    color: #212529;
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+/* Espacio para notas médicas */
+.notas-medicas {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.espacio-notas {
+    margin-top: 10px;
+}
+
+.linea-nota {
+    height: 1px;
+    background: #dee2e6;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #000;
+
+    /* Efecto 3D sutil para líneas */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    transform: translateZ(2px);
+}
+
+/* Información de expedición */
+.info-expedicion {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.fechas-expedicion {
+    flex: 1;
+}
+
+.fecha-exp,
+.fecha-ven {
+    margin-bottom: 10px;
+}
+
+.fecha-exp:last-child,
+.fecha-ven:last-child {
+    margin-bottom: 0;
+}
+
+.fecha-valor {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    font-family: 'Courier New', monospace;
+}
+
+.firma-veterinario {
+    flex: 1;
+    text-align: center;
+}
+
+.firma-linea-vet {
+    width: 100px;
+    height: 1px;
+    background: #000;
+    margin: 0 auto 5px;
+    border-bottom: 1px solid #000;
+
+    /* Efecto 3D para línea de firma */
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    transform: translateZ(6px);
+}
+
+.firma-texto-vet {
+    font-size: 8px;
+    font-weight: bold;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+.sello-veterinario {
+    margin-top: 10px;
+}
+
+.sello-circulo {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    background: #fff;
+
+    /* Efectos 3D para sello */
+    box-shadow:
+        0 3px 8px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        inset 0 -1px 0 rgba(0,0,0,0.2);
+    transform: translateZ(12px);
+    transition: transform 0.3s ease;
+}
+
+.sello-circulo:hover {
+    transform: translateZ(16px) scale(1.05);
+}
+
+/* Información de la entidad expedidora */
+.entidad-expedidora {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.entidad-info {
+    flex: 1;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.entidad-info strong {
+    font-size: 11px;
+    color: #000;
+}
+
+.contacto-emergencia {
+    flex: 1;
+    text-align: right;
+}
+
+.emergencia-numero {
+    font-size: 12px;
+    font-weight: bold;
+    color: #dc3545;
+    font-family: 'Courier New', monospace;
+}
+
+/* Elementos de seguridad del reverso */
+.elementos-seguridad-reverso {
+    background: repeating-linear-gradient(
+        45deg,
+        #f8f9fa 0px,
+        #f8f9fa 10px,
+        #e9ecef 10px,
+        #e9ecef 20px
+    );
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #dee2e6;
+}
+
+.patron-seguridad {
+    flex: 1;
+}
+
+.guilloche-pattern {
+    height: 30px;
+    background: repeating-linear-gradient(
+        45deg,
+        #6c757d 0px,
+        #6c757d 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    opacity: 0.3;
+}
+
+.holograma-simulado {
+    flex: 1;
+    text-align: center;
+}
+
+.holograma-placeholder {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+    border: 1px solid #000;
+    border-radius: 3px;
+
+    /* Efectos 3D para holograma */
+    box-shadow:
+        0 2px 6px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        0 0 10px rgba(255,215,0,0.5);
+    transform: translateZ(10px);
+    position: relative;
+    overflow: hidden;
+    animation: hologram-shine 3s ease-in-out infinite;
+}
+
+@keyframes hologram-shine {
+    0%, 100% {
+        box-shadow:
+            0 2px 6px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.8),
+            0 0 10px rgba(255,215,0,0.5);
+    }
+    50% {
+        box-shadow:
+            0 2px 6px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.8),
+            0 0 20px rgba(255,215,0,0.8),
+            0 0 30px rgba(255,215,0,0.3);
+    }
+}
+
+/* ===========================================
+   ESTILOS DE IMPRESIÓN
+   =========================================== */
+
+@media print {
+    .carnet-oficial {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        transform: scale(0.95);
+        transform-origin: top left;
+    }
+
+    .carnet-frente,
+    .carnet-reverso {
+        page-break-after: always;
+    }
+
+    .encabezado-oficial,
+    .reverso-header {
+        background: #1e3a8a !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .bandera-franja {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .campo-info,
+    .campo-medico {
+        break-inside: avoid;
+    }
+
+    .info-medica-reverso,
+    .notas-medicas,
+    .info-expedicion,
+    .entidad-expedidora {
+        break-inside: avoid;
+    }
+
+    .microtexto-seguridad {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .elementos-seguridad-reverso {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+}
+
+/* ===========================================
+   ESTILOS RESPONSIVE
+   =========================================== */
+
+@media (max-width: 768px) {
+    .carnet-oficial {
+        font-size: 12px;
+    }
+
+    .encabezado-oficial {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .bandera-colombia {
+        width: 45px;
+        height: 30px;
+    }
+
+    .republica {
+        font-size: 14px;
+    }
+
+    .ministerio {
+        font-size: 10px;
+    }
+
+    .titulo-carnet {
+        font-size: 12px;
+    }
+
+    .area-principal {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .foto-retrato,
+    .foto-placeholder-oficial {
+        width: 100px;
+        height: 125px;
+    }
+
+    .info-mascota {
+        width: 100%;
+        text-align: center;
+    }
+
+    .campo-label {
+        min-width: 90px;
+        font-size: 9px;
+    }
+
+    .campo-valor {
+        font-size: 10px;
+    }
+
+    .info-propietario {
+        padding: 10px 15px;
+    }
+
+    .elementos-seguridad {
+        padding: 8px 15px;
+    }
+
+    .reverso-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .titulo-reverso {
+        font-size: 12px;
+    }
+
+    .info-expedicion {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 15px;
+    }
+
+    .fechas-expedicion {
+        order: -1;
+    }
+
+    .entidad-expedidora {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .contacto-emergencia {
+        text-align: left;
+    }
+}

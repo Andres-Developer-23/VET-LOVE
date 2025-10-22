@@ -27,12 +27,22 @@ class Producto(models.Model):
         ('juguete', 'Juguetes'),
     ]
 
+    TIPO_MASCOTA = [
+        ('perro', 'Perro'),
+        ('gato', 'Gato'),
+        ('ave', 'Ave'),
+        ('roedor', 'Roedor'),
+        ('reptil', 'Reptil'),
+        ('todos', 'Todos los tipos'),
+    ]
+
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     precio_descuento = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.01'))])
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos')
     tipo = models.CharField(max_length=20, choices=TIPO_PRODUCTO, default='accesorio')
+    tipo_mascota = models.CharField(max_length=20, choices=TIPO_MASCOTA, default='todos', verbose_name="Tipo de mascota")
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     stock = models.PositiveIntegerField(default=0)
     stock_minimo = models.PositiveIntegerField(default=5)
@@ -151,3 +161,33 @@ class ItemOrden(models.Model):
     def save(self, *args, **kwargs):
         self.subtotal = self.cantidad * self.precio
         super().save(*args, **kwargs)
+
+class Comentario(models.Model):
+    CALIFICACION_CHOICES = [
+        (1, '1 estrella'),
+        (2, '2 estrellas'),
+        (3, '3 estrellas'),
+        (4, '4 estrellas'),
+        (5, '5 estrellas'),
+    ]
+
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='comentarios')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comentarios')
+    calificacion = models.IntegerField(choices=CALIFICACION_CHOICES)
+    comentario = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    aprobado = models.BooleanField(default=True)  # Para moderación futura
+
+    class Meta:
+        verbose_name = 'Comentario'
+        verbose_name_plural = 'Comentarios'
+        ordering = ['-fecha_creacion']
+        unique_together = ['producto', 'usuario']  # Un comentario por usuario por producto
+
+    def __str__(self):
+        return f"Comentario de {self.usuario.username} en {self.producto.nombre}"
+
+    @property
+    def estrellas_display(self):
+        return '★' * self.calificacion + '☆' * (5 - self.calificacion)

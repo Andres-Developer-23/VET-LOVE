@@ -1,0 +1,40 @@
+.product-image-small {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+}
+
+.search-box {
+    max-width: 300px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge-oferta {
+    background: linear-gradient(45deg, #dc3545, #a71e2a);
+    color: white;
+}
+
+.badge-lowstock {
+    background: linear-gradient(45deg, #ffc107, #e0a800);
+    color: white;
+}
+
+.table-warning {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}

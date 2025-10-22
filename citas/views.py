@@ -7,10 +7,10 @@ from .forms import CitaForm
 from .models import Cita
 from mascotas.models import Mascota
 
-@login_required
 def solicitar_cita(request):
+    # Verificar que el usuario tenga perfil de cliente
     if not hasattr(request.user, 'cliente'):
-        messages.warning(request, 'Debes completar tu perfil antes de solicitar una cita.')
+        messages.warning(request, 'Debes completar tu perfil de cliente antes de solicitar una cita.')
         return redirect('clientes:crear_perfil_cliente')
     
     # Verificar si el usuario tiene mascotas
@@ -69,40 +69,83 @@ def solicitar_cita(request):
         'mascotas': mascotas  # Pasar las mascotas al template para mostrar información
     })
 
-@login_required
 def mis_citas(request):
-    citas = None
-    if hasattr(request.user, 'cliente'):
-        mascotas = Mascota.objects.filter(cliente=request.user.cliente)
-        try:
-            citas = Cita.objects.filter(mascota__in=mascotas).order_by('-fecha')
-        except Exception as e:
-            # Si hay error por campos faltantes, mostrar página sin citas
-            messages.error(request, 'Error al cargar las citas. Por favor, contacta al administrador.')
-            citas = []
+    # Verificar que el usuario tenga perfil de cliente
+    if not hasattr(request.user, 'cliente'):
+        messages.warning(request, 'Debes completar tu perfil de cliente para ver tus citas.')
+        return redirect('clientes:crear_perfil_cliente')
     
+    # Administradores pueden ver todas las citas, clientes solo las suyas
+    es_admin = request.user.is_staff or request.user.is_superuser
+    
+    try:
+        if es_admin:
+            citas = Cita.objects.all().select_related('mascota__cliente__usuario').order_by('-fecha')
+        else:
+            mascotas = Mascota.objects.filter(cliente=request.user.cliente)
+            citas = Cita.objects.filter(mascota__in=mascotas).order_by('-fecha')
+    except Exception as e:
+        # Si hay error por campos faltantes, mostrar página sin citas
+        messages.error(request, 'Error al cargar las citas. Por favor, contacta al administrador.')
+        citas = []
+
     return render(request, 'citas/mis_citas.html', {
         'citas': citas,
-        'tiene_perfil': hasattr(request.user, 'cliente')
+        'tiene_perfil': True,
+        'es_admin': es_admin
     })
 
-@login_required
 def cancelar_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id)
-    
-    # Verificar que el usuario es el dueño de la mascota
-    if not hasattr(request.user, 'cliente') or cita.mascota.cliente != request.user.cliente:
-        messages.error(request, 'No tienes permiso para cancelar esta cita.')
-        return redirect('citas:mis_citas')
-    
+
+    # Verificar permisos: administradores pueden cancelar todas, clientes solo las suyas
+    es_admin = request.user.is_staff or request.user.is_superuser
+    if not es_admin:
+        if not hasattr(request.user, 'cliente') or cita.mascota.cliente != request.user.cliente:
+            messages.error(request, 'No tienes permiso para cancelar esta cita.')
+            return redirect('citas:mis_citas')
+
     if cita.puede_ser_cancelada():
         cita.estado = 'cancelada'
         cita.save()
         messages.success(request, 'Cita cancelada correctamente.')
     else:
         messages.error(request, 'No se puede cancelar una cita en su estado actual.')
-    
-    return redirect('citas:mis_citas')
+
+from django.http import JsonResponse
+
+@login_required
+def cambiar_estado_cita(request, cita_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+    try:
+        cita = get_object_or_404(Cita, id=cita_id)
+
+        # Verificar permisos: solo administradores pueden cambiar estado
+        if not request.user.is_staff:
+            return JsonResponse({'success': False, 'error': 'No tienes permisos para realizar esta acción'})
+
+        nuevo_estado = request.POST.get('estado') or request.GET.get('estado')
+        if not nuevo_estado:
+            return JsonResponse({'success': False, 'error': 'Estado no especificado'})
+
+        # Validar que el estado sea válido
+        estados_validos = ['programada', 'confirmada', 'completada', 'cancelada']
+        if nuevo_estado not in estados_validos:
+            return JsonResponse({'success': False, 'error': 'Estado no válido'})
+
+        # Cambiar el estado
+        cita.estado = nuevo_estado
+        cita.save()
+
+        return JsonResponse({
+            'success': True,
+            'mensaje': f'Cita cambiada a {nuevo_estado} correctamente'
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 # Eliminamos la vista confirmar_cita ya que no es necesaria
 # porque las citas se confirman directamente desde el modal

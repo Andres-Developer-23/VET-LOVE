@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Notificaciones{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-bell me-2"></i>Mis Notificaciones</h2>
+            {% if notificaciones_no_leidas %}
+            <a href="?marcar_leidas=1" class="btn btn-outline-primary">
+                <i class="fas fa-check-double me-1"></i>Marcar todas como leídas
+            </a>
+            {% endif %}
+        </div>
+
+        {% if not notificaciones %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No tienes notificaciones en este momento.
+        </div>
+        {% else %}
+        <div class="row">
+            {% for notificacion in notificaciones %}
+            <div class="col-12 mb-3">
+                <div class="card {% if not notificacion.leida %}border-primary{% endif %} {% if user.is_staff and notificacion.prioridad == 'urgente' %}border-danger{% elif user.is_staff and notificacion.prioridad == 'alta' %}border-warning{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    {% if not notificacion.leida %}
+                                    <span class="badge bg-primary me-2">Nueva</span>
+                                    {% endif %}
+                                    {% if user.is_staff %}
+                                        {% if notificacion.prioridad == 'urgente' %}
+                                            <span class="badge bg-danger me-2">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>{{ notificacion.get_prioridad_display }}
+                                            </span>
+                                        {% elif notificacion.prioridad == 'alta' %}
+                                            <span class="badge bg-warning me-2">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ notificacion.get_prioridad_display }}
+                                            </span>
+                                        {% endif %}
+                                        <span class="badge bg-secondary">{{ notificacion.get_tipo_display }}</span>
+                                        <small class="text-muted ms-2">
+                                            <i class="fas fa-clock me-1"></i>{{ notificacion.fecha_creacion|date:"d/m/Y H:i" }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                                <h5 class="card-title">
+                                    <a href="{% url 'notificaciones:detalle' notificacion.id %}" class="text-decoration-none text-dark">
+                                        {{ notificacion.titulo }}
+                                    </a>
+                                </h5>
+                                <p class="card-text">{{ notificacion.mensaje|truncatechars:150 }}</p>
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'notificaciones:detalle' notificacion.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i>Ver detalle
+                                    </a>
+                                    {% if notificacion.url_relacionada %}
+                                    <a href="{{ notificacion.url_relacionada }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-external-link-alt me-1"></i>Ir al elemento
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="ms-3">
+                                {% if not notificacion.leida %}
+                                <button class="btn btn-sm btn-outline-success marcar-leida"
+                                        data-id="{{ notificacion.id }}"
+                                        title="Marcar como leída">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación si es necesario -->
+        {% if notificaciones.paginator %}
+        <nav aria-label="Paginación de notificaciones" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if notificaciones.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ notificaciones.previous_page_number }}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in notificaciones.paginator.page_range %}
+                <li class="page-item {% if num == notificaciones.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if notificaciones.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ notificaciones.next_page_number }}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar marcar como leída
+    document.querySelectorAll('.marcar-leida').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const notificacionId = this.dataset.id;
+            const card = this.closest('.card');
+
+            fetch(`/notificaciones/marcar-leida/${notificacionId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remover el badge de nueva y el botón
+                    card.querySelector('.badge.bg-primary')?.remove();
+                    this.remove();
+                    card.classList.remove('border-primary');
+
+                    // Actualizar contador si existe
+                    const contador = document.getElementById('notificaciones-count');
+                    if (contador && data.total_no_leidas !== undefined) {
+                        contador.textContent = data.total_no_leidas;
+                        if (data.total_no_leidas === 0) {
+                            contador.style.display = 'none';
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al marcar la notificación como leída');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

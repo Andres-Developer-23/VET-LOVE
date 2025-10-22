@@ -1,6 +1,7 @@
 from django import forms
 from .models import Mascota, HistorialMedico, Vacuna
 from datetime import date
+from django.utils.safestring import mark_safe
 
 class MascotaForm(forms.ModelForm):
     # INFORMACIÓN VITAL PARA EMERGENCIAS (CAMPOS NUEVOS)
@@ -8,7 +9,7 @@ class MascotaForm(forms.ModelForm):
         max_digits=5,
         decimal_places=2,
         required=True,
-        label='<i class="fas fa-weight-scale me-2"></i>Peso Actual (kg) *',
+        label='<i class="fas fa-weight-scale me-2"></i>Peso Actual (kg)',
         help_text='Peso exacto en kilogramos para dosificación precisa de medicamentos',
         widget=forms.NumberInput(attrs={
             'class': 'form-control form-control-lg',
@@ -113,7 +114,7 @@ class MascotaForm(forms.ModelForm):
             'placeholder': 'Ej: Carprofeno 50mg - 1/2 tableta cada 12 horas para dolor articular...'
         }),
         required=True,
-        label='<i class="fas fa-pills me-2"></i>Medicación Actual *',
+        label='<i class="fas fa-pills me-2"></i>Medicación Actual',
         help_text='Liste TODOS los medicamentos, suplementos, dosis y frecuencia. Si no hay, escriba "Ninguna"'
     )
     
@@ -121,7 +122,7 @@ class MascotaForm(forms.ModelForm):
     comportamiento_consulta = forms.ChoiceField(
         choices=Mascota.COMPORTAMIENTO_CONSULTA_CHOICES,
         required=True,
-        label='<i class="fas fa-heart me-2"></i>Comportamiento en Consulta *',
+        label='<i class="fas fa-heart me-2"></i>Comportamiento en Consulta',
         help_text='Comportamiento esperado durante exámenes y procedimientos médicos',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
@@ -153,7 +154,7 @@ class MascotaForm(forms.ModelForm):
     estado_vacunacion = forms.ChoiceField(
         choices=Mascota.ESTADO_VACUNACION_CHOICES,
         required=True,
-        label='<i class="fas fa-syringe me-2"></i>Estado de Vacunación *',
+        label='<i class="fas fa-syringe me-2"></i>Estado de Vacunación',
         help_text='Información crucial para prevención de enfermedades infecciosas',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
@@ -171,7 +172,7 @@ class MascotaForm(forms.ModelForm):
     desparasitacion = forms.ChoiceField(
         choices=Mascota.DESPARASITACION_CHOICES,
         required=True,
-        label='<i class="fas fa-bug me-2"></i>Estado de Desparasitación *',
+        label='<i class="fas fa-bug me-2"></i>Estado de Desparasitación',
         help_text='Control de parásitos internos y externos para salud integral',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
@@ -225,11 +226,11 @@ class MascotaForm(forms.ModelForm):
             }),
         }
         labels = {
-            'nombre': '<i class="fas fa-paw me-2"></i>Nombre de la Mascota *',
-            'tipo': '<i class="fas fa-dog me-2"></i>Especie *',
-            'raza': '<i class="fas fa-dna me-2"></i>Raza o Cruce *',
-            'sexo': '<i class="fas fa-venus-mars me-2"></i>Sexo *',
-            'fecha_nacimiento': '<i class="fas fa-birthday-cake me-2"></i>Fecha de Nacimiento *',
+            'nombre': '<i class="fas fa-paw me-2"></i>Nombre de la Mascota',
+            'tipo': '<i class="fas fa-dog me-2"></i>Especie',
+            'raza': '<i class="fas fa-dna me-2"></i>Raza o Cruce',
+            'sexo': '<i class="fas fa-venus-mars me-2"></i>Sexo',
+            'fecha_nacimiento': '<i class="fas fa-birthday-cake me-2"></i>Fecha de Nacimiento',
             'foto': '<i class="fas fa-camera me-2"></i>Fotografía',
             'color': '<i class="fas fa-palette me-2"></i>Color Principal',
             'caracteristicas': '<i class="fas fa-search me-2"></i>Señas Particulares',
@@ -244,16 +245,66 @@ class MascotaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Campos obligatorios para atención veterinaria
-        required_fields = [
-            'nombre', 'tipo', 'raza', 'sexo', 'fecha_nacimiento',
+
+        # Si es una instancia existente (editar), algunos campos pueden ser opcionales
+        is_editing = self.instance and self.instance.pk is not None
+
+        # Campos siempre obligatorios
+        always_required = ['nombre', 'tipo', 'raza', 'sexo', 'fecha_nacimiento']
+
+        # Campos obligatorios solo para nuevas mascotas
+        new_only_required = [
             'peso_actual', 'comportamiento_consulta', 'estado_vacunacion',
             'desparasitacion', 'medicacion_actual'
         ]
-        
-        for field_name in required_fields:
+
+        for field_name in always_required:
             if field_name in self.fields:
                 self.fields[field_name].widget.attrs.update({'required': 'required'})
+
+        # Para nuevas mascotas, estos campos también son requeridos
+        if not is_editing:
+            for field_name in new_only_required:
+                if field_name in self.fields:
+                    self.fields[field_name].widget.attrs.update({'required': 'required'})
+                    self.fields[field_name].required = True
+        else:
+            # Para editar, estos campos son opcionales
+            for field_name in new_only_required:
+                if field_name in self.fields:
+                    self.fields[field_name].required = False
+                    # Remover required del widget si existe
+                    if 'required' in self.fields[field_name].widget.attrs:
+                        del self.fields[field_name].widget.attrs['required']
+        
+        # Etiquetas con iconos y asteriscos dinámicos según si son requeridos
+        is_editing = self.instance and self.instance.pk is not None
+
+        label_map = {
+            'nombre': ('<i class="fas fa-paw me-2"></i>Nombre de la Mascota', True),  # Siempre requerido
+            'tipo': ('<i class="fas fa-dog me-2"></i>Especie', True),
+            'raza': ('<i class="fas fa-dna me-2"></i>Raza o Cruce', True),
+            'sexo': ('<i class="fas fa-venus-mars me-2"></i>Sexo', True),
+            'fecha_nacimiento': ('<i class="fas fa-birthday-cake me-2"></i>Fecha de Nacimiento', True),
+            'foto': ('<i class="fas fa-camera me-2"></i>Fotografía', False),
+            'color': ('<i class="fas fa-palette me-2"></i>Color Principal', False),
+            'caracteristicas': ('<i class="fas fa-search me-2"></i>Señas Particulares', False),
+            'microchip': ('<i class="fas fa-microchip me-2"></i>Número de Microchip', False),
+            'peso_actual': ('<i class="fas fa-weight-scale me-2"></i>Peso Actual (kg)', not is_editing),
+            'medicacion_actual': ('<i class="fas fa-pills me-2"></i>Medicación Actual', not is_editing),
+            'comportamiento_consulta': ('<i class="fas fa-heart me-2"></i>Comportamiento en Consulta', not is_editing),
+            'estado_vacunacion': ('<i class="fas fa-syringe me-2"></i>Estado de Vacunación', not is_editing),
+            'fecha_ultima_vacuna': ('<i class="fas fa-calendar-day me-2"></i>Fecha de Última Vacuna', False),
+            'desparasitacion': ('<i class="fas fa-bug me-2"></i>Estado de Desparasitación', not is_editing),
+            'fecha_ultima_desparasitacion': ('<i class="fas fa-calendar-day me-2"></i>Fecha de Última Desparasitación', False),
+            'fecha_ultima_cirugia': ('<i class="fas fa-calendar-day me-2"></i>Fecha de la Última Cirugía', False),
+        }
+
+        for fname, (lbl, is_required) in label_map.items():
+            if fname in self.fields:
+                if is_required:
+                    lbl += ' *'
+                self.fields[fname].label = mark_safe(lbl)
 
     def clean_fecha_nacimiento(self):
         fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
@@ -390,7 +441,7 @@ class HistorialMedicoForm(forms.ModelForm):
             'placeholder': 'Describa los síntomas, duración, evolución del problema y cualquier cambio observado...'
         }),
         required=True,
-        label='<i class="fas fa-stethoscope me-2"></i>Motivo de la Consulta *',
+        label='<i class="fas fa-stethoscope me-2"></i>Motivo de la Consulta',
         help_text='Describa detalladamente los síntomas y duración del problema'
     )
     
@@ -450,11 +501,11 @@ class HistorialMedicoForm(forms.ModelForm):
             }),
         }
         labels = {
-            'veterinario': '<i class="fas fa-user-md me-2"></i>Veterinario Responsable *',
-            'diagnostico': '<i class="fas fa-diagnoses me-2"></i>Diagnóstico *',
-            'tratamiento': '<i class="fas fa-prescription me-2"></i>Tratamiento Prescrito *',
-            'observaciones': '<i class="fas fa-clipboard-list me-2"></i>Observaciones y Recomendaciones',
-            'peso': '<i class="fas fa-weight-scale me-2"></i>Peso Actual (kg) *',
+            'veterinario': 'Veterinario Responsable',
+            'diagnostico': 'Diagnóstico',
+            'tratamiento': 'Tratamiento Prescrito',
+            'observaciones': 'Observaciones y Recomendaciones',
+            'peso': 'Peso Actual (kg)',
         }
         help_texts = {
             'peso': 'Peso actual en kilogramos con dos decimales para precisión médica',
@@ -466,6 +517,17 @@ class HistorialMedicoForm(forms.ModelForm):
         for field_name in required_fields:
             if field_name in self.fields:
                 self.fields[field_name].widget.attrs.update({'required': 'required'})
+        # Etiquetas con iconos como HTML seguro (sin asteriscos manuales)
+        label_map = {
+            'veterinario': '<i class="fas fa-user-md me-2"></i>Veterinario Responsable',
+            'peso': '<i class="fas fa-weight-scale me-2"></i>Peso Actual (kg)',
+            'diagnostico': '<i class="fas fa-diagnoses me-2"></i>Diagnóstico',
+            'tratamiento': '<i class="fas fa-prescription me-2"></i>Tratamiento Prescrito',
+            'observaciones': '<i class="fas fa-clipboard-list me-2"></i>Observaciones y Recomendaciones',
+        }
+        for fname, lbl in label_map.items():
+            if fname in self.fields:
+                self.fields[fname].label = mark_safe(lbl)
 
     def clean_peso(self):
         peso = self.cleaned_data.get('peso')
@@ -501,7 +563,7 @@ class VacunaForm(forms.ModelForm):
     lote = forms.CharField(
         max_length=20,
         required=True,
-        label='<i class="fas fa-barcode me-2"></i>Número de Lote *',
+        label='<i class="fas fa-barcode me-2"></i>Número de Lote',
         help_text='Número de lote del fabricante para trazabilidad',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -512,7 +574,7 @@ class VacunaForm(forms.ModelForm):
     laboratorio = forms.CharField(
         max_length=100,
         required=True,
-        label='<i class="fas fa-industry me-2"></i>Laboratorio Fabricante *',
+        label='<i class="fas fa-industry me-2"></i>Laboratorio Fabricante',
         help_text='Empresa fabricante de la vacuna',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -576,9 +638,9 @@ class VacunaForm(forms.ModelForm):
             }),
         }
         labels = {
-            'nombre': '<i class="fas fa-syringe me-2"></i>Nombre de la Vacuna *',
-            'fecha_aplicacion': '<i class="fas fa-calendar-day me-2"></i>Fecha de Aplicación *',
-            'fecha_proxima': '<i class="fas fa-calendar-check me-2"></i>Fecha de Próxima Aplicación *',
+            'nombre': '<i class="fas fa-syringe me-2"></i>Nombre de la Vacuna',
+            'fecha_aplicacion': '<i class="fas fa-calendar-day me-2"></i>Fecha de Aplicación',
+            'fecha_proxima': '<i class="fas fa-calendar-check me-2"></i>Fecha de Próxima Aplicación',
             'aplicada': '<i class="fas fa-check-circle me-2"></i>¿Vacuna aplicada en esta visita?',
         }
         help_texts = {
@@ -589,20 +651,49 @@ class VacunaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        required_fields = ['nombre', 'fecha_aplicacion', 'fecha_proxima', 'lote', 'laboratorio']
+        required_fields = ['nombre', 'fecha_aplicacion', 'fecha_proxima', 'lote', 'laboratorio', 'via_aplicacion']
         for field_name in required_fields:
             if field_name in self.fields:
                 self.fields[field_name].widget.attrs.update({'required': 'required'})
+        # Establecer fecha de aplicación por defecto a hoy si no está enlazado
+        if not self.is_bound and 'fecha_aplicacion' in self.fields and not self.fields['fecha_aplicacion'].initial:
+            self.fields['fecha_aplicacion'].initial = date.today()
+        
+        # Etiquetas con iconos como HTML seguro (sin asteriscos manuales)
+        label_map = {
+            'nombre': '<i class="fas fa-syringe me-2"></i>Nombre de la Vacuna',
+            'aplicada': '<i class="fas fa-check-circle me-2"></i>¿Vacuna aplicada en esta visita?',
+            'fecha_aplicacion': '<i class="fas fa-calendar-day me-2"></i>Fecha de Aplicación',
+            'fecha_proxima': '<i class="fas fa-calendar-check me-2"></i>Fecha de Próxima Aplicación',
+            'lote': '<i class="fas fa-barcode me-2"></i>Número de Lote',
+            'laboratorio': '<i class="fas fa-industry me-2"></i>Laboratorio Fabricante',
+            'via_aplicacion': '<i class="fas fa-tint me-2"></i>Vía de Aplicación',
+            'sitio_aplicacion': '<i class="fas fa-map-marker-alt me-2"></i>Sitio de Aplicación',
+            'reacciones_adversas': '<i class="fas fa-exclamation-triangle me-2"></i>Reacciones Adversas',
+        }
+        for fname, lbl in label_map.items():
+            if fname in self.fields:
+                self.fields[fname].label = mark_safe(lbl)
 
     def clean(self):
         cleaned_data = super().clean()
         fecha_aplicacion = cleaned_data.get('fecha_aplicacion')
         fecha_proxima = cleaned_data.get('fecha_proxima')
+        aplicada = cleaned_data.get('aplicada')
 
+        # Validaciones de fecha de aplicación según estado 'aplicada'
+        if fecha_aplicacion:
+            hoy = date.today()
+            if aplicada:
+                if fecha_aplicacion > hoy:
+                    self.add_error('fecha_aplicacion', 'Si la vacuna está marcada como aplicada, la fecha no puede ser futura')
+            else:
+                if fecha_aplicacion < hoy:
+                    self.add_error('fecha_aplicacion', 'Para vacunas planificadas, la fecha debe ser hoy o futura')
+
+        # Validación de próxima dosis
         if fecha_proxima and fecha_aplicacion and fecha_proxima <= fecha_aplicacion:
-            raise forms.ValidationError({
-                'fecha_proxima': 'La próxima aplicación debe ser posterior a la fecha de aplicación actual'
-            })
+            self.add_error('fecha_proxima', 'La próxima aplicación debe ser posterior a la fecha de aplicación')
         
         return cleaned_data
 

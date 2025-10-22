@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Recordatorios{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-calendar-check me-2"></i>Mis Recordatorios</h2>
+
+        {% if not recordatorios %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No tienes recordatorios activos en este momento.
+        </div>
+        {% else %}
+        <div class="row">
+            {% for recordatorio in recordatorios %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0 me-3">
+                                {% if recordatorio.tipo == 'cita' %}
+                                <i class="fas fa-calendar-alt fa-2x text-primary"></i>
+                                {% elif recordatorio.tipo == 'vacuna' %}
+                                <i class="fas fa-syringe fa-2x text-success"></i>
+                                {% elif recordatorio.tipo == 'desparasitacion' %}
+                                <i class="fas fa-pills fa-2x text-warning"></i>
+                                {% elif recordatorio.tipo == 'medicamento' %}
+                                <i class="fas fa-prescription-bottle fa-2x text-danger"></i>
+                                {% else %}
+                                <i class="fas fa-bell fa-2x text-info"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">{{ recordatorio.titulo }}</h5>
+                                <span class="badge bg-secondary">{{ recordatorio.get_tipo_display }}</span>
+                            </div>
+                        </div>
+
+                        <p class="card-text">{{ recordatorio.mensaje }}</p>
+
+                        <div class="mt-3">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-clock me-1"></i>
+                                <strong>Fecha:</strong> {{ recordatorio.fecha_recordatorio|date:"d/m/Y H:i" }}
+                            </small>
+                            <small class="text-muted d-block">
+                                <i class="fas fa-bell me-1"></i>
+                                <strong>Recordatorio:</strong> {{ recordatorio.dias_anticipacion }} día(s) antes
+                            </small>
+                            {% if recordatorio.enviado %}
+                            <small class="text-success d-block">
+                                <i class="fas fa-check-circle me-1"></i>Recordatorio enviado
+                            </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

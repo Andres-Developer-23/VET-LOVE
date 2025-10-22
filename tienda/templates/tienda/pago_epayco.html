@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Procesando Pago - Veterinaria Vet Love{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-credit-card me-2"></i>Procesando Pago Seguro
+                    </h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                        <h5>Conectando con Epayco</h5>
+                        <p class="text-muted">Serás redirigido a la pasarela de pagos segura de Epayco</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Orden #{{ orden.numero_orden }}</strong><br>
+                        Total a pagar: <strong>${{ orden.total|floatformat:0 }}</strong> COP
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Preparando pago seguro...</p>
+                    </div>
+
+                    <!-- Formulario oculto para Epayco -->
+                    <form id="epaycoForm" method="post" action="{{ epayco_url }}" style="display: none;">
+                        {% for key, value in epayco_data.items %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                    </form>
+
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-success btn-lg" onclick="submitEpaycoForm()">
+                            <i class="fas fa-lock me-2"></i>Continuar al Pago Seguro
+                        </button>
+                        <br>
+                        <small class="text-muted mt-2 d-block">
+                            Serás redirigido a Epayco para completar el pago de forma segura
+                        </small>
+                    </div>
+
+                    <!-- Debug info (remover en producción) -->
+                    {% if debug %}
+                    <div class="mt-4 p-3 bg-light border rounded">
+                        <h6>Datos enviados a Epayco (debug):</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless">
+                                {% for key, value in epayco_data.items %}
+                                <tr>
+                                    <td class="fw-bold">{{ key }}</td>
+                                    <td>{{ value|default:"(vacío)" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <p class="mt-2"><strong>URL:</strong> {{ epayco_url }}</p>
+                        <div class="alert alert-warning small">
+                            <strong>Nota:</strong> Si los valores aparecen como "(vacío)", configura las variables de entorno EPAYCO_* en tu archivo .env
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function submitEpaycoForm() {
+    document.getElementById('epaycoForm').submit();
+}
+</script>
+{% endblock %}

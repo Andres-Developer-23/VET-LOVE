@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load static %}
 
 <!-- Tarjetas de estadísticas principales -->
 <div class="row mt-4">
@@ -58,6 +59,26 @@
                 <div class="stat-icon"><i class="fas fa-box"></i></div>
                 <div class="stat-number">{{ total_productos }}</div>
                 <div class="stat-label">Productos</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-notifications admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                <div class="stat-number">{{ total_notificaciones }}</div>
+                <div class="stat-label">Notificaciones</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-4 col-6 mb-4">
+        <div class="card card-reminders admin-card text-center">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">{{ recordatorios_activos }}</div>
+                <div class="stat-label">Recordatorios</div>
             </div>
         </div>
     </div>
@@ -151,279 +172,12 @@
 </div>
 
 <script>
-// Gráficos para la pestaña de resumen
-function renderEstadoCitasChart() {
-    const ctx = document.getElementById('estadoCitasChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: citasPorEstado.map(item => item.estado.toUpperCase()),
-        datasets: [{
-            data: citasPorEstado.map(item => item.total),
-            backgroundColor: [
-                colors.success, colors.primary, colors.warning, colors.danger, colors.info
-            ],
-            borderWidth: 0
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'doughnut',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((context.parsed / total) * 100);
-                            return `${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderTipoMascotasChart() {
-    const ctx = document.getElementById('tipoMascotasChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: mascotasPorTipo.map(item => item.tipo.toUpperCase()),
-        datasets: [{
-            data: mascotasPorTipo.map(item => item.total),
-            backgroundColor: [
-                colors.primary, colors.success, colors.warning, colors.info, colors.danger
-            ],
-            borderWidth: 0
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'bar',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        drawBorder: false
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderProductosCategoriaChart() {
-    const ctx = document.getElementById('productosCategoriaChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: productosPorCategoria.map(item => item.categoria__nombre?.toUpperCase() || 'SIN CATEGORÍA'),
-        datasets: [{
-            data: productosPorCategoria.map(item => item.total),
-            backgroundColor: [
-                colors.teal, colors.orange, colors.pink, colors.purple, colors.info, colors.warning
-            ],
-            borderWidth: 0
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'bar',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        drawBorder: false
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderOrdenesEstadoChart() {
-    const ctx = document.getElementById('ordenesEstadoChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: ordenesPorEstado.map(item => item.estado.toUpperCase()),
-        datasets: [{
-            data: ordenesPorEstado.map(item => item.total),
-            backgroundColor: [
-                colors.success, colors.info, colors.warning, colors.secondary, colors.danger
-            ],
-            borderWidth: 0
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'pie',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderTendenciaCitasChart() {
-    const ctx = document.getElementById('tendenciaCitasChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: citasUltimos7Dias.map(item => item.dia),
-        datasets: [{
-            label: 'Citas por Día',
-            data: citasUltimos7Dias.map(item => item.total),
-            borderColor: colors.primary,
-            backgroundColor: 'rgba(0, 123, 255, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        drawBorder: false
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderTendenciaVentasChart() {
-    const ctx = document.getElementById('tendenciaVentasChart');
-    if (!ctx) return;
-    
-    const context = ctx.getContext('2d');
-    const data = {
-        labels: ventasUltimos7Dias.map(item => item.dia),
-        datasets: [{
-            label: 'Ventas por Día',
-            data: ventasUltimos7Dias.map(item => item.total),
-            borderColor: colors.purple,
-            backgroundColor: 'rgba(111, 66, 193, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4
-        }]
-    };
-    
-    new Chart(context, {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        drawBorder: false
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value;
-                        }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-// Inicializar gráficos cuando la pestaña esté activa
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar gráficos inmediatamente para la pestaña activa
-    renderEstadoCitasChart();
-    renderTipoMascotasChart();
-    renderProductosCategoriaChart();
-    renderOrdenesEstadoChart();
-    renderTendenciaCitasChart();
-    renderTendenciaVentasChart();
-});
+// Datos para los gráficos
+const citasPorEstado = {{ citas_por_estado_json|safe }};
+const mascotasPorTipo = {{ mascotas_por_tipo_json|safe }};
+const productosPorCategoria = {{ productos_por_categoria_json|safe }};
+const ordenesPorEstado = {{ ordenes_por_estado_json|safe }};
+const citasUltimos7Dias = {{ citas_ultimos_7_dias_json|safe }};
+const ventasUltimos7Dias = {{ ventas_ultimos_7_dias_json|safe }};
 </script>
+<script src="{% static 'administracion/js/overview_tab.js' %}"></script>

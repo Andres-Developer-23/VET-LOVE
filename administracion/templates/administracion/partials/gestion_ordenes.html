@@ -10,6 +10,42 @@
                 </div>
             </div>
             <div class="card-body">
+                <!-- Formulario de filtros para órdenes -->
+                <form method="get" class="mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="orden_busqueda" placeholder="Buscar órdenes..."
+                                   value="{{ orden_busqueda }}" title="Buscar por número de orden o cliente">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="date" class="form-control" name="orden_fecha_inicio" placeholder="Fecha inicio"
+                                   value="{{ orden_fecha_inicio_str }}" title="Fecha de creación desde">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="date" class="form-control" name="orden_fecha_fin" placeholder="Fecha fin"
+                                   value="{{ orden_fecha_fin_str }}" title="Fecha de creación hasta">
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" name="orden_estado">
+                                <option value="todos" {% if orden_estado == 'todos' %}selected{% endif %}>Todos los estados</option>
+                                {% for value, label in estados_orden %}
+                                <option value="{{ value }}" {% if orden_estado == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-search me-1"></i>Filtrar
+                                </button>
+                                <a href="?tab=tienda" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-times me-1"></i>Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
@@ -23,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orden in ordenes_recientes %}
+                            {% for orden in ordenes_gestion %}
                             <tr>
                                 <td><strong>{{ orden.numero_orden }}</strong></td>
                                 <td>{{ orden.usuario.get_full_name|default:orden.usuario.username }}</td>

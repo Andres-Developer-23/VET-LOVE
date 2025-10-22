@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -74,4 +75,8 @@
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script src="{% static 'mascotas/js/agregar_historial.js' %}"></script>
+{% endblock %}
 {% endblock %}

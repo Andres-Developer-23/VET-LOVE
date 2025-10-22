@@ -58,7 +58,7 @@ def registro_usuario(request):
             
             # Enviar email de confirmación
             current_site = get_current_site(request)
-            mail_subject = 'Activa tu cuenta en Veterinaria HappyPets'
+            mail_subject = 'Activa tu cuenta en Veterinaria VET LOVE'
             message = render_to_string('clientes/activar_cuenta_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -102,6 +102,7 @@ def activar_cuenta(request, uidb64, token):
         if not hasattr(user, 'cliente'):
             Cliente.objects.create(
                 usuario=user,
+                cedula=None,
                 telefono='+000000000',
                 direccion='Dirección por definir',
                 preferencias_comunicacion='email'
@@ -113,18 +114,25 @@ def activar_cuenta(request, uidb64, token):
         messages.error(request, 'El enlace de activación es inválido o ha expirado.')
         return redirect('home')
 
-# Vista de perfil del cliente (solo para usuarios normales)
+# Vista de perfil del cliente (accesible para todos los usuarios autenticados)
 @login_required
 def perfil_cliente(request):
-    # Verificar que el usuario no sea staff/admin
-    if request.user.is_staff or request.user.is_superuser:
-        messages.warning(request, 'Los administradores deben usar el panel de administración.')
-        return redirect('admin:index')
+    # Los administradores pueden ver su perfil pero con funcionalidad limitada
+    es_admin = request.user.is_staff or request.user.is_superuser
     
-    try:
-        cliente = request.user.cliente
-    except Cliente.DoesNotExist:
-        return redirect('clientes:crear_perfil_cliente')
+    # Si es admin y no tiene perfil de cliente, mostrar mensaje informativo
+    if es_admin:
+        if not hasattr(request.user, 'cliente'):
+            messages.info(request, 'Como administrador, puedes crear un perfil de cliente si lo deseas.')
+            return redirect('clientes:crear_perfil_cliente')
+    else:
+        # Para usuarios normales, requerir perfil de cliente
+        try:
+            cliente = request.user.cliente
+        except Cliente.DoesNotExist:
+            return redirect('clientes:crear_perfil_cliente')
+    
+    cliente = request.user.cliente
     
     # Obtener estadísticas para el perfil
     mascotas_count = Mascota.objects.filter(cliente=cliente).count()
@@ -153,13 +161,10 @@ def perfil_cliente(request):
         'vacunas_count': vacunas_count,
     })
 
-# Vista para crear perfil de cliente
+# Vista para crear perfil de cliente (accesible para todos)
 @login_required
 def crear_perfil_cliente(request):
-    # Verificar que el usuario no sea staff/admin
-    if request.user.is_staff or request.user.is_superuser:
-        return HttpResponseForbidden("Los administradores no pueden crear perfiles de cliente.")
-    
+    # Permitir que administradores también puedan crear perfil si lo desean
     if hasattr(request.user, 'cliente'):
         return redirect('clientes:perfil_cliente')
     

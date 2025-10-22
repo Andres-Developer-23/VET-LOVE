@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-4">
-        <div class="card">
+        <!-- Primera Card: Información Básica -->
+        <div class="card mb-3">
             <div class="card-header">
                 <h4 class="card-title mb-0">
                     <i class="fas fa-paw me-2"></i>{{ mascota.nombre }}
@@ -11,13 +13,13 @@
             </div>
             <div class="card-body text-center">
                 {% if mascota.foto %}
-                <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}" class="img-fluid rounded mb-3" style="max-height: 250px;">
+                <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}" class="img-fluid rounded mb-3" style="max-height: 200px;">
                 {% else %}
-                <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
-                    <i class="fas fa-camera fa-3x"></i>
+                <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center mb-3" style="height: 150px;">
+                    <i class="fas fa-camera fa-2x"></i>
                 </div>
                 {% endif %}
-                
+
                 <div class="text-start">
                     <p><strong><i class="fas fa-tag me-2"></i>Tipo:</strong> {{ mascota.get_tipo_display }}</p>
                     <p><strong><i class="fas fa-dna me-2"></i>Raza:</strong> {{ mascota.raza|default:"No especificada" }}</p>
@@ -28,14 +30,28 @@
                     {% endif %}
                     <p><strong><i class="fas fa-calendar-plus me-2"></i>Registrado:</strong> {{ mascota.fecha_registro|date:"d/m/Y" }}</p>
                 </div>
-                
-                {% if mascota.caracteristicas %}
-                <div class="mt-3">
-                    <h5><i class="fas fa-info-circle me-2"></i>Características</h5>
-                    <p>{{ mascota.caracteristicas }}</p>
-                </div>
-                {% endif %}
             </div>
+        </div>
+
+        <!-- Segunda Card: Características y Acciones -->
+        <div class="card sticky-sidebar">
+            {% if mascota.caracteristicas %}
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Características
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ mascota.caracteristicas }}</p>
+            </div>
+            {% else %}
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-cogs me-2"></i>Acciones
+                </h5>
+            </div>
+            {% endif %}
+
             <div class="card-footer">
                 <div class="d-grid gap-2">
                     <a href="{% url 'mascotas:editar_mascota' mascota.id %}" class="btn btn-outline-primary">
@@ -44,6 +60,12 @@
                     <a href="{% url 'citas:solicitar_cita' %}?mascota={{ mascota.id }}" class="btn btn-outline-success">
                         <i class="fas fa-calendar-plus me-1"></i>Agendar Cita
                     </a>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalCarnetVacunacion">
+                        <i class="fas fa-id-badge me-1"></i>Carnet Vacunación
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalCarnetIdentificacion">
+                        <i class="fas fa-address-card me-1"></i>Carnet de Mascota
+                    </button>
                 </div>
             </div>
         </div>
@@ -52,30 +74,59 @@
     <div class="col-md-8">
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Calendario de Vacunación</h5>
+            </div>
+            <div class="card-body">
+                <div id="calendario-vacunas"></div>
+                <div class="mt-3 small text-muted">
+                    <span class="badge bg-success me-1">Aplicada</span>
+                    <span class="badge bg-warning text-dark me-1">Próxima</span>
+                    <span class="badge bg-danger me-1">Vencida</span>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-syringe me-2"></i>Vacunas</h5>
-                <a href="{% url 'mascotas:agregar_vacuna' mascota.id %}" class="btn btn-sm btn-primary">
-                    <i class="fas fa-plus me-1"></i>Agregar
-                </a>
+                {% if es_admin %}
+                <div class="d-flex gap-2">
+                    <a href="{% url 'mascotas:agregar_vacuna' mascota.id %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Agregar
+                    </a>
+                    <button type="button" class="btn btn-sm btn-success" onclick="exportarTablaVacunasPDF('{{ mascota.nombre }}')">
+                        <i class="fas fa-file-pdf me-1"></i>Tabla PDF
+                    </button>
+                    <button type="button" class="btn btn-sm btn-info" onclick="descargarCarnetPDF('carnet-vacunacion-print','Carnet_Vacunacion_{{ mascota.nombre }}')">
+                        <i class="fas fa-id-badge me-1"></i>Carnet PDF (1 hoja)
+                    </button>
+                    <a href="{% url 'mascotas:descargar_carnet_identificacion_pdf' mascota.id %}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-address-card me-1"></i>Carnet ID PDF
+                    </a>
+                    <a href="{% url 'mascotas:descargar_plantilla_carnet_pdf' mascota.id %}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-file-contract me-1"></i>Plantilla Vacunas
+                    </a>
+                </div>
+                {% endif %}
             </div>
             <div class="card-body">
                 {% if vacunas %}
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
+                    <table class="table table-excel">
+                        <thead class="table-excel-header">
                             <tr>
-                                <th>Vacuna</th>
-                                <th>Fecha aplicación</th>
-                                <th>Próxima aplicación</th>
-                                <th>Estado</th>
+                                <th class="table-excel-cell">Vacuna</th>
+                                <th class="table-excel-cell">Fecha aplicación</th>
+                                <th class="table-excel-cell">Próxima aplicación</th>
+                                <th class="table-excel-cell">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for vacuna in vacunas %}
-                            <tr>
-                                <td>{{ vacuna.nombre }}</td>
-                                <td>{{ vacuna.fecha_aplicacion|date:"d/m/Y" }}</td>
-                                <td>{{ vacuna.fecha_proxima|date:"d/m/Y" }}</td>
-                                <td>
+                            <tr class="table-excel-row">
+                                <td class="table-excel-cell">{{ vacuna.nombre }}</td>
+                                <td class="table-excel-cell">{{ vacuna.fecha_aplicacion|date:"d/m/Y" }}</td>
+                                <td class="table-excel-cell">{{ vacuna.fecha_proxima|date:"d/m/Y" }}</td>
+                                <td class="table-excel-cell">
                                     <span class="badge bg-{% if vacuna.aplicada %}success{% else %}warning{% endif %}">
                                         {% if vacuna.aplicada %}Aplicada{% else %}Pendiente{% endif %}
                                     </span>
@@ -97,9 +148,11 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-notes-medical me-2"></i>Historial Médico</h5>
+                {% if es_admin %}
                 <a href="{% url 'mascotas:agregar_historial' mascota.id %}" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus me-1"></i>Agregar
                 </a>
+                {% endif %}
             </div>
             <div class="card-body">
                 {% if historial %}
@@ -171,4 +224,1120 @@
         <i class="fas fa-arrow-left me-1"></i>Volver al listado
     </a>
 </div>
+
+<!-- Modal Carnet Vacunación -->
+<div class="modal fade" id="modalCarnetVacunacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-id-badge me-2"></i>Carnet de Vacunación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="carnet-vacunacion-print" class="print-card" style="width: 210mm; min-height: 297mm; margin: 0 auto; background: #ffffff; border: 2px solid #2c3e50; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); page-break-inside: avoid; padding: 0; font-family: 'Times New Roman', serif;">
+           <div class="carnet-vacunacion-profesional" style="width: 210mm; min-height: 297mm; margin: 0 auto; background: #ffffff; border: 2px solid #2c3e50; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); page-break-inside: avoid; padding: 0; font-family: 'Times New Roman', serif;">
+            <!-- Encabezado -->
+            <div class="carnet-header-vac">
+              <div class="logo-section">
+                <div class="logo-placeholder">
+                  <i class="fas fa-heartbeat"></i>
+                  <div class="clinica-nombre">Veterinaria Vet Love</div>
+                </div>
+              </div>
+              <div class="title-section">
+                <div class="carnet-titulo">CARNET DE VACUNACIÓN</div>
+                <div class="numero-certificado">CV-{{ mascota.id|stringformat:"04d" }}</div>
+              </div>
+              <div class="foto-section">
+                {% if mascota.foto %}
+                <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}" class="foto-mascota-vac">
+                {% else %}
+                <div class="foto-placeholder-vac">
+                  <i class="fas fa-camera"></i>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Información compacta -->
+            <div class="info-mascota-section">
+              <div class="mascota-nombre-destacado">
+                <h2>{{ mascota.nombre|upper }}</h2>
+              </div>
+              <div class="info-compacta">
+                <div class="info-line">
+                  <strong>{{ mascota.get_tipo_display }}</strong> |
+                  <strong>{{ mascota.raza|default:"Mestizo" }}</strong> |
+                  <strong>{{ mascota.get_sexo_display }}</strong>
+                  {% if mascota.edad %} | {{ mascota.edad }} años{% endif %}
+                </div>
+                <div class="info-line">
+                  <span class="info-label">Propietario:</span> {{ mascota.cliente.usuario.get_full_name|default:mascota.cliente.usuario.username }}
+                  {% if mascota.cliente.telefono %} | {{ mascota.cliente.telefono }}{% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de vacunación -->
+            <div class="vacunas-section">
+              <div class="seccion-titulo-vac">REGISTRO DE VACUNACIÓN</div>
+              <div class="vacunas-table-container">
+                <table class="vacunas-table">
+                  <thead>
+                    <tr>
+                      <th class="checkbox-col">✓</th>
+                      <th class="vacuna-col">Vacuna</th>
+                      <th class="fecha-col">Fecha Aplicación</th>
+                      <th class="fecha-col">Próxima Dosis</th>
+                      <th class="lote-col">Lote</th>
+                      <th class="lab-col">Laboratorio</th>
+                      <th class="estado-col">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for v in vacunas %}
+                    <tr>
+                      <td class="text-center">
+                        <div class="checkbox-cell">
+                          {% if v.aplicada %}✓{% else %}☐{% endif %}
+                        </div>
+                      </td>
+                      <td class="vacuna-cell"><strong>{{ v.nombre }}</strong></td>
+                      <td class="fecha-cell">{{ v.fecha_aplicacion|date:"d/m/Y" }}</td>
+                      <td class="fecha-cell">{{ v.fecha_proxima|date:"d/m/Y" }}</td>
+                      <td class="lote-cell">{{ v.lote|default:"-" }}</td>
+                      <td class="lab-cell">{{ v.laboratorio|default:"-" }}</td>
+                      <td class="estado-cell">
+                        <span class="badge-estado {% if v.aplicada %}aplicada{% else %}pendiente{% endif %}">
+                          {% if v.aplicada %}Aplicada{% else %}Pendiente{% endif %}
+                        </span>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Espacios en blanco para llenado manual -->
+                    {% for i in "xxxxxxxxxx" %}
+                    <tr class="manual-row">
+                      <td class="text-center">
+                        <div class="checkbox-cell">☐</div>
+                      </td>
+                      <td class="vacuna-cell">______________________________</td>
+                      <td class="fecha-cell">____/____/______</td>
+                      <td class="fecha-cell">____/____/______</td>
+                      <td class="lote-cell">________________</td>
+                      <td class="lab-cell">________________</td>
+                      <td class="estado-cell">
+                        <span class="badge-estado pendiente">Pendiente</span>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Instrucciones compactas -->
+            <div class="instrucciones-vac">
+              <div class="alert alert-warning">
+                <small><i class="fas fa-exclamation-triangle me-1"></i><strong>Instrucciones:</strong> Marque ✓ las vacunas aplicadas. Complete espacios en blanco. Documento oficial Vet Love.</small>
+              </div>
+            </div>
+
+            <!-- Pie de página compacto -->
+            <div class="carnet-footer-vac">
+              <div class="footer-left">
+                <div class="emision-info">
+                  <small>Emitido: {% now "d/m/Y H:i" %} | Vet: Dr. Vet Love | Reg: Local</small>
+                </div>
+              </div>
+              <div class="footer-center">
+                <div class="codigo-qr-vac">
+                  <div class="qr-placeholder-vac">
+                    <i class="fas fa-qrcode"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="footer-right">
+                <div class="firmas-section">
+                  <div class="firma-veterinario">
+                    <div class="linea-firma"></div>
+                    <small class="firma-texto">Firma Veterinario</small>
+                    <div class="sello-veterinario">
+                      <div class="sello-circulo">
+                        <small>SELLO</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Elementos de seguridad -->
+            <div class="elementos-seguridad-vac">
+              <div class="marca-agua">{{ mascota.nombre|upper }}</div>
+              <div class="linea-seguridad"></div>
+            </div>
+          </div>
+
+          <!-- Información adicional compacta -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="card border-info">
+                <div class="card-body py-2">
+                  <div class="row text-center">
+                    <div class="col-12">
+                      <small class="text-muted">
+                        <strong>Emitido:</strong> {% now "d/m/Y H:i" %} |
+                        <strong>Cert:</strong> CV-{{ mascota.id|stringformat:"04d" }} |
+                        <strong>Vet:</strong> Dr. Vet Love |
+                        Conservar en lugar fresco y seco
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <a href="{% url 'mascotas:descargar_carnet_pdf' mascota.id %}" class="btn btn-success">
+          <i class="fas fa-file-pdf me-1"></i>Descargar PDF
+        </a>
+        <button type="button" class="btn btn-primary" onclick="exportarCarnet('carnet-vacunacion-print','Carnet de Vacunación - {{ mascota.nombre }}')">
+          <i class="fas fa-print me-1"></i>Imprimir
+        </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Carnet Identificación -->
+<div class="modal fade" id="modalCarnetIdentificacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-address-card me-2"></i>Carnet de Mascota</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="carnet-identificacion-print" class="print-container">
+          <div class="carnet-frente-print print-card card shadow-lg border-2" style="min-height: 650px; border-color: #1e3a8a;" tabindex="-1">
+            <div class="card-body">
+              <!-- CARNET FRENTE -->
+              <div class="carnet-frente">
+            <!-- Encabezado oficial -->
+            <div class="encabezado-oficial">
+              <div class="bandera-colombia">
+                <div class="bandera-franja amarilla"></div>
+                <div class="bandera-franja azul"></div>
+                <div class="bandera-franja roja"></div>
+              </div>
+              <div class="titulo-principal">
+                <h1 class="republica">REPÚBLICA DE COLOMBIA</h1>
+                <h2 class="ministerio">REGISTRO DE MASCOTAS</h2>
+                <h3 class="titulo-carnet">CERTIFICADO DE IDENTIFICACIÓN</h3>
+              </div>
+              <div class="escudo-nacional">
+                <div class="escudo-placeholder">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Número de identificación -->
+            <div class="numero-identificacion">
+              <span class="numero-label">No.</span>
+              <span class="numero-valor">{{ mascota.id|stringformat:"08d" }}</span>
+            </div>
+
+            <!-- Área principal con foto e información -->
+            <div class="area-principal">
+              <!-- Foto de la mascota -->
+              <div class="foto-mascota">
+                {% if mascota.foto %}
+                <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}" class="foto-retrato">
+                {% else %}
+                <div class="foto-placeholder-oficial">
+                  <i class="fas fa-camera"></i>
+                  <small>FOTO</small>
+                </div>
+                {% endif %}
+                <div class="foto-marco"></div>
+              </div>
+
+              <!-- Información de la mascota y propietario lado a lado -->
+              <div class="datos-container row">
+                <!-- Información de la mascota -->
+                <div class="info-mascota col-md-6">
+                  <div class="seccion-info">
+                    <h4 class="seccion-titulo-oficial">DATOS DEL ANIMAL</h4>
+                    <div class="campo-info">
+                      <span class="campo-label">NOMBRE:</span>
+                      <span class="campo-valor">{{ mascota.nombre|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">ESPECIE:</span>
+                      <span class="campo-valor">{{ mascota.get_tipo_display|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">RAZA:</span>
+                      <span class="campo-valor">{{ mascota.raza|default:"MESTIZO"|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">SEXO:</span>
+                      <span class="campo-valor">{{ mascota.get_sexo_display|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">COLOR:</span>
+                      <span class="campo-valor">{{ mascota.color|default:"NO ESPECIFICADO"|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">F. NACIMIENTO:</span>
+                      <span class="campo-valor">
+                        {% if mascota.fecha_nacimiento %}
+                          {{ mascota.fecha_nacimiento|date:"d/m/Y" }}
+                        {% else %}
+                          NO REGISTRA
+                        {% endif %}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Información del propietario -->
+                <div class="info-propietario col-md-6">
+                  <div class="seccion-info">
+                    <h4 class="seccion-titulo-oficial">DATOS DEL PROPIETARIO</h4>
+                    <div class="campo-info">
+                      <span class="campo-label">NOMBRE:</span>
+                      <span class="campo-valor">{{ mascota.cliente.usuario.get_full_name|default:mascota.cliente.usuario.username|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">DOCUMENTO:</span>
+                      <span class="campo-valor">NO REGISTRA</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">DIRECCIÓN:</span>
+                      <span class="campo-valor">{{ mascota.cliente.direccion|default:"NO REGISTRA"|upper }}</span>
+                    </div>
+                    <div class="campo-info">
+                      <span class="campo-label">TELÉFONO:</span>
+                      <span class="campo-valor">{{ mascota.cliente.telefono|default:"NO REGISTRA"|upper }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Elementos de seguridad -->
+            <div class="elementos-seguridad">
+              <div class="firma-digital">
+                <div class="firma-linea"></div>
+                <small class="firma-texto">FIRMA DIGITAL</small>
+              </div>
+            </div>
+
+            <!-- Microtexto de seguridad -->
+            <div class="microtexto-seguridad">
+              <small class="microtexto">{{ mascota.nombre|upper }} {{ mascota.nombre|upper }} {{ mascota.nombre|upper }} {{ mascota.nombre|upper }}</small>
+            </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="carnet-reverso-print print-card card shadow-lg border-2" style="min-height: 650px; border-color: #1e3a8a;" tabindex="-1">
+            <div class="card-body">
+              <!-- CARNET REVERSO -->
+              <div class="carnet-reverso">
+            <!-- Encabezado reverso -->
+            <div class="reverso-header">
+              <h3 class="titulo-reverso">INFORMACIÓN ADICIONAL</h3>
+              <div class="codigo-barras">
+                <div class="barras-placeholder">
+                  <div class="barra-negra"></div>
+                  <div class="barra-blanca"></div>
+                  <div class="barra-negra"></div>
+                  <div class="barra-blanca"></div>
+                  <div class="barra-negra"></div>
+                  <small class="codigo-numero">{{ mascota.id|stringformat:"08d" }}</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información médica básica -->
+            <div class="info-medica-reverso">
+              <h4 class="seccion-titulo-reverso">INFORMACIÓN MÉDICA</h4>
+              <div class="campo-medico">
+                <span class="campo-label-medico">VACUNACIÓN:</span>
+                <span class="campo-valor-medico">{{ mascota.get_estado_vacunacion_display|upper }}</span>
+              </div>
+              <div class="campo-medico">
+                <span class="campo-label-medico">ÚLTIMA VACUNA:</span>
+                <span class="campo-valor-medico">
+                  {% if mascota.fecha_ultima_vacuna %}
+                    {{ mascota.fecha_ultima_vacuna|date:"d/m/Y" }}
+                  {% else %}
+                    NO REGISTRA
+                  {% endif %}
+                </span>
+              </div>
+              <div class="campo-medico">
+                <span class="campo-label-medico">DESPARASITACIÓN:</span>
+                <span class="campo-valor-medico">{{ mascota.get_desparasitacion_display|upper }}</span>
+              </div>
+              <div class="campo-medico">
+                <span class="campo-label-medico">MICROCHIP:</span>
+                <span class="campo-valor-medico">{{ mascota.microchip|default:"NO REGISTRA"|upper }}</span>
+              </div>
+              <div class="campo-medico">
+                <span class="campo-label-medico">REGISTRO:</span>
+                <span class="campo-valor-medico">PLATAFORMA LOCAL</span>
+              </div>
+            </div>
+
+            <!-- Espacio para notas médicas -->
+            <div class="notas-medicas">
+              <h4 class="seccion-titulo-reverso">NOTAS MÉDICAS IMPORTANTES</h4>
+              <div class="espacio-notas">
+                <div class="linea-nota"></div>
+                <div class="linea-nota"></div>
+                <div class="linea-nota"></div>
+                <div class="linea-nota"></div>
+                <div class="linea-nota"></div>
+              </div>
+            </div>
+
+            <!-- Información de la entidad expedidora -->
+            <div class="entidad-expedidora">
+              <div class="entidad-info">
+                <strong>EXPEDIDO POR:</strong><br>
+                VETERINARIA VET LOVE<br>
+                REGISTRO LOCAL DE MASCOTAS<br>
+                <small>www.vetlove.com</small>
+              </div>
+              <div class="contacto-emergencia">
+                <strong>CONTACTO DE EMERGENCIA:</strong><br>
+                <span class="emergencia-numero">{{ mascota.telefono_emergencia|default:mascota.cliente.telefono|default:"NO REGISTRA" }}</span>
+              </div>
+            </div>
+
+            <!-- Información de expedición -->
+            <div class="info-expedicion">
+              <div class="fechas-expedicion">
+                <div class="fecha-exp">
+                  <strong>FECHA DE EXPEDICIÓN:</strong><br>
+                  <span class="fecha-valor">{{ fecha_expedicion }}</span>
+                </div>
+                <div class="fecha-ven">
+                  <strong>FECHA DE VENCIMIENTO:</strong><br>
+                  <span class="fecha-valor">{{ fecha_vencimiento }}</span>
+                </div>
+              </div>
+
+              <div class="firma-veterinario">
+                <div class="firma-linea-vet"></div>
+                <small class="firma-texto-vet">FIRMA DEL VETERINARIO</small>
+                <div class="sello-veterinario">
+                  <div class="sello-circulo">
+                    <small>SELLO</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Elementos de seguridad reverso -->
+            <div class="elementos-seguridad-reverso">
+              <div class="patron-seguridad">
+                <div class="guilloche-pattern"></div>
+              </div>
+              <div class="holograma-simulado">
+                <div class="holograma-placeholder">
+                  <i class="fas fa-certificate"></i>
+                  <small>HOLOGRAMA</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" onclick="descargarCarnetPDF('carnet-identificacion-print','Carnet_Mascota_{{ mascota.nombre }}')">
+          <i class="fas fa-file-pdf me-1"></i>Descargar PDF
+        </button>
+        <button type="button" class="btn btn-primary" onclick="exportarCarnet('carnet-identificacion-print','Carnet de Mascota - {{ mascota.nombre }}')">
+          <i class="fas fa-print me-1"></i>Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'mascotas/css/detalle_mascota.css' %}">
+<link rel="stylesheet" href="{% static 'mascotas/css/carnet_cedula.css' %}">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* Estilos para tabla tipo Excel */
+.table-excel {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Calibri', 'Arial', sans-serif;
+    font-size: 11px;
+    border: 1px solid #000;
+    background: white;
+}
+
+.table-excel-header {
+    background: #f0f0f0;
+    border-bottom: 2px solid #000;
+}
+
+.table-excel-cell {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: middle;
+    min-height: 20px;
+}
+
+.table-excel-row:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.table-excel-row:hover {
+    background: #e6f3ff;
+}
+
+/* Estilos específicos para el modal del carnet de vacunación */
+#modalCarnetVacunacion .modal-dialog {
+    max-width: 95vw !important;
+    margin: 1rem auto;
+}
+
+#modalCarnetVacunacion .modal-body {
+    padding: 1rem;
+}
+
+.carnet-vacunacion-profesional {
+    font-family: 'Times New Roman', serif !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    border: 2px solid #2c3e50 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+    page-break-inside: avoid !important;
+    padding: 0 !important;
+}
+
+/* Información compacta */
+.info-compacta {
+    padding: 15px 25px 10px 25px !important;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%) !important;
+}
+
+.info-line {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #2c3e50 !important;
+    margin-bottom: 8px !important;
+    line-height: 1.4 !important;
+}
+
+.info-line .info-label {
+    font-weight: bold !important;
+    color: #2c3e50 !important;
+    margin-right: 5px !important;
+}
+
+.info-line strong {
+    color: #3498db !important;
+}
+
+.carnet-header-vac {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    color: white !important;
+    padding: 20px 25px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 3px solid #1a252f !important;
+    position: relative !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.logo-section {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.logo-placeholder {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: #ecf0f1 !important;
+}
+
+.logo-placeholder i {
+    font-size: 28px !important;
+    margin-bottom: 3px !important;
+    color: #3498db !important;
+}
+
+.title-section {
+    flex: 1 !important;
+    text-align: center !important;
+}
+
+.clinica-nombre {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    margin: 0 0 3px 0 !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
+    letter-spacing: 1px !important;
+}
+
+.carnet-titulo {
+    font-size: 14px !important;
+    margin: 0 0 5px 0 !important;
+    opacity: 0.95 !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.numero-certificado {
+    font-size: 11px !important;
+    background: rgba(255,255,255,0.15) !important;
+    padding: 3px 10px !important;
+    border-radius: 12px !important;
+    display: inline-block !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.foto-section {
+    flex: 1 !important;
+    text-align: right !important;
+}
+
+.foto-mascota-vac {
+    width: 70px !important;
+    height: 70px !important;
+    object-fit: cover !important;
+    border: 3px solid #fff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+.foto-placeholder-vac {
+    width: 70px !important;
+    height: 70px !important;
+    background: #f8f9fa !important;
+    border: 3px solid #fff !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #6c757d !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+.foto-placeholder-vac i {
+    font-size: 24px !important;
+    margin-bottom: 2px !important;
+}
+
+.info-mascota-section {
+    padding: 20px 25px !important;
+    border-bottom: 1px solid #bdc3c7 !important;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%) !important;
+}
+
+.mascota-nombre-destacado {
+    text-align: center !important;
+    margin-bottom: 25px !important;
+    padding: 15px !important;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3) !important;
+}
+
+.mascota-nombre-destacado h2 {
+    font-size: 28px !important;
+    font-weight: bold !important;
+    color: white !important;
+    margin: 0 !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+    letter-spacing: 2px !important;
+}
+
+.info-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 15px !important;
+    margin-top: 20px !important;
+}
+
+.info-item {
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+    padding: 8px 12px !important;
+    background: white !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    border-left: 4px solid #3498db !important;
+}
+
+.info-label {
+    font-weight: bold !important;
+    min-width: 90px !important;
+    color: #2c3e50 !important;
+    font-size: 13px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.info-value {
+    color: #34495e !important;
+    font-size: 13px !important;
+    flex: 1 !important;
+    font-weight: 500 !important;
+}
+
+.info-propietario-section {
+    padding: 15px 25px !important;
+    background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%) !important;
+    border-bottom: 1px solid #95a5a6 !important;
+}
+
+.seccion-titulo-vac.propietario {
+    color: #2c3e50 !important;
+    border-bottom-color: #e74c3c !important;
+    font-size: 15px !important;
+    text-align: center !important;
+}
+
+.propietario-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 15px !important;
+}
+
+.propietario-grid .info-item {
+    background: white !important;
+    border-left-color: #e74c3c !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+}
+
+.vacunas-section {
+    padding: 20px 25px !important;
+}
+
+.seccion-titulo-vac {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: #2c3e50 !important;
+    margin: 0 0 20px 0 !important;
+    padding-bottom: 10px !important;
+    border-bottom: 2px solid #27ae60 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+}
+
+.vacunas-table-container {
+    margin-top: 20px !important;
+    border: 2px solid #2c3e50 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.vacunas-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10px !important;
+    font-family: 'Times New Roman', serif !important;
+    line-height: 1.3 !important;
+}
+
+.vacunas-table thead {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    color: white !important;
+}
+
+.vacunas-table th {
+    padding: 12px 6px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    border-right: 1px solid #4a5568 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 9px !important;
+}
+
+.vacunas-table th:last-child {
+    border-right: none !important;
+}
+
+.checkbox-col { width: 35px !important; }
+.vacuna-col { width: 28% !important; }
+.fecha-col { width: 11% !important; }
+.lote-col { width: 11% !important; }
+.lab-col { width: 13% !important; }
+.estado-col { width: 12% !important; }
+
+.vacunas-table td {
+    padding: 6px 3px !important;
+    border-bottom: 1px solid #e9ecef !important;
+    border-right: 1px solid #e9ecef !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+}
+
+.vacunas-table td:last-child {
+    border-right: none !important;
+}
+
+.vacunas-table tbody tr:nth-child(even) {
+    background: #f8f9fa !important;
+}
+
+.vacunas-table tbody tr:nth-child(odd) {
+    background: #ffffff !important;
+}
+
+.vacunas-table tbody tr:hover {
+    background: #e8f4f8 !important;
+    transform: scale(1.01) !important;
+    transition: all 0.2s ease !important;
+}
+
+.checkbox-cell {
+    text-align: center !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+}
+
+.vacuna-cell {
+    font-weight: bold !important;
+    color: #1a7f5c !important;
+}
+
+.fecha-cell {
+    font-family: 'Courier New', monospace !important;
+    font-size: 8px !important;
+}
+
+.lote-cell,
+.lab-cell {
+    font-size: 8px !important;
+}
+
+.estado-cell {
+    text-align: center !important;
+}
+
+.manual-row {
+    background: #f9f9f9 !important;
+}
+
+.manual-row td {
+    color: #666 !important;
+    font-style: italic !important;
+}
+
+.badge-estado {
+    padding: 3px 6px !important;
+    border-radius: 10px !important;
+    font-size: 8px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+}
+
+.badge-estado.aplicada {
+    background: #27ae60 !important;
+    color: white !important;
+}
+
+.badge-estado.pendiente {
+    background: #f39c12 !important;
+    color: #2c3e50 !important;
+}
+
+.instrucciones-vac {
+    margin-top: 10px !important;
+    padding: 8px 15px !important;
+    background: #fff3cd !important;
+    border: 1px solid #ffeaa7 !important;
+    border-radius: 5px !important;
+}
+
+.instrucciones-vac .alert {
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    font-size: 10px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.carnet-footer-vac {
+    padding: 20px 25px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    border-top: 3px solid #2c3e50 !important;
+    background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%) !important;
+    margin-top: 15px !important;
+}
+
+.footer-left {
+    flex: 1 !important;
+}
+
+.emision-info {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    color: #2c3e50 !important;
+}
+
+.emision-info strong {
+    color: #2c3e50 !important;
+    font-weight: bold !important;
+}
+
+.emision-info small {
+    font-size: 10px !important;
+    color: #34495e !important;
+}
+
+.footer-center {
+    flex: 1 !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.codigo-qr-vac {
+    display: inline-block !important;
+    margin-bottom: 10px !important;
+}
+
+.qr-placeholder-vac {
+    width: 70px !important;
+    height: 70px !important;
+    border: 2px solid #2c3e50 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+}
+
+.qr-placeholder-vac i {
+    font-size: 28px !important;
+    color: #3498db !important;
+    margin-bottom: 2px !important;
+}
+
+.qr-placeholder-vac small {
+    color: #7f8c8d !important;
+    font-size: 8px !important;
+    font-weight: bold !important;
+}
+
+.footer-right {
+    flex: 1 !important;
+    text-align: right !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+}
+
+.firmas-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 20px !important;
+}
+
+.firma-veterinario {
+    text-align: center !important;
+    background: white !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+    border: 1px solid #bdc3c7 !important;
+}
+
+.linea-firma {
+    width: 140px !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent 0%, #2c3e50 20%, #2c3e50 80%, transparent 100%) !important;
+    margin: 0 auto 8px auto !important;
+    border-radius: 1px !important;
+}
+
+.firma-texto {
+    font-size: 11px !important;
+    color: #2c3e50 !important;
+    font-weight: bold !important;
+    margin-bottom: 10px !important;
+}
+
+.sello-veterinario {
+    margin-top: 10px !important;
+}
+
+.sello-circulo {
+    width: 65px !important;
+    height: 65px !important;
+    border: 3px solid #2c3e50 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    position: relative !important;
+}
+
+.sello-circulo::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 3px !important;
+    left: 3px !important;
+    right: 3px !important;
+    bottom: 3px !important;
+    border: 1px solid #34495e !important;
+    border-radius: 50% !important;
+}
+
+.sello-circulo small {
+    color: #2c3e50 !important;
+    font-weight: bold !important;
+    font-size: 9px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.elementos-seguridad-vac {
+    position: relative !important;
+    padding: 15px !important;
+    background: repeating-linear-gradient(
+        45deg,
+        #ecf0f1 0px,
+        #ecf0f1 8px,
+        #bdc3c7 8px,
+        #bdc3c7 16px
+    ) !important;
+    border-top: 1px solid #95a5a6 !important;
+}
+
+.marca-agua {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) rotate(-45deg) !important;
+    font-size: 52px !important;
+    color: rgba(44, 62, 80, 0.08) !important;
+    font-weight: bold !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    font-family: 'Times New Roman', serif !important;
+    letter-spacing: 2px !important;
+}
+
+.linea-seguridad {
+    height: 3px !important;
+    background: repeating-linear-gradient(
+        90deg,
+        #2c3e50 0px,
+        #2c3e50 4px,
+        transparent 4px,
+        transparent 8px
+    ) !important;
+    margin: 8px 0 !important;
+    border-radius: 2px !important;
+}
+
+/* Estilos de impresión */
+@media print {
+    .carnet-vacunacion-profesional {
+        border: 2px solid #2c3e50 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+        margin: 0 !important;
+        width: 100% !important;
+        min-height: auto !important;
+        page-break-inside: avoid !important;
+        font-family: 'Times New Roman', serif !important;
+        transform: scale(0.95) !important;
+        transform-origin: top center !important;
+    }
+
+    .vacunas-section {
+        page-break-inside: avoid !important;
+    }
+
+    .vacunas-table {
+        font-size: 8px !important;
+    }
+
+    .vacunas-table th {
+        font-size: 8px !important;
+        padding: 8px 4px !important;
+    }
+
+    .vacunas-table td {
+        font-size: 8px !important;
+        padding: 4px 2px !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+<script>
+  // Variable global para la URL del calendario
+  window.calendarioVacunasUrl = '{% url "mascotas:calendario_vacunas" mascota.id %}';
+</script>
+<script src="{% static 'mascotas/js/detalle_mascota.js' %}"></script>
+<script>
+  // Verificar que las funciones estén disponibles después de que se cargue el JS
+  setTimeout(function() {
+    console.log('Verificando funciones disponibles...');
+    console.log('descargarPlantillaVacia:', typeof window.descargarPlantillaVacia);
+    console.log('descargarCarnetPDF:', typeof window.descargarCarnetPDF);
+    console.log('exportarCarnet:', typeof exportarCarnet);
+  }, 1000);
+</script>
+
 {% endblock %}

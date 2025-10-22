@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{% block titulo_pagina %}Dashboard de Administración{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administracion/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+{% block contenido_principal %}
+<!-- HEADER -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-tachometer-alt me-2"></i>Dashboard de Administración
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'admin:index' %}" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-cog me-1"></i>Panel Admin
+            </a>
+            <a href="{% url 'administracion:exportar_datos' %}?formato=excel" class="btn btn-sm btn-success" title="Exportar datos a Excel">
+                <i class="fas fa-file-excel me-1"></i>Excel
+            </a>
+            <a href="{% url 'administracion:exportar_datos' %}?formato=pdf" class="btn btn-sm btn-danger" title="Exportar datos a PDF">
+                <i class="fas fa-file-pdf me-1"></i>PDF
+            </a>
+            <a href="{% url 'administracion:descargar_plantillas_carnets' %}" class="btn btn-sm btn-warning" title="Seleccionar mascota y descargar plantilla individual">
+                <i class="fas fa-file-contract me-1"></i>Plantilla Carnet
+            </a>
+            <button class="btn btn-sm btn-info" onclick="actualizarDatos()" title="Actualizar datos del dashboard">
+                <i class="fas fa-sync-alt me-1"></i>Actualizar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- NAVEGACIÓN POR PESTAÑAS -->
+<ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+            <i class="fas fa-chart-bar me-1"></i>Resumen General
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tienda-tab" data-bs-toggle="tab" data-bs-target="#tienda" type="button" role="tab">
+            <i class="fas fa-shopping-cart me-1"></i>Gestión de Tienda
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="citas-tab" data-bs-toggle="tab" data-bs-target="#citas" type="button" role="tab">
+            <i class="fas fa-calendar-alt me-1"></i>Gestión de Citas
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab" data-bs-target="#notificaciones" type="button" role="tab">
+            <i class="fas fa-bell me-1"></i>Notificaciones
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="dashboardTabsContent">
+    <!-- PESTAÑA 1: RESUMEN GENERAL -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        {% include 'administracion/partials/overview_tab.html' %}
+    </div>
+
+    <!-- PESTAÑA 2: GESTIÓN DE TIENDA -->
+    <div class="tab-pane fade" id="tienda" role="tabpanel">
+        {% include 'administracion/partials/tienda_tab.html' %}
+    </div>
+
+    <!-- PESTAÑA 3: GESTIÓN DE CITAS -->
+    <div class="tab-pane fade" id="citas" role="tabpanel">
+        {% include 'administracion/partials/citas_tab.html' %}
+    </div>
+
+    <!-- PESTAÑA 4: GESTIÓN DE NOTIFICACIONES -->
+    <div class="tab-pane fade" id="notificaciones" role="tabpanel">
+        {% include 'administracion/partials/notificaciones_tab.html' %}
+    </div>
+</div>
+{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="{% static 'administracion/js/dashboard.js' %}"></script>
+<script src="{% static 'administracion/js/citas_tab.js' %}"></script>
+{% endblock %}

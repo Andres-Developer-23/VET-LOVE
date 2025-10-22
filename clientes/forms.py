@@ -53,8 +53,9 @@ class UserForm(forms.ModelForm):
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['telefono', 'direccion', 'preferencias_comunicacion', 'foto_perfil']
+        fields = ['cedula', 'telefono', 'direccion', 'preferencias_comunicacion', 'foto_perfil']
         labels = {
+            'cedula': 'Cédula',
             'telefono': 'Teléfono',
             'direccion': 'Dirección',
             'preferencias_comunicacion': 'Preferencia de comunicación',
@@ -62,7 +63,8 @@ class ClienteForm(forms.ModelForm):
         }
         widgets = {
             'direccion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Ingresa tu dirección completa'}),
-            'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'})
+            'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'}),
+            'cedula': forms.TextInput(attrs={'placeholder': 'Ingresa tu número de cédula'})
         }
     
     def clean_telefono(self):
@@ -74,18 +76,20 @@ class ClienteForm(forms.ModelForm):
 
 class RegistroClienteForm(forms.ModelForm):
     acepto_terminos = forms.BooleanField(required=True, label="Acepto los términos y condiciones")
-    
+
     class Meta:
         model = Cliente
-        fields = ['telefono', 'direccion', 'preferencias_comunicacion']
+        fields = ['cedula', 'telefono', 'direccion', 'preferencias_comunicacion']
         labels = {
+            'cedula': 'Cédula',
             'telefono': 'Teléfono',
             'direccion': 'Dirección',
             'preferencias_comunicacion': 'Preferencia de comunicación'
         }
         widgets = {
             'direccion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Ingresa tu dirección completa'}),
-            'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'})
+            'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'}),
+            'cedula': forms.TextInput(attrs={'placeholder': 'Ingresa tu número de cédula'})
         }
     
     def clean_telefono(self):

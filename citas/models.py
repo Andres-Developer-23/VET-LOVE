@@ -34,6 +34,9 @@ class Cita(models.Model):
         ('emergencia', 'Emergencia'),
     ]
 
+   
+   
+   ##BD
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, related_name='citas')
     fecha = models.DateTimeField(verbose_name="Fecha y Hora")
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, verbose_name="Tipo de Cita")

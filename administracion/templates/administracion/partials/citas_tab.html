@@ -1,27 +1,153 @@
+<!-- ESTADÍSTICAS RÁPIDAS DE CITAS -->
 <div class="row mt-4">
-    <!-- Contenido existente de citas -->
     <div class="col-12 mb-4">
-        <h4 class="section-title"><i class="fas fa-calendar-day me-2"></i>Citas para Hoy</h4>
+        <h4 class="section-title"><i class="fas fa-chart-line me-2"></i>Resumen de Citas</h4>
+        <div class="row">
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-appointments admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                        <div class="stat-number">{{ citas_hoy|length }}</div>
+                        <div class="stat-label">Citas Hoy</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-completed admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-number">{{ citas_completadas_mes }}</div>
+                        <div class="stat-label">Completadas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-urgent admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-number">{{ citas_urgentes }}</div>
+                        <div class="stat-label">Urgentes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-clients admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-number">{{ citas_mes }}</div>
+                        <div class="stat-label">Este Mes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-pets admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+                        <div class="stat-number">{{ proximas_citas|length }}</div>
+                        <div class="stat-label">Próximas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-md-4 col-6 mb-3">
+                <div class="card card-products admin-card text-center">
+                    <div class="card-body">
+                        <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+                        <div class="stat-number">{{ cumplimiento_citas }}%</div>
+                        <div class="stat-label">Cumplimiento</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GESTIÓN DE CITAS -->
+<div class="row">
+    <div class="col-12 mb-4">
         <div class="card admin-card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Gestión de Citas</h5>
+                <div>
+                    <a href="{% url 'admin:citas_cita_add' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus me-1"></i>Nueva Cita
+                    </a>
+                    <a href="{% url 'admin:citas_cita_changelist' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>Ver Todas
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                {% if citas_hoy %}
+                <!-- Filtros de Citas -->
+                <form method="get" class="mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="cita_busqueda" placeholder="Buscar citas..."
+                                   value="{{ request.GET.cita_busqueda }}" title="Buscar por mascota, dueño o tipo">
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" name="cita_estado">
+                                <option value="">Todos los estados</option>
+                                <option value="programada" {% if request.GET.cita_estado == 'programada' %}selected{% endif %}>Programadas</option>
+                                <option value="confirmada" {% if request.GET.cita_estado == 'confirmada' %}selected{% endif %}>Confirmadas</option>
+                                <option value="completada" {% if request.GET.cita_estado == 'completada' %}selected{% endif %}>Completadas</option>
+                                <option value="cancelada" {% if request.GET.cita_estado == 'cancelada' %}selected{% endif %}>Canceladas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" name="cita_tipo">
+                                <option value="">Todos los tipos</option>
+                                <option value="consulta" {% if request.GET.cita_tipo == 'consulta' %}selected{% endif %}>Consulta</option>
+                                <option value="urgencia" {% if request.GET.cita_tipo == 'urgencia' %}selected{% endif %}>Urgencia</option>
+                                <option value="vacunacion" {% if request.GET.cita_tipo == 'vacunacion' %}selected{% endif %}>Vacunación</option>
+                                <option value="cirugia" {% if request.GET.cita_tipo == 'cirugia' %}selected{% endif %}>Cirugía</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" name="cita_periodo">
+                                <option value="hoy" {% if request.GET.cita_periodo == 'hoy' or not request.GET.cita_periodo %}selected{% endif %}>Hoy</option>
+                                <option value="semana" {% if request.GET.cita_periodo == 'semana' %}selected{% endif %}>Esta semana</option>
+                                <option value="mes" {% if request.GET.cita_periodo == 'mes' %}selected{% endif %}>Este mes</option>
+                                <option value="todas" {% if request.GET.cita_periodo == 'todas' %}selected{% endif %}>Todas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-search me-1"></i>Filtrar
+                                </button>
+                                <a href="?tab=citas" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-times me-1"></i>Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Lista de Citas -->
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Hora</th>
+                                <th>Fecha/Hora</th>
                                 <th>Mascota</th>
                                 <th>Dueño</th>
                                 <th>Tipo</th>
                                 <th>Estado</th>
+                                <th>Teléfono</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for cita in citas_hoy %}
                             <tr class="{% if cita.tipo == 'urgencia' %}table-warning{% endif %}">
-                                <td><strong>{{ cita.fecha|time:"H:i" }}</strong></td>
-                                <td>{{ cita.mascota.nombre }}</td>
+                                <td>
+                                    <strong>{{ cita.fecha|date:"d/m" }}</strong><br>
+                                    <small class="text-muted">{{ cita.fecha|time:"H:i" }}</small>
+                                </td>
+                                <td>
+                                    <strong>{{ cita.mascota.nombre }}</strong><br>
+                                    <small class="text-muted">{{ cita.mascota.tipo|title }}</small>
+                                </td>
                                 <td>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}</td>
                                 <td>
                                     {{ cita.get_tipo_display }}
@@ -30,13 +156,40 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <span class="badge bg-{% if cita.estado == 'completada' %}success{% elif cita.estado == 'cancelada' %}danger{% else %}warning{% endif %}">
+                                    <span class="badge bg-{% if cita.estado == 'completada' %}success{% elif cita.estado == 'cancelada' %}danger{% elif cita.estado == 'confirmada' %}info{% else %}warning{% endif %}">
                                         {{ cita.get_estado_display }}
                                     </span>
                                 </td>
+                                <td>{{ cita.mascota.cliente.telefono|default:"-" }}</td>
                                 <td>
-                                    <a href="{% url 'admin:citas_cita_change' cita.id %}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-edit"></i>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'admin:citas_cita_change' cita.id %}" class="btn btn-outline-primary" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if cita.estado == 'programada' %}
+                                        <button class="btn btn-outline-success" title="Confirmar" onclick="cambiarEstadoCita({{ cita.id }}, 'confirmada')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        {% elif cita.estado == 'confirmada' %}
+                                        <button class="btn btn-outline-success" title="Completar" onclick="cambiarEstadoCita({{ cita.id }}, 'completada')">
+                                            <i class="fas fa-check-double"></i>
+                                        </button>
+                                        {% endif %}
+                                        {% if cita.estado in 'programada,confirmada' %}
+                                        <button class="btn btn-outline-danger" title="Cancelar" onclick="cambiarEstadoCita({{ cita.id }}, 'cancelada')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">
+                                    <i class="fas fa-calendar-times fa-2x mb-2"></i>
+                                    <p class="mb-2">No hay citas que coincidan con los filtros aplicados</p>
+                                    <a href="{% url 'admin:citas_cita_add' %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-plus me-1"></i>Programar Primera Cita
                                     </a>
                                 </td>
                             </tr>
@@ -44,83 +197,48 @@
                         </tbody>
                     </table>
                 </div>
-                {% else %}
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
-                    <p>No hay citas programadas para hoy</p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Próximas Citas -->
+<!-- ACCIONES RÁPIDAS MEJORADAS -->
 <div class="row">
-    <div class="col-12 mb-4">
-        <h4 class="section-title"><i class="fas fa-calendar-alt me-2"></i>Próximas Citas</h4>
-        <div class="card admin-card">
-            <div class="card-body">
-                {% if proximas_citas %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Mascota</th>
-                                <th>Dueño</th>
-                                <th>Tipo</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cita in proximas_citas %}
-                            <tr>
-                                <td>{{ cita.fecha|date:"d/m/Y" }}</td>
-                                <td>{{ cita.fecha|time:"H:i" }}</td>
-                                <td>{{ cita.mascota.nombre }}</td>
-                                <td>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}</td>
-                                <td>{{ cita.get_tipo_display }}</td>
-                                <td>
-                                    <span class="badge bg-{% if cita.estado == 'completada' %}success{% elif cita.estado == 'cancelada' %}danger{% else %}warning{% endif %}">
-                                        {{ cita.get_estado_display }}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
-                    <p>No hay próximas citas programadas</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Acciones Rápidas Citas -->
-<div class="row mb-4">
     <div class="col-12">
         <div class="card admin-card">
-            <div class="card-body text-center">
-                <div class="d-flex flex-wrap justify-content-center">
-                    <a href="{% url 'admin:citas_cita_add' %}" class="btn quick-action-btn btn-warning">
-                        <i class="fas fa-calendar-plus me-2"></i>Nueva Cita
-                    </a>
-                    <a href="{% url 'admin:citas_cita_changelist' %}" class="btn quick-action-btn btn-primary">
-                        <i class="fas fa-list me-2"></i>Ver Todas las Citas
-                    </a>
-                    <a href="{% url 'admin:mascotas_mascota_add' %}" class="btn quick-action-btn btn-info">
-                        <i class="fas fa-paw me-2"></i>Nueva Mascota
-                    </a>
-                    <a href="{% url 'admin:clientes_cliente_add' %}" class="btn quick-action-btn btn-success">
-                        <i class="fas fa-user-plus me-2"></i>Nuevo Cliente
-                    </a>
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-3"><i class="fas fa-calendar-plus me-2"></i>Programar Citas</h6>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'admin:citas_cita_add' %}" class="btn btn-success">
+                                <i class="fas fa-calendar-plus me-2"></i>Nueva Cita Médica
+                            </a>
+                            <a href="{% url 'admin:citas_cita_add' %}?tipo=urgencia" class="btn btn-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Cita de Urgencia
+                            </a>
+                            <a href="{% url 'admin:citas_cita_add' %}?tipo=vacunacion" class="btn btn-info">
+                                <i class="fas fa-syringe me-2"></i>Cita de Vacunación
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-3"><i class="fas fa-users me-2"></i>Gestionar Clientes y Mascotas</h6>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'admin:clientes_cliente_add' %}" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Nuevo Cliente
+                            </a>
+                            <a href="{% url 'admin:mascotas_mascota_add' %}" class="btn btn-secondary">
+                                <i class="fas fa-paw me-2"></i>Nueva Mascota
+                            </a>
+                            <a href="{% url 'admin:citas_cita_changelist' %}?estado__exact=programada" class="btn btn-outline-warning">
+                                <i class="fas fa-clock me-2"></i>Citas Pendientes
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
