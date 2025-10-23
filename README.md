@@ -565,10 +565,6 @@ gunicorn veterinaria_project.wsgi:application --bind 0.0.0.0:8000
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abrir Pull Request
 
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
 ## 📞 Contacto
 
 **Veterinaria Vet Love**
@@ -579,5 +575,3 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ---
 
 ## 🎉 ¡Gracias por usar Veterinaria Vet Love!
-
-**Desarrollado con ❤️ siguiendo las mejores prácticas de Django**
