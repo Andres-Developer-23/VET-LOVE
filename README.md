@@ -571,7 +571,3 @@ gunicorn veterinaria_project.wsgi:application --bind 0.0.0.0:8000
 - Email: info@vetlove.com
 - Sitio Web: [www.vetlove.com](https://www.vetlove.com)
 - Teléfono: +57 310 5956453
-
----
-
-## 🎉 ¡Gracias por usar Veterinaria Vet Love!
