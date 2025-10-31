@@ -369,23 +369,23 @@ def main():
     print("="*60)
     print("INICIANDO POBLACIÓN DE BASE DE DATOS")
     print("="*60)
-    
+
     try:
         # Paso 1: Crear usuarios y clientes
         clientes = crear_usuarios_y_clientes()
-        
+
         # Paso 2: Crear mascotas
         mascotas = crear_mascotas(clientes)
-        
+
         # Paso 3: Crear citas
         citas = crear_citas(mascotas)
-        
+
         # Paso 4: Crear categorías y productos
         productos = crear_categorias_y_productos()
-        
+
         # Paso 5: Crear usuarios adicionales
         crear_usuarios_adicionales()
-        
+
         print("\n" + "="*60)
         print("RESUMEN DE DATOS CREADOS:")
         print("="*60)
@@ -402,9 +402,10 @@ def main():
         print("  Usuario: juan.perez")
         print("  Contraseña: password123")
         print("\n  (Todos los usuarios tienen la contraseña: password123)")
-        
+
     except Exception as e:
         print(f"\n❌ Error durante la población: {str(e)}")
+        print("Continuando con la ejecución para asegurar que la aplicación funcione...")
         import traceback
         traceback.print_exc()
 

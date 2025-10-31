@@ -15,16 +15,16 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Wait a moment for database to be ready
-sleep 10
+sleep 15
 
-# Load data from fixtures if available
-if [ -f "db_dump.json" ]; then
-    echo "Loading data from fixtures..."
-    python manage.py loaddata db_dump.json
-fi
-
-# Run population script if available
+# Run population script if available (this will create all data)
 if [ -f "populate_db.py" ]; then
     echo "Running database population script..."
     python populate_db.py
+else
+    # Fallback: Load data from fixtures if available
+    if [ -f "db_dump.json" ]; then
+        echo "Loading data from fixtures..."
+        python manage.py loaddata db_dump.json
+    fi
 fi
