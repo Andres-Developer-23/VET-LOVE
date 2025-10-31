@@ -8,7 +8,7 @@ from .base import *
 DEBUG = False
 
 # Production allowed hosts
-ALLOWED_HOSTS = ['vet-love.onrender.com', 'veterinaria-app.onrender.com', '*.onrender.com', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['vet-love.onrender.com', 'veterinaria-app.onrender.com', 'veterinaria-app-kda0.onrender.com', '*.onrender.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Security settings for production
