@@ -7,8 +7,8 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Production allowed hosts - Allow all hosts for Render deployment
-ALLOWED_HOSTS = ['*']
+# Production allowed hosts
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='vet-love.onrender.com,veterinaria-app.onrender.com,localhost,127.0.0.1,0.0.0.0', cast=Csv())
 
 
 # Security settings for production
