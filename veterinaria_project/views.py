@@ -1,9 +1,24 @@
 from django.shortcuts import render
 from tienda.models import Producto
+from django.db import connection
+from django.conf import settings
 
 def home(request):
     """Vista para la página de inicio con productos destacados y promociones"""
     try:
+        # Verificar si las tablas existen usando SQL apropiado para PostgreSQL
+        with connection.cursor() as cursor:
+            if 'postgresql' in settings.DATABASES['default']['ENGINE']:
+                # PostgreSQL
+                cursor.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'tienda_producto');")
+            else:
+                # SQLite
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tienda_producto';")
+
+            table_exists = cursor.fetchone()
+            if not table_exists or not table_exists[0]:
+                raise Exception("Tabla tienda_producto no existe")
+
         # Obtener productos destacados y en oferta para el carrusel
         productos_destacados = Producto.objects.filter(
             activo=True,
