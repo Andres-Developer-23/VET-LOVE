@@ -13,27 +13,32 @@ import string
 from decimal import Decimal
 
 def lista_productos(request):
-    categorias = Categoria.objects.filter(activo=True)
-    productos = Producto.objects.filter(activo=True)
+    try:
+        categorias = Categoria.objects.filter(activo=True)
+        productos = Producto.objects.filter(activo=True)
 
-    # Filtros
-    categoria_id = request.GET.get('categoria')
-    tipo = request.GET.get('tipo')
-    tipo_mascota = request.GET.get('tipo_mascota')
-    buscar = request.GET.get('buscar')
-    categoria_filtro = request.GET.get('categoria_filtro')  # Nuevo filtro para categorías por nombre
+        # Filtros
+        categoria_id = request.GET.get('categoria')
+        tipo = request.GET.get('tipo')
+        tipo_mascota = request.GET.get('tipo_mascota')
+        buscar = request.GET.get('buscar')
+        categoria_filtro = request.GET.get('categoria_filtro')  # Nuevo filtro para categorías por nombre
 
-    if categoria_id:
-        productos = productos.filter(categoria_id=categoria_id)
-    if tipo:
-        productos = productos.filter(tipo=tipo)
-    if tipo_mascota and tipo_mascota != 'todos':
-        productos = productos.filter(tipo_mascota=tipo_mascota)
-    if buscar:
-        productos = productos.filter(nombre__icontains=buscar)
-    if categoria_filtro:
-        # Filtrar por nombre de categoría (para enlaces desde la página de inicio)
-        productos = productos.filter(categoria__nombre__icontains=categoria_filtro)
+        if categoria_id:
+            productos = productos.filter(categoria_id=categoria_id)
+        if tipo:
+            productos = productos.filter(tipo=tipo)
+        if tipo_mascota and tipo_mascota != 'todos':
+            productos = productos.filter(tipo_mascota=tipo_mascota)
+        if buscar:
+            productos = productos.filter(nombre__icontains=buscar)
+        if categoria_filtro:
+            # Filtrar por nombre de categoría (para enlaces desde la página de inicio)
+            productos = productos.filter(categoria__nombre__icontains=categoria_filtro)
+    except Exception as e:
+        # Si hay error con la base de datos, mostrar página sin productos
+        categorias = []
+        productos = []
 
     context = {
         'productos': productos,
