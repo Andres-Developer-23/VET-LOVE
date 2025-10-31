@@ -14,6 +14,25 @@ from decimal import Decimal
 
 def lista_productos(request):
     try:
+        # Verificar si las tablas existen usando SQL apropiado para PostgreSQL
+        from django.db import connection
+        with connection.cursor() as cursor:
+            if 'postgresql' in connection.vendor:
+                # PostgreSQL
+                cursor.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'tienda_categoria');")
+                categoria_exists = cursor.fetchone()[0]
+                cursor.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'tienda_producto');")
+                producto_exists = cursor.fetchone()[0]
+            else:
+                # SQLite
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tienda_categoria';")
+                categoria_exists = bool(cursor.fetchone())
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tienda_producto';")
+                producto_exists = bool(cursor.fetchone())
+
+        if not categoria_exists or not producto_exists:
+            raise Exception("Tablas de tienda no existen")
+
         categorias = Categoria.objects.filter(activo=True)
         productos = Producto.objects.filter(activo=True)
 
