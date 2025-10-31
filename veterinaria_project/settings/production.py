@@ -5,10 +5,15 @@ import dj_database_url
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = 'RENDER' not in os.environ
 
-# Production allowed hosts - Allow all hosts for Render deployment
-ALLOWED_HOSTS = ['*']
+# Production allowed hosts
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 
 # Security settings for production
 SECURE_SSL_REDIRECT = True
