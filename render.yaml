@@ -22,8 +22,5 @@ services:
         value: 4
       - key: DJANGO_SETTINGS_MODULE
         value: veterinaria_project.settings.production
-      - key: RENDER_EXTERNAL_HOSTNAME
-        fromService:
-          type: web
-          name: veterinaria-app
-          property: host
+      - key: ALLOWED_HOSTS
+        value: vet-love.onrender.com,veterinaria-app.onrender.com,localhost,127.0.0.1,0.0.0.0
