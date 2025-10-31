@@ -6,8 +6,8 @@ DJANGO_SETTINGS_MODULE environment variable or defaults to development.
 """
 import os
 
-# Default to development settings if not specified
-settings_module = os.environ.get('DJANGO_SETTINGS_MODULE', 'veterinaria_project.settings.development')
+# Default to production settings for Render deployment
+settings_module = os.environ.get('DJANGO_SETTINGS_MODULE', 'veterinaria_project.settings.production')
 
 # Extract the settings name (development, production, etc.)
 settings_name = settings_module.split('.')[-1]
