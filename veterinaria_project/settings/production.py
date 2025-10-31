@@ -7,8 +7,21 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Production allowed hosts - Allow all hosts for Render deployment
-ALLOWED_HOSTS = ['*']
+# Production allowed hosts
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Add common Render domains
+ALLOWED_HOSTS.extend([
+    'vet-love.onrender.com',
+    'veterinaria-app.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+])
 
 # Security settings for production
 SECURE_SSL_REDIRECT = True
