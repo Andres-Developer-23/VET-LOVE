@@ -14,6 +14,15 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+# Add common Render domains
+ALLOWED_HOSTS.extend([
+    'vet-love.onrender.com',
+    'veterinaria-app.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+])
+
 # Security settings for production
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000  # 1 year
