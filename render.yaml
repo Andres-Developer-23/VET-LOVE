@@ -22,3 +22,8 @@ services:
         value: 4
       - key: DJANGO_SETTINGS_MODULE
         value: veterinaria_project.settings.production
+      - key: RENDER_EXTERNAL_HOSTNAME
+        fromService:
+          type: web
+          name: veterinaria-app
+          property: host
