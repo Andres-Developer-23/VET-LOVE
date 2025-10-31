@@ -10,7 +10,7 @@ services:
     name: veterinaria-app
     runtime: python
     buildCommand: './build.sh'
-    startCommand: 'python -m gunicorn veterinaria_project.asgi:application -k uvicorn.workers.UvicornWorker'
+    startCommand: 'cd veterinaria_project && python -m gunicorn veterinaria_project.asgi:application -k uvicorn.workers.UvicornWorker'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -22,5 +22,7 @@ services:
         value: 4
       - key: DJANGO_SETTINGS_MODULE
         value: veterinaria_project.settings.production
+      - key: PYTHONPATH
+        value: /opt/render/project/src/veterinaria_project
       - key: ALLOWED_HOSTS
         value: vet-love.onrender.com,veterinaria-app.onrender.com,localhost,127.0.0.1,0.0.0.0
