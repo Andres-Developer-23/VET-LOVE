@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Usuario - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-user-edit me-2"></i>{{ titulo }}
+            </h1>
+            <p class="text-muted mb-0">Modificar la información del usuario</p>
+        </div>
+        <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver a Gestión de Usuarios
+        </a>
+    </div>
+
+    <!-- Información del Usuario -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-4x text-primary"></i>
+                    </div>
+                    <h5>{{ usuario.get_full_name|default:usuario.username }}</h5>
+                    <p class="text-muted mb-2">{{ usuario.username }}</p>
+                    <span class="badge
+                        {% if usuario.is_staff %}bg-danger
+                        {% elif usuario|has_group:"Veterinarios" %}bg-success
+                        {% else %}bg-info{% endif %}">
+                        {% if usuario.is_staff %}Administrador
+                        {% elif usuario|has_group:"Veterinarios" %}Veterinario
+                        {% else %}Cliente{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Información Actual</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> {{ usuario.email|default:"No especificado" }}</p>
+                            <p><strong>Estado:</strong>
+                                <span class="badge {% if usuario.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% if usuario.is_active %}Activo{% else %}Inactivo{% endif %}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Último Login:</strong>
+                                {% if usuario.last_login %}
+                                    {{ usuario.last_login|date:"d/m/Y H:i" }}
+                                {% else %}
+                                    <span class="text-muted">Nunca</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Fecha Registro:</strong> {{ usuario.date_joined|date:"d/m/Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Editar Información
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Tipo de Usuario -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Tipo de Usuario</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        {{ form.tipo_usuario }}
+                                        <label class="form-check-label" for="{{ form.tipo_usuario.id_for_label }}">
+                                            <i class="fas fa-user-shield text-danger me-2"></i>Administrador
+                                        </label>
+                                        <small class="form-text text-muted">Acceso completo al sistema</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_1" value="veterinario"
+                                               {% if usuario|has_group:"Veterinarios" %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_tipo_usuario_1">
+                                            <i class="fas fa-user-md text-success me-2"></i>Veterinario
+                                        </label>
+                                        <small class="form-text text-muted">Gestión de mascotas y citas</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_2" value="cliente"
+                                               {% if not usuario.is_staff and not usuario|has_group:"Veterinarios" %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_tipo_usuario_2">
+                                            <i class="fas fa-user-friends text-info me-2"></i>Cliente
+                                        </label>
+                                        <small class="form-text text-muted">Acceso limitado a sus datos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Básica -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                                        <i class="fas fa-user me-1"></i>{{ form.username.label }}
+                                    </label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                        <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        <i class="fas fa-envelope me-1"></i>{{ form.email.label }}
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                        <i class="fas fa-signature me-1"></i>{{ form.first_name.label }}
+                                    </label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                        <i class="fas fa-signature me-1"></i>{{ form.last_name.label }}
+                                    </label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado del Usuario -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    <i class="fas fa-toggle-on me-2"></i>{{ form.is_active.label }}
+                                </label>
+                                <small class="form-text text-muted">Desmarcar para desactivar la cuenta del usuario</small>
+                            </div>
+                        </div>
+
+                        <!-- Cambiar Contraseña -->
+                        <div class="mb-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="cambiar_password_check" name="cambiar_password">
+                                <label class="form-check-label fw-bold" for="cambiar_password_check">
+                                    <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                                </label>
+                            </div>
+
+                            <div id="password_fields" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="id_password1" class="form-label">
+                                                <i class="fas fa-lock me-1"></i>Nueva Contraseña
+                                            </label>
+                                            <input type="password" name="password1" id="id_password1" class="form-control">
+                                            <div class="form-text">Mínimo 8 caracteres</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="id_password2" class="form-label">
+                                                <i class="fas fa-lock me-1"></i>Confirmar Nueva Contraseña
+                                            </label>
+                                            <input type="password" name="password2" id="id_password2" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Errores generales -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Mostrar/ocultar campos de contraseña
+document.getElementById('cambiar_password_check').addEventListener('change', function() {
+    const passwordFields = document.getElementById('password_fields');
+    if (this.checked) {
+        passwordFields.style.display = 'block';
+        document.getElementById('id_password1').required = true;
+        document.getElementById('id_password2').required = true;
+    } else {
+        passwordFields.style.display = 'none';
+        document.getElementById('id_password1').required = false;
+        document.getElementById('id_password2').required = false;
+        document.getElementById('id_password1').value = '';
+        document.getElementById('id_password2').value = '';
+    }
+});
+</script>
+
+<style>
+.form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+</style>
+{% endblock %}

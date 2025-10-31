@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{% block titulo_pagina %}Gestión de Citas - Veterinario{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administracion/css/dashboard.css' %}">
+<style>
+    .cita-card {
+        border-left: 4px solid;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+    }
+    .cita-card:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-1px);
+    }
+    .cita-programada { border-left-color: #007bff; }
+    .cita-confirmada { border-left-color: #28a745; }
+    .cita-completada { border-left-color: #6c757d; }
+    .cita-cancelada { border-left-color: #dc3545; }
+    .cita-urgencia { border-left-color: #ffc107; background-color: #fff3cd; }
+    .filtro-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+    .estado-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% block contenido_principal %}
+<!-- HEADER -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div>
+        <h1 class="h2">
+            <i class="fas fa-calendar-alt me-2"></i>Gestión de Citas
+        </h1>
+        <p class="text-muted mb-0">Administra las citas veterinarias y su estado</p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'administracion:dashboard_veterinario' %}" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+        </a>
+        <button class="btn btn-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>Actualizar
+        </button>
+    </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtro-section">
+    <form method="GET" class="row g-3">
+        <div class="col-md-2">
+            <label for="cita_periodo" class="form-label">Período</label>
+            <select name="cita_periodo" id="cita_periodo" class="form-select">
+                <option value="hoy" {% if cita_periodo == 'hoy' %}selected{% endif %}>Hoy</option>
+                <option value="semana" {% if cita_periodo == 'semana' %}selected{% endif %}>Esta Semana</option>
+                <option value="mes" {% if cita_periodo == 'mes' %}selected{% endif %}>Este Mes</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="cita_estado" class="form-label">Estado</label>
+            <select name="cita_estado" id="cita_estado" class="form-select">
+                <option value="">Todos los estados</option>
+                <option value="programada" {% if cita_estado == 'programada' %}selected{% endif %}>Programada</option>
+                <option value="confirmada" {% if cita_estado == 'confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="completada" {% if cita_estado == 'completada' %}selected{% endif %}>Completada</option>
+                <option value="cancelada" {% if cita_estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+                <option value="reprogramada" {% if cita_estado == 'reprogramada' %}selected{% endif %}>Reprogramada</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="cita_tipo" class="form-label">Tipo</label>
+            <select name="cita_tipo" id="cita_tipo" class="form-select">
+                <option value="">Todos los tipos</option>
+                <option value="consulta" {% if cita_tipo == 'consulta' %}selected{% endif %}>Consulta General</option>
+                <option value="urgencia" {% if cita_tipo == 'urgencia' %}selected{% endif %}>Urgencia</option>
+                <option value="control" {% if cita_tipo == 'control' %}selected{% endif %}>Control</option>
+                <option value="vacunacion" {% if cita_tipo == 'vacunacion' %}selected{% endif %}>Vacunación</option>
+                <option value="cirugia" {% if cita_tipo == 'cirugia' %}selected{% endif %}>Cirugía</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="cita_busqueda" class="form-label">Búsqueda</label>
+            <input type="text" name="cita_busqueda" id="cita_busqueda" class="form-control"
+                   placeholder="Nombre de mascota, propietario..." value="{{ cita_busqueda }}">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="fas fa-search me-1"></i>Filtrar
+            </button>
+            <a href="{% url 'citas:mis_citas' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-1"></i>Limpiar Filtros
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- ESTADÍSTICAS -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">{{ citas|length }}</h3>
+                <p class="text-muted mb-0">Citas Encontradas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">{{ citas|length|add:"0" }}</h3>
+                <p class="text-muted mb-0">Pendientes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">0</h3>
+                <p class="text-muted mb-0">Completadas Hoy</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">0</h3>
+                <p class="text-muted mb-0">Urgencias</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LISTA DE CITAS -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Lista de Citas</h5>
+    </div>
+    <div class="card-body">
+        {% if citas %}
+            <div class="row">
+                {% for cita in citas %}
+                    <div class="col-lg-6 mb-3">
+                        <div class="card cita-card cita-{{ cita.estado }} {% if cita.tipo == 'urgencia' %}cita-urgencia{% endif %}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1">
+                                        <h5 class="card-title mb-1">
+                                            <i class="fas fa-paw me-2"></i>{{ cita.mascota.nombre }}
+                                        </h5>
+                                        <p class="card-text mb-1">
+                                            <strong>Propietario:</strong> {{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}
+                                        </p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge estado-badge bg-{{ cita.estado|lower }}">{{ cita.get_estado_display }}</span>
+                                        {% if cita.tipo == 'urgencia' %}
+                                            <span class="badge bg-danger ms-1">URGENTE</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ cita.fecha|date:"d/m/Y" }}
+                                        </small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>{{ cita.fecha|date:"H:i" }}
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <strong>Tipo:</strong> {{ cita.get_tipo_display }}
+                                    </small>
+                                </div>
+
+                                {% if cita.notas %}
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <strong>Notas:</strong> {{ cita.notas|truncatechars:100 }}
+                                        </small>
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        {{ cita.mascota.get_tipo_display }} - {{ cita.mascota.raza|default:"Sin raza" }}
+                                    </small>
+
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {% if cita.estado in 'programada,confirmada' %}
+                                            <button class="btn btn-outline-success btn-sm"
+                                                    onclick="cambiarEstadoCita({{ cita.id }}, 'completada')"
+                                                    title="Marcar como completada">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm"
+                                                    onclick="cambiarEstadoCita({{ cita.id }}, 'reprogramada')"
+                                                    title="Reprogramar">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm"
+                                                    onclick="cambiarEstadoCita({{ cita.id }}, 'cancelada')"
+                                                    title="Cancelar cita">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        {% endif %}
+
+                                        <a href="{% url 'administracion:historial_medico_veterinario' cita.mascota.id %}"
+                                           class="btn btn-outline-primary btn-sm" title="Ver historial médico">
+                                            <i class="fas fa-file-medical"></i>
+                                        </a>
+
+                                        <a href="{% url 'mascotas:detalle_mascota' cita.mascota.id %}"
+                                           class="btn btn-outline-info btn-sm" title="Ver mascota" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if citas|length >= 100 %}
+                <div class="text-center mt-3">
+                    <small class="text-muted">Mostrando los primeros 100 resultados. Use filtros para refinar la búsqueda.</small>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No se encontraron citas</h4>
+                <p class="text-muted">Intente ajustar los filtros de búsqueda</p>
+                <a href="{% url 'citas:mis_citas' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-times me-1"></i>Limpiar Filtros
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- MODAL PARA CAMBIAR ESTADO -->
+<div class="modal fade" id="estadoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cambiar Estado de Cita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro de cambiar el estado de esta cita?</p>
+                <div id="citaInfo"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmarCambio">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let citaIdActual = null;
+let estadoNuevo = null;
+
+function cambiarEstadoCita(citaId, nuevoEstado) {
+    citaIdActual = citaId;
+    estadoNuevo = nuevoEstado;
+
+    // Mostrar información de la cita en el modal
+    fetch(`/administracion/citas/cambiar-estado/${citaId}/`, {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('citaInfo').innerHTML = `
+                <div class="alert alert-info">
+                    <strong>Cita:</strong> ${data.cita_info || 'Información no disponible'}<br>
+                    <strong>Nuevo estado:</strong> ${nuevoEstado.charAt(0).toUpperCase() + nuevoEstado.slice(1)}
+                </div>
+            `;
+            new bootstrap.Modal(document.getElementById('estadoModal')).show();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al obtener información de la cita');
+    });
+}
+
+document.getElementById('confirmarCambio').addEventListener('click', function() {
+    if (!citaIdActual || !estadoNuevo) return;
+
+    fetch(`/administracion/citas/cambiar-estado/${citaIdActual}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `estado=${estadoNuevo}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al cambiar el estado de la cita');
+    });
+});
+
+// Función para filtrar automáticamente al cambiar selects
+document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function() {
+        this.closest('form').submit();
+    });
+});
+
+// Función para búsqueda con delay
+let searchTimeout;
+document.getElementById('cita_busqueda').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        this.closest('form').submit();
+    }, 500);
+});
+</script>
+{% endblock %}

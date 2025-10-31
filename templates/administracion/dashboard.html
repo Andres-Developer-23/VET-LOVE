@@ -54,6 +54,11 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
+            <i class="fas fa-users-cog me-1"></i>Usuarios
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab" data-bs-target="#notificaciones" type="button" role="tab">
             <i class="fas fa-bell me-1"></i>Notificaciones
         </button>
@@ -63,7 +68,241 @@
 <div class="tab-content" id="dashboardTabsContent">
     <!-- PESTAÑA 1: RESUMEN GENERAL -->
     <div class="tab-pane fade show active" id="overview" role="tabpanel">
-        {% include 'administracion/partials/overview_tab.html' %}
+        <!-- ESTADÍSTICAS RÁPIDAS -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-users fa-2x text-primary"></i>
+                        </div>
+                        <div class="stat-number h3 text-primary">{{ total_clientes|intcomma }}</div>
+                        <div class="stat-label text-muted">Clientes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-paw fa-2x text-success"></i>
+                        </div>
+                        <div class="stat-number h3 text-success">{{ total_mascotas|intcomma }}</div>
+                        <div class="stat-label text-muted">Mascotas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-user-friends fa-2x text-info"></i>
+                        </div>
+                        <div class="stat-number h3 text-info">{{ total_usuarios|intcomma }}</div>
+                        <div class="stat-label text-muted">Usuarios Totales</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-user-check fa-2x text-warning"></i>
+                        </div>
+                        <div class="stat-number h3 text-warning">{{ usuarios_activos_24h|intcomma }}</div>
+                        <div class="stat-label text-muted">Usuarios Activos (24h)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTADÍSTICAS DE ACTIVIDAD DE USUARIOS -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-clock fa-2x text-secondary"></i>
+                        </div>
+                        <div class="stat-number h4 text-secondary">{{ usuarios_recientes|intcomma }}</div>
+                        <div class="stat-label text-muted">Iniciaron Sesión (7 días)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-user-times fa-2x text-danger"></i>
+                        </div>
+                        <div class="stat-number h4 text-danger">{{ usuarios_sin_login|intcomma }}</div>
+                        <div class="stat-label text-muted">Nunca Iniciaron Sesión</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon mb-2">
+                            <i class="fas fa-percentage fa-2x text-dark"></i>
+                        </div>
+                        <div class="stat-number h4 text-dark">
+                            {% if total_usuarios > 0 %}
+                                {% widthratio usuarios_activos_24h total_usuarios 100 %}%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </div>
+                        <div class="stat-label text-muted">% Usuarios Activos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAGRAMAS Y GRÁFICOS -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Diagramas y Estadísticas Visuales
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Gráfico de Citas por Estado -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Citas por Estado</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="citasEstadoChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico de Mascotas por Tipo -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Mascotas por Tipo</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="mascotasTipoChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Gráfico de Citas Últimos 7 Días -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Citas - Últimos 7 Días</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="citas7DiasChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico de Ventas Últimos 7 Días -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Ventas Tienda - Últimos 7 Días</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="ventas7DiasChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Gráfico de Órdenes por Estado -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Órdenes por Estado</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="ordenesEstadoChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gráfico de Productos por Categoría -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Productos por Categoría</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="productosCategoriaChart" width="400" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTA DE USUARIOS RECIENTES -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Últimas Sesiones de Usuarios
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Último Login</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in usuarios_recientes_list %}
+                                    <tr>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.get_full_name|default:"-" }}</td>
+                                        <td>
+                                            {% if user.last_login %}
+                                                {{ user.last_login|date:"d/m/Y H:i" }}
+                                            {% else %}
+                                                <span class="text-muted">Nunca</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.is_active %}
+                                                <span class="badge bg-success">Activo</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No hay usuarios recientes</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- PESTAÑA 2: GESTIÓN DE TIENDA -->
@@ -74,6 +313,11 @@
     <!-- PESTAÑA 3: GESTIÓN DE CITAS -->
     <div class="tab-pane fade" id="citas" role="tabpanel">
         {% include 'administracion/partials/citas_tab.html' %}
+    </div>
+
+    <!-- PESTAÑA 3: GESTIÓN DE USUARIOS -->
+    <div class="tab-pane fade" id="usuarios" role="tabpanel">
+        {% include 'administracion/partials/usuarios_tab.html' %}
     </div>
 
     <!-- PESTAÑA 4: GESTIÓN DE NOTIFICACIONES -->
@@ -89,4 +333,216 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script src="{% static 'administracion/js/dashboard.js' %}"></script>
 <script src="{% static 'administracion/js/citas_tab.js' %}"></script>
+
+<script>
+// Función para crear gráficos con Chart.js
+function crearGraficos() {
+    // Gráfico de Citas por Estado
+    const ctxCitasEstado = document.getElementById('citasEstadoChart');
+    if (ctxCitasEstado) {
+        const citasEstadoData = {{ citas_por_estado_json|safe }};
+        const citasEstadoLabels = citasEstadoData.map(item => item.estado);
+        const citasEstadoValues = citasEstadoData.map(item => item.total);
+
+        new Chart(ctxCitasEstado, {
+            type: 'doughnut',
+            data: {
+                labels: citasEstadoLabels,
+                datasets: [{
+                    data: citasEstadoValues,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value * 100 / sum).toFixed(2) + "%";
+                            return percentage;
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Mascotas por Tipo
+    const ctxMascotasTipo = document.getElementById('mascotasTipoChart');
+    if (ctxMascotasTipo) {
+        const mascotasTipoData = {{ mascotas_por_tipo_json|safe }};
+        const mascotasTipoLabels = mascotasTipoData.map(item => item.tipo);
+        const mascotasTipoValues = mascotasTipoData.map(item => item.total);
+
+        new Chart(ctxMascotasTipo, {
+            type: 'pie',
+            data: {
+                labels: mascotasTipoLabels,
+                datasets: [{
+                    data: mascotasTipoValues,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Citas Últimos 7 Días
+    const ctxCitas7Dias = document.getElementById('citas7DiasChart');
+    if (ctxCitas7Dias) {
+        const citas7DiasData = {{ citas_ultimos_7_dias_json|safe }};
+        const citas7DiasLabels = citas7DiasData.map(item => item.dia);
+        const citas7DiasValues = citas7DiasData.map(item => item.total);
+
+        new Chart(ctxCitas7Dias, {
+            type: 'line',
+            data: {
+                labels: citas7DiasLabels,
+                datasets: [{
+                    label: 'Citas',
+                    data: citas7DiasValues,
+                    borderColor: '#36A2EB',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Ventas Últimos 7 Días
+    const ctxVentas7Dias = document.getElementById('ventas7DiasChart');
+    if (ctxVentas7Dias) {
+        const ventas7DiasData = {{ ventas_ultimos_7_dias_json|safe }};
+        const ventas7DiasLabels = ventas7DiasData.map(item => item.dia);
+        const ventas7DiasValues = ventas7DiasData.map(item => item.total);
+
+        new Chart(ctxVentas7Dias, {
+            type: 'bar',
+            data: {
+                labels: ventas7DiasLabels,
+                datasets: [{
+                    label: 'Ventas ($)',
+                    data: ventas7DiasValues,
+                    backgroundColor: '#4BC0C0',
+                    borderColor: '#4BC0C0',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Órdenes por Estado
+    const ctxOrdenesEstado = document.getElementById('ordenesEstadoChart');
+    if (ctxOrdenesEstado) {
+        const ordenesEstadoData = {{ ordenes_por_estado_json|safe }};
+        const ordenesEstadoLabels = ordenesEstadoData.map(item => item.estado);
+        const ordenesEstadoValues = ordenesEstadoData.map(item => item.total);
+
+        new Chart(ctxOrdenesEstado, {
+            type: 'doughnut',
+            data: {
+                labels: ordenesEstadoLabels,
+                datasets: [{
+                    data: ordenesEstadoValues,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Productos por Categoría
+    const ctxProductosCategoria = document.getElementById('productosCategoriaChart');
+    if (ctxProductosCategoria) {
+        const productosCategoriaData = {{ productos_por_categoria_json|safe }};
+        const productosCategoriaLabels = productosCategoriaData.map(item => item.categoria_nombre);
+        const productosCategoriaValues = productosCategoriaData.map(item => item.total);
+
+        new Chart(ctxProductosCategoria, {
+            type: 'bar',
+            data: {
+                labels: productosCategoriaLabels,
+                datasets: [{
+                    label: 'Productos',
+                    data: productosCategoriaValues,
+                    backgroundColor: '#9966FF',
+                    borderColor: '#9966FF',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Inicializar gráficos cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    crearGraficos();
+});
+
+// Función para actualizar datos (llamada desde el botón)
+function actualizarDatos() {
+    location.reload();
+}
+</script>
 {% endblock %}

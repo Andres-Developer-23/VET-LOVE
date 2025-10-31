@@ -1,0 +1,24 @@
+databases:
+  - name: veterinaria_db
+    plan: free
+    databaseName: veterinaria_db
+    user: veterinaria_user
+
+services:
+  - type: web
+    plan: free
+    name: veterinaria-app
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'python -m gunicorn veterinaria_project.asgi:application -k uvicorn.workers.UvicornWorker'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: veterinaria_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: DJANGO_SETTINGS_MODULE
+        value: veterinaria_project.settings.production

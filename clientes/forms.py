@@ -66,6 +66,10 @@ class ClienteForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'}),
             'cedula': forms.TextInput(attrs={'placeholder': 'Ingresa tu número de cédula'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cedula'].required = False
     
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -91,6 +95,10 @@ class RegistroClienteForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'placeholder': '+34 123 456 789'}),
             'cedula': forms.TextInput(attrs={'placeholder': 'Ingresa tu número de cédula'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cedula'].required = False
     
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')

@@ -26,6 +26,9 @@ from notificaciones.models import Notificacion, Recordatorio
 def staff_required(login_url=None):
     return user_passes_test(lambda u: u.is_staff, login_url=login_url)
 
+def veterinario_required(login_url=None):
+    return user_passes_test(lambda u: u.groups.filter(name='Veterinarios').exists() or u.is_staff, login_url=login_url)
+
 def dashboard(request):
     hoy = timezone.now().date()
 
@@ -33,6 +36,36 @@ def dashboard(request):
     total_clientes = Cliente.objects.count()
     total_mascotas = Mascota.objects.count()
     total_usuarios = User.objects.count()
+
+    # ESTADÍSTICAS DE ACTIVIDAD DE USUARIOS
+    from django.contrib.sessions.models import Session
+    import datetime
+
+    # Usuarios activos (con sesiones activas en las últimas 24 horas)
+    sesiones_activas = Session.objects.filter(expire_date__gte=timezone.now())
+    usuarios_activos_24h = set()
+
+    for session in sesiones_activas:
+        try:
+            session_data = session.get_decoded()
+            user_id = session_data.get('_auth_user_id')
+            if user_id:
+                usuarios_activos_24h.add(int(user_id))
+        except:
+            continue
+
+    usuarios_activos_count = len(usuarios_activos_24h)
+
+    # Usuarios que iniciaron sesión en los últimos 7 días
+    usuarios_recientes = User.objects.filter(
+        last_login__gte=timezone.now() - datetime.timedelta(days=7)
+    ).count()
+
+    # Usuarios que nunca han iniciado sesión
+    usuarios_sin_login = User.objects.filter(last_login__isnull=True).count()
+
+    # Lista de usuarios recientes para mostrar en la tabla
+    usuarios_recientes_list = User.objects.order_by('-last_login')[:10]
     
     # Citas
     citas_hoy = Cita.objects.filter(
@@ -297,6 +330,12 @@ def dashboard(request):
         'total_clientes': total_clientes,
         'total_mascotas': total_mascotas,
         'total_usuarios': total_usuarios,
+
+        # ESTADÍSTICAS DE ACTIVIDAD DE USUARIOS
+        'usuarios_activos_24h': usuarios_activos_count,
+        'usuarios_recientes': usuarios_recientes,
+        'usuarios_sin_login': usuarios_sin_login,
+        'usuarios_recientes_list': usuarios_recientes_list,
         'citas_mes': citas_mes,
         'citas_completadas_mes': citas_completadas_mes,
         'clientes_nuevos_mes': clientes_nuevos_mes,
@@ -678,6 +717,273 @@ def exportar_datos(request):
         response['Content-Disposition'] = f'attachment; filename="reporte_admin_{date.today().strftime('%Y%m%d')}.pdf"'
         response.write(pdf_data)
         return response
+    
+@login_required
+@veterinario_required(login_url='/admin/login/')
+def dashboard_veterinario(request):
+    """
+    Panel principal para veterinarios - vista especializada para gestión veterinaria
+    """
+    hoy = timezone.now().date()
+
+    # Estadísticas específicas para veterinarios
+    total_mascotas = Mascota.objects.count()
+    citas_hoy = Cita.objects.filter(
+        fecha__date=hoy,
+        estado__in=['programada', 'confirmada']
+    ).select_related('mascota__cliente__usuario').order_by('fecha')
+
+    citas_pendientes = Cita.objects.filter(
+        estado__in=['programada', 'confirmada']
+    ).count()
+
+    # Mascotas atendidas por el veterinario (si se implementa asignación)
+    # Por ahora, mostrar todas las mascotas activas
+    mascotas_activas = Mascota.objects.count()
+
+    # Historial médico reciente
+    try:
+        historial_reciente = HistorialMedico.objects.select_related(
+                'mascota__cliente__usuario'
+            ).order_by('-fecha')[:10]
+    except:
+        historial_reciente = []
+
+    # Vacunas próximas a vencer (próximos 30 días)
+    try:
+        proximas_vacunas = Vacuna.objects.filter(
+                fecha_proxima__lte=hoy + timedelta(days=30),
+                fecha_proxima__gte=hoy
+            ).select_related('mascota__cliente__usuario').order_by('fecha_proxima')[:10]
+    except:
+        proximas_vacunas = []
+
+    # Citas urgentes
+    citas_urgentes = Cita.objects.filter(
+            fecha__date=hoy,
+            tipo='urgencia',
+            estado__in=['programada', 'confirmada']
+        ).count()
+
+    # Estadísticas del mes
+    citas_mes = Cita.objects.filter(
+        fecha__date__month=hoy.month,
+        fecha__date__year=hoy.year
+    ).count()
+
+    citas_completadas_mes = Cita.objects.filter(
+        fecha__date__month=hoy.month,
+        fecha__date__year=hoy.year,
+        estado='completada'
+    ).count()
+
+    # Filtros para gestión de citas
+    cita_busqueda = request.GET.get('cita_busqueda', '')
+    cita_estado = request.GET.get('cita_estado', '')
+    cita_tipo = request.GET.get('cita_tipo', '')
+    cita_periodo = request.GET.get('cita_periodo', 'hoy')
+
+    # Base query para citas
+    citas_query = Cita.objects.select_related('mascota__cliente__usuario')
+
+    # Aplicar filtros de período
+    if cita_periodo == 'hoy':
+        citas_query = citas_query.filter(fecha__date=hoy)
+    elif cita_periodo == 'semana':
+        semana_inicio = hoy - timedelta(days=hoy.weekday())
+        semana_fin = semana_inicio + timedelta(days=6)
+        citas_query = citas_query.filter(fecha__date__range=[semana_inicio, semana_fin])
+    elif cita_periodo == 'mes':
+        citas_query = citas_query.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year)
+
+    # Filtro por estado
+    if cita_estado:
+        citas_query = citas_query.filter(estado=cita_estado)
+
+    # Filtro por tipo
+    if cita_tipo:
+        citas_query = citas_query.filter(tipo=cita_tipo)
+
+    # Filtro por búsqueda
+    if cita_busqueda:
+        citas_query = citas_query.filter(
+            Q(mascota__nombre__icontains=cita_busqueda) |
+            Q(mascota__cliente__usuario__first_name__icontains=cita_busqueda) |
+            Q(mascota__cliente__usuario__last_name__icontains=cita_busqueda) |
+            Q(mascota__cliente__usuario__username__icontains=cita_busqueda) |
+            Q(tipo__icontains=cita_busqueda)
+        )
+
+    # Citas filtradas para gestión
+    citas_gestion = citas_query.order_by('fecha')[:50]
+
+    context = {
+        # Estadísticas principales
+        'total_mascotas': total_mascotas,
+        'citas_hoy': citas_hoy,
+        'citas_pendientes': citas_pendientes,
+        'mascotas_activas': mascotas_activas,
+        'historial_reciente': historial_reciente,
+        'proximas_vacunas': proximas_vacunas,
+        'citas_urgentes': citas_urgentes,
+        'citas_mes': citas_mes,
+        'citas_completadas_mes': citas_completadas_mes,
+
+        # Filtros de citas
+        'citas_gestion': citas_gestion,
+        'cita_busqueda': cita_busqueda,
+        'cita_estado': cita_estado,
+        'cita_tipo': cita_tipo,
+        'cita_periodo': cita_periodo,
+
+        # Información del veterinario
+        'veterinario': getattr(request.user, 'perfil_veterinario', None),
+        'hoy': hoy,
+        'mes_actual': hoy.strftime('%B %Y'),
+    }
+
+    return render(request, 'administracion/dashboard_veterinario.html', context)
+    
+    @login_required
+    @veterinario_required(login_url='/admin/login/')
+    def gestion_mascotas_veterinario(request):
+        """
+        Vista para que veterinarios gestionen mascotas
+        """
+        # Filtros
+        tipo_filtro = request.GET.get('tipo', '')
+        cliente_filtro = request.GET.get('cliente', '')
+        busqueda = request.GET.get('busqueda', '')
+        estado_filtro = request.GET.get('estado', 'activas')  # activas/inactivas/todas
+    
+        # Base query
+        mascotas_query = Mascota.objects.select_related('cliente__usuario')
+    
+        # Aplicar filtros
+        if tipo_filtro:
+            mascotas_query = mascotas_query.filter(tipo=tipo_filtro)
+    
+        if cliente_filtro:
+            mascotas_query = mascotas_query.filter(
+                Q(cliente__usuario__username__icontains=cliente_filtro) |
+                Q(cliente__usuario__first_name__icontains=cliente_filtro) |
+                Q(cliente__usuario__last_name__icontains=cliente_filtro)
+            )
+    
+        if estado_filtro == 'activas':
+            mascotas_query = mascotas_query.filter(activo=True)
+        elif estado_filtro == 'inactivas':
+            mascotas_query = mascotas_query.filter(activo=False)
+    
+        if busqueda:
+            mascotas_query = mascotas_query.filter(
+                Q(nombre__icontains=busqueda) |
+                Q(raza__icontains=busqueda) |
+                Q(color__icontains=busqueda)
+            )
+    
+        # Ordenar y limitar
+        mascotas = mascotas_query.order_by('-fecha_registro')[:100]
+    
+        context = {
+            'mascotas': mascotas,
+            'tipo_filtro': tipo_filtro,
+            'cliente_filtro': cliente_filtro,
+            'busqueda': busqueda,
+            'estado_filtro': estado_filtro,
+            'tipos_mascota': Mascota.TIPO_CHOICES,
+        }
+    
+        return render(request, 'administracion/gestion_mascotas_veterinario.html', context)
+    
+    @login_required
+    @veterinario_required(login_url='/admin/login/')
+    def gestion_citas_veterinario(request):
+        """
+        Vista para que veterinarios gestionen citas
+        """
+        hoy = timezone.now().date()
+    
+        # Filtros
+        cita_busqueda = request.GET.get('cita_busqueda', '')
+        cita_estado = request.GET.get('cita_estado', '')
+        cita_tipo = request.GET.get('cita_tipo', '')
+        cita_periodo = request.GET.get('cita_periodo', 'hoy')
+    
+        # Base query para citas
+        citas_query = Cita.objects.select_related('mascota__cliente__usuario')
+    
+        # Aplicar filtros de período
+        if cita_periodo == 'hoy':
+            citas_query = citas_query.filter(fecha__date=hoy)
+        elif cita_periodo == 'semana':
+            semana_inicio = hoy - timedelta(days=hoy.weekday())
+            semana_fin = semana_inicio + timedelta(days=6)
+            citas_query = citas_query.filter(fecha__date__range=[semana_inicio, semana_fin])
+        elif cita_periodo == 'mes':
+            citas_query = citas_query.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year)
+    
+        # Filtro por estado
+        if cita_estado:
+            citas_query = citas_query.filter(estado=cita_estado)
+    
+        # Filtro por tipo
+        if cita_tipo:
+            citas_query = citas_query.filter(tipo=cita_tipo)
+    
+        # Filtro por búsqueda
+        if cita_busqueda:
+            citas_query = citas_query.filter(
+                Q(mascota__nombre__icontains=cita_busqueda) |
+                Q(mascota__cliente__usuario__first_name__icontains=cita_busqueda) |
+                Q(mascota__cliente__usuario__last_name__icontains=cita_busqueda) |
+                Q(mascota__cliente__usuario__username__icontains=cita_busqueda) |
+                Q(tipo__icontains=cita_busqueda)
+            )
+    
+        # Citas para gestión
+        citas = citas_query.order_by('fecha')[:100]
+    
+        context = {
+            'citas': citas,
+            'cita_busqueda': cita_busqueda,
+            'cita_estado': cita_estado,
+            'cita_tipo': cita_tipo,
+            'cita_periodo': cita_periodo,
+            'hoy': hoy,
+        }
+    
+        return render(request, 'administracion/gestion_citas_veterinario.html', context)
+    
+    @login_required
+    @veterinario_required(login_url='/admin/login/')
+    def historial_medico_veterinario(request, mascota_id):
+        """
+        Vista para que veterinarios vean y gestionen el historial médico de una mascota
+        """
+        try:
+            mascota = Mascota.objects.select_related('cliente__usuario').get(id=mascota_id)
+        except Mascota.DoesNotExist:
+            messages.error(request, 'Mascota no encontrada.')
+            return redirect('administracion:gestion_mascotas_veterinario')
+    
+        # Historial médico
+        historial = HistorialMedico.objects.filter(mascota=mascota).order_by('-fecha')
+    
+        # Vacunas de la mascota
+        vacunas = Vacuna.objects.filter(mascota=mascota).order_by('-fecha_aplicacion')
+    
+        # Citas de la mascota
+        citas_mascota = Cita.objects.filter(mascota=mascota).order_by('-fecha')
+    
+        context = {
+            'mascota': mascota,
+            'historial': historial,
+            'vacunas': vacunas,
+            'citas_mascota': citas_mascota,
+        }
+    
+        return render(request, 'administracion/historial_medico_veterinario.html', context)
 
     # Generación de Excel profesional con openpyxl
     wb = Workbook()
@@ -1006,6 +1312,411 @@ def crear_notificacion(request):
     return render(request, 'administracion/crear_notificacion.html', context)
 
 @login_required
+@login_required
+@staff_required(login_url='/admin/login/')
+def gestionar_usuarios(request):
+    """
+    Vista para que los administradores gestionen usuarios del sistema
+    """
+    # Filtros
+    tipo_filtro = request.GET.get('tipo', 'todos')  # todos, staff, veterinarios, clientes
+    busqueda = request.GET.get('busqueda', '')
+    estado_filtro = request.GET.get('estado', 'todos')  # todos, activos, inactivos
+
+    # Base query para usuarios
+    usuarios_query = User.objects.select_related()
+
+    # Aplicar filtros
+    if tipo_filtro == 'staff':
+        usuarios_query = usuarios_query.filter(is_staff=True)
+    elif tipo_filtro == 'veterinarios':
+        usuarios_query = usuarios_query.filter(groups__name='Veterinarios')
+    elif tipo_filtro == 'clientes':
+        usuarios_query = usuarios_query.filter(is_staff=False).exclude(groups__name='Veterinarios')
+
+    if estado_filtro == 'activos':
+        usuarios_query = usuarios_query.filter(is_active=True)
+    elif estado_filtro == 'inactivos':
+        usuarios_query = usuarios_query.filter(is_active=False)
+
+    if busqueda:
+        usuarios_query = usuarios_query.filter(
+            Q(username__icontains=busqueda) |
+            Q(first_name__icontains=busqueda) |
+            Q(last_name__icontains=busqueda) |
+            Q(email__icontains=busqueda)
+        )
+
+    # Obtener usuarios
+    usuarios = usuarios_query.order_by('-date_joined')[:100]
+
+    # Estadísticas
+    total_usuarios = User.objects.count()
+    usuarios_staff = User.objects.filter(is_staff=True).count()
+    usuarios_veterinarios = User.objects.filter(groups__name='Veterinarios').count()
+    usuarios_clientes = User.objects.filter(is_staff=False).exclude(groups__name='Veterinarios').count()
+    usuarios_activos = User.objects.filter(is_active=True).count()
+    usuarios_inactivos = User.objects.filter(is_active=False).count()
+
+    context = {
+        'usuarios': usuarios,
+        'tipo_filtro': tipo_filtro,
+        'busqueda': busqueda,
+        'estado_filtro': estado_filtro,
+        'total_usuarios': total_usuarios,
+        'usuarios_staff': usuarios_staff,
+        'usuarios_veterinarios': usuarios_veterinarios,
+        'usuarios_clientes': usuarios_clientes,
+        'usuarios_activos': usuarios_activos,
+        'usuarios_inactivos': usuarios_inactivos,
+    }
+
+    return render(request, 'administracion/gestion_usuarios.html', context)
+
+@login_required
+@staff_required(login_url='/admin/login/')
+def crear_usuario(request):
+    """
+    Vista para crear nuevos usuarios (staff, veterinarios, clientes)
+    """
+    if request.method == 'POST':
+        from django.contrib.auth.forms import UserCreationForm
+        from django import forms
+
+        class UsuarioForm(forms.ModelForm):
+            TIPO_USUARIO_CHOICES = [
+                ('cliente', 'Cliente'),
+                ('veterinario', 'Veterinario'),
+                ('staff', 'Administrador'),
+            ]
+
+            tipo_usuario = forms.ChoiceField(
+                choices=TIPO_USUARIO_CHOICES,
+                widget=forms.Select(attrs={'class': 'form-select'}),
+                label='Tipo de Usuario'
+            )
+
+            password1 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Contraseña'
+            )
+            password2 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Confirmar Contraseña'
+            )
+
+            class Meta:
+                model = User
+                fields = ['username', 'first_name', 'last_name', 'email']
+                widgets = {
+                    'username': forms.TextInput(attrs={'class': 'form-control'}),
+                    'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'email': forms.EmailInput(attrs={'class': 'form-control'}),
+                }
+
+            def clean(self):
+                cleaned_data = super().clean()
+                password1 = cleaned_data.get('password1')
+                password2 = cleaned_data.get('password2')
+
+                if password1 and password2 and password1 != password2:
+                    raise forms.ValidationError('Las contraseñas no coinciden')
+
+                return cleaned_data
+
+        form = UsuarioForm(request.POST)
+        if form.is_valid():
+            tipo_usuario = form.cleaned_data['tipo_usuario']
+            password = form.cleaned_data['password1']
+
+            # Crear usuario
+            user = form.save(commit=False)
+            user.set_password(password)
+            user.save()
+
+            # Asignar permisos según el tipo
+            if tipo_usuario == 'staff':
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
+                messages.success(request, f'Administrador {user.get_full_name()} creado exitosamente.')
+            elif tipo_usuario == 'veterinario':
+                from administracion.models import Veterinario
+                user.is_staff = False
+                user.is_superuser = False
+                user.save()
+
+                # Crear perfil de veterinario
+                Veterinario.objects.create(
+                    usuario=user,
+                    nombre_completo=user.get_full_name(),
+                    especialidad='Medicina General',
+                    telefono='',
+                    activo=True
+                )
+                messages.success(request, f'Veterinario {user.get_full_name()} creado exitosamente.')
+            else:  # cliente
+                from clientes.models import Cliente
+                user.is_staff = False
+                user.is_superuser = False
+                user.save()
+
+                # Crear perfil de cliente
+                Cliente.objects.create(
+                    usuario=user,
+                    telefono='',
+                    direccion='',
+                    preferencias_comunicacion='email'
+                )
+                messages.success(request, f'Cliente {user.get_full_name()} creado exitosamente.')
+
+            return redirect('administracion:gestion_usuarios')
+    else:
+        from django import forms
+
+        class UsuarioForm(forms.ModelForm):
+            TIPO_USUARIO_CHOICES = [
+                ('cliente', 'Cliente'),
+                ('veterinario', 'Veterinario'),
+                ('staff', 'Administrador'),
+            ]
+
+            tipo_usuario = forms.ChoiceField(
+                choices=TIPO_USUARIO_CHOICES,
+                widget=forms.Select(attrs={'class': 'form-select'}),
+                label='Tipo de Usuario'
+            )
+
+            password1 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Contraseña'
+            )
+            password2 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Confirmar Contraseña'
+            )
+
+            class Meta:
+                model = User
+                fields = ['username', 'first_name', 'last_name', 'email']
+                widgets = {
+                    'username': forms.TextInput(attrs={'class': 'form-control'}),
+                    'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'email': forms.EmailInput(attrs={'class': 'form-control'}),
+                }
+
+        form = UsuarioForm()
+
+    context = {
+        'form': form,
+        'titulo': 'Crear Nuevo Usuario',
+    }
+
+    return render(request, 'administracion/crear_usuario.html', context)
+
+@login_required
+@staff_required(login_url='/admin/login/')
+def editar_usuario(request, user_id):
+    """
+    Vista para editar usuarios existentes
+    """
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Usuario no encontrado.')
+        return redirect('administracion:gestion_usuarios')
+
+    if request.method == 'POST':
+        from django import forms
+
+        class UsuarioEditForm(forms.ModelForm):
+            TIPO_USUARIO_CHOICES = [
+                ('cliente', 'Cliente'),
+                ('veterinario', 'Veterinario'),
+                ('staff', 'Administrador'),
+            ]
+
+            tipo_usuario = forms.ChoiceField(
+                choices=TIPO_USUARIO_CHOICES,
+                widget=forms.Select(attrs={'class': 'form-select'}),
+                label='Tipo de Usuario'
+            )
+
+            cambiar_password = forms.BooleanField(
+                required=False,
+                widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                label='Cambiar contraseña'
+            )
+
+            password1 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Nueva Contraseña',
+                required=False
+            )
+            password2 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Confirmar Nueva Contraseña',
+                required=False
+            )
+
+            class Meta:
+                model = User
+                fields = ['username', 'first_name', 'last_name', 'email', 'is_active']
+                widgets = {
+                    'username': forms.TextInput(attrs={'class': 'form-control'}),
+                    'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'email': forms.EmailInput(attrs={'class': 'form-control'}),
+                    'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                }
+
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                # Determinar el tipo actual del usuario
+                if self.instance.is_staff:
+                    self.fields['tipo_usuario'].initial = 'staff'
+                elif hasattr(self.instance, 'perfil_veterinario'):
+                    self.fields['tipo_usuario'].initial = 'veterinario'
+                else:
+                    self.fields['tipo_usuario'].initial = 'cliente'
+
+            def clean(self):
+                cleaned_data = super().clean()
+                cambiar_password = cleaned_data.get('cambiar_password')
+                password1 = cleaned_data.get('password1')
+                password2 = cleaned_data.get('password2')
+
+                if cambiar_password:
+                    if not password1 or not password2:
+                        raise forms.ValidationError('Debe ingresar ambas contraseñas')
+                    if password1 != password2:
+                        raise forms.ValidationError('Las contraseñas no coinciden')
+
+                return cleaned_data
+
+        form = UsuarioEditForm(request.POST, instance=user)
+        if form.is_valid():
+            tipo_usuario = form.cleaned_data['tipo_usuario']
+            cambiar_password = form.cleaned_data.get('cambiar_password')
+            password1 = form.cleaned_data.get('password1')
+
+            user = form.save(commit=False)
+
+            # Actualizar permisos según el tipo
+            if tipo_usuario == 'staff':
+                user.is_staff = True
+                user.is_superuser = True
+                # Remover de veterinarios si estaba
+                if hasattr(user, 'perfil_veterinario'):
+                    user.perfil_veterinario.delete()
+                user.groups.clear()
+            elif tipo_usuario == 'veterinario':
+                user.is_staff = False
+                user.is_superuser = False
+                # Crear perfil de veterinario si no existe
+                from administracion.models import Veterinario
+                if not hasattr(user, 'perfil_veterinario'):
+                    Veterinario.objects.create(
+                        usuario=user,
+                        nombre_completo=user.get_full_name(),
+                        especialidad='Medicina General',
+                        telefono='',
+                        activo=True
+                    )
+                user.groups.clear()
+                from django.contrib.auth.models import Group
+                grupo_veterinarios, created = Group.objects.get_or_create(name='Veterinarios')
+                user.groups.add(grupo_veterinarios)
+            else:  # cliente
+                user.is_staff = False
+                user.is_superuser = False
+                # Remover de veterinarios si estaba
+                if hasattr(user, 'perfil_veterinario'):
+                    user.perfil_veterinario.delete()
+                user.groups.clear()
+                # Crear perfil de cliente si no existe
+                from clientes.models import Cliente
+                if not hasattr(user, 'cliente_profile'):
+                    Cliente.objects.create(
+                        usuario=user,
+                        telefono='',
+                        direccion='',
+                        preferencias_comunicacion='email'
+                    )
+
+            # Cambiar contraseña si se solicita
+            if cambiar_password and password1:
+                user.set_password(password1)
+
+            user.save()
+            messages.success(request, f'Usuario {user.get_full_name()} actualizado exitosamente.')
+            return redirect('administracion:gestion_usuarios')
+    else:
+        from django import forms
+
+        class UsuarioEditForm(forms.ModelForm):
+            TIPO_USUARIO_CHOICES = [
+                ('cliente', 'Cliente'),
+                ('veterinario', 'Veterinario'),
+                ('staff', 'Administrador'),
+            ]
+
+            tipo_usuario = forms.ChoiceField(
+                choices=TIPO_USUARIO_CHOICES,
+                widget=forms.Select(attrs={'class': 'form-select'}),
+                label='Tipo de Usuario'
+            )
+
+            cambiar_password = forms.BooleanField(
+                required=False,
+                widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                label='Cambiar contraseña'
+            )
+
+            password1 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Nueva Contraseña',
+                required=False
+            )
+            password2 = forms.CharField(
+                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                label='Confirmar Nueva Contraseña',
+                required=False
+            )
+
+            class Meta:
+                model = User
+                fields = ['username', 'first_name', 'last_name', 'email', 'is_active']
+                widgets = {
+                    'username': forms.TextInput(attrs={'class': 'form-control'}),
+                    'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+                    'email': forms.EmailInput(attrs={'class': 'form-control'}),
+                    'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                }
+
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                # Determinar el tipo actual del usuario
+                if self.instance.is_staff:
+                    self.fields['tipo_usuario'].initial = 'staff'
+                elif hasattr(self.instance, 'perfil_veterinario'):
+                    self.fields['tipo_usuario'].initial = 'veterinario'
+                else:
+                    self.fields['tipo_usuario'].initial = 'cliente'
+
+        form = UsuarioEditForm(instance=user)
+
+    context = {
+        'form': form,
+        'usuario': user,
+        'titulo': f'Editar Usuario: {user.get_full_name()}',
+    }
+
+    return render(request, 'administracion/editar_usuario.html', context)
+
 @staff_required(login_url='/admin/login/')
 def cambiar_estado_cita(request, cita_id):
     """

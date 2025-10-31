@@ -35,6 +35,11 @@
                     {% if user.is_staff %}
                     <!-- MENÚ PARA ADMINISTRADORES -->
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'administracion:dashboard_admin' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:clientes_cliente_changelist' %}">
                             <i class="fas fa-users me-1"></i>Clientes
                         </a>
@@ -52,6 +57,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:tienda_producto_changelist' %}">
                             <i class="fas fa-shopping-bag me-1"></i>Tienda
+                        </a>
+                    </li>
+                    {% elif user|has_group:"Veterinarios" %}
+                    <!-- MENÚ PARA VETERINARIOS -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'administracion:dashboard_veterinario' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Mi Panel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'mascotas:lista_mascotas' %}">
+                            <i class="fas fa-paw me-1"></i>Mascotas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'citas:mis_citas' %}">
+                            <i class="fas fa-calendar-alt me-1"></i>Citas
                         </a>
                     </li>
                     {% else %}
@@ -84,8 +106,8 @@
                 
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                    <!-- Widget del Carrito (solo para usuarios no admin) -->
-                    {% if not user.is_staff %}
+                    <!-- Widget del Carrito (solo para usuarios normales, no admin ni veterinarios) -->
+                    {% if not user.is_staff and not user|has_group:"Veterinarios" %}
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'tienda:ver_carrito' %}">
                             <i class="fas fa-shopping-cart me-1"></i>Carrito
@@ -94,19 +116,32 @@
                     </li>
                     {% endif %}
 
-                    <!-- Menú de usuario admin -->
+                    <!-- Menú de usuario admin/veterinario -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle me-1"></i>{{ user.get_full_name|default:user.username }}
-                            {% if user.is_staff %}<span class="admin-badge">ADMIN</span>{% endif %}
+                            {% if user.is_staff %}<span class="admin-badge">ADMIN</span>
+                            {% elif user|has_group:"Veterinarios" %}<span class="badge bg-success">VET</span>
+                            {% endif %}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             {% if user.is_staff %}
                             <li><a class="dropdown-item" href="{% url 'administracion:dashboard_admin' %}">
-                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard Admin
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'admin:index' %}">
                                 <i class="fas fa-cog me-1"></i>Panel Admin
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% elif user|has_group:"Veterinarios" %}
+                            <li><a class="dropdown-item" href="{% url 'administracion:dashboard_veterinario' %}">
+                                <i class="fas fa-tachometer-alt me-1"></i>Mi Panel
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'mascotas:lista_mascotas' %}">
+                                <i class="fas fa-paw me-1"></i>Mascotas
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'citas:mis_citas' %}">
+                                <i class="fas fa-calendar-alt me-1"></i>Citas
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             {% else %}
@@ -152,9 +187,15 @@
         {% endif %}
         
         {% if user.is_staff %}
-        <div class="alert admin-menu alert-dismissible fade show mb-4">
+        <div class="alert alert-warning alert-dismissible fade show mb-4">
             <strong><i class="fas fa-shield-alt me-2"></i>Modo Administrador</strong>
             <p class="mb-0">Estás navegando como administrador del sistema.</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% elif user|has_group:"Veterinarios" %}
+        <div class="alert alert-info alert-dismissible fade show mb-4">
+            <strong><i class="fas fa-user-md me-2"></i>Panel de Veterinario</strong>
+            <p class="mb-0">Bienvenido al panel veterinario. Aquí puedes gestionar mascotas, citas e historiales médicos.</p>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         {% endif %}

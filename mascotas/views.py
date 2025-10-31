@@ -37,9 +37,14 @@ def lista_mascotas(request):
         es_cliente = False
     else:
         # Clientes solo ven sus mascotas
-        cliente = request.user.cliente
-        mascotas = Mascota.objects.filter(cliente=cliente).select_related('cliente')
-        es_cliente = True
+        if hasattr(request.user, 'cliente'):
+            cliente = request.user.cliente
+            mascotas = Mascota.objects.filter(cliente=cliente).select_related('cliente')
+            es_cliente = True
+        else:
+            # Usuario veterinario sin perfil cliente
+            mascotas = Mascota.objects.none()
+            es_cliente = False
     
     return render(request, 'mascotas/lista_mascotas.html', {
         'mascotas': mascotas,

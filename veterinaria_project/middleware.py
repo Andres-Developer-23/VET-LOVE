@@ -29,6 +29,8 @@ class RedirectAuthenticatedUsers:
             if request.path in self.redirect_urls:
                 if request.user.is_staff or request.user.is_superuser:
                     return redirect('admin:index')
+                elif hasattr(request.user, 'perfil_veterinario') and request.user.perfil_veterinario.activo:
+                    return redirect('administracion:dashboard_veterinario')
                 else:
                     return redirect('home')
         

@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{% block titulo_pagina %}Panel de Veterinario{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administracion/css/dashboard.css' %}">
+<style>
+    .veterinario-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+    .stat-card-vet {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #28a745;
+        transition: transform 0.2s;
+    }
+    .stat-card-vet:hover {
+        transform: translateY(-2px);
+    }
+    .stat-card-vet.urgent {
+        border-left-color: #dc3545;
+    }
+    .stat-card-vet.warning {
+        border-left-color: #ffc107;
+    }
+    .action-btn {
+        margin: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% block contenido_principal %}
+<!-- HEADER DEL VETERINARIO -->
+<div class="veterinario-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="fas fa-user-md me-2"></i>Panel de Veterinario
+            </h1>
+            {% if veterinario %}
+                <p class="mb-0">Dr. {{ veterinario.nombre_completo }}
+                    {% if veterinario.especialidad %} - {{ veterinario.especialidad }}{% endif %}
+                </p>
+            {% else %}
+                <p class="mb-0">Bienvenido al panel veterinario</p>
+            {% endif %}
+        </div>
+        <div class="text-end">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-calendar-alt fa-2x me-3"></i>
+                <div>
+                    <div class="h5 mb-0">{{ hoy|date:"l, d F Y" }}</div>
+                    <small>{{ hoy|time:"H:i" }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ESTADÍSTICAS RÁPIDAS -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card-vet">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h3 class="h4 mb-1">{{ total_mascotas }}</h3>
+                    <p class="text-muted mb-0">Total Mascotas</p>
+                </div>
+                <i class="fas fa-paw fa-2x text-primary"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card-vet">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h3 class="h4 mb-1">{{ citas_hoy|length }}</h3>
+                    <p class="text-muted mb-0">Citas Hoy</p>
+                </div>
+                <i class="fas fa-calendar-check fa-2x text-success"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card-vet warning">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h3 class="h4 mb-1">{{ proximas_vacunas|length }}</h3>
+                    <p class="text-muted mb-0">Vacunas Próximas</p>
+                </div>
+                <i class="fas fa-syringe fa-2x text-warning"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card-vet {% if citas_urgentes > 0 %}urgent{% endif %}">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h3 class="h4 mb-1">{{ citas_urgentes }}</h3>
+                    <p class="text-muted mb-0">Citas Urgentes</p>
+                </div>
+                <i class="fas fa-exclamation-triangle fa-2x {% if citas_urgentes > 0 %}text-danger{% else %}text-muted{% endif %}"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCIONES RÁPIDAS -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap">
+                    <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-primary action-btn">
+                        <i class="fas fa-paw me-1"></i>Ver Mascotas
+                    </a>
+                    <a href="{% url 'citas:mis_citas' %}" class="btn btn-success action-btn">
+                        <i class="fas fa-calendar-alt me-1"></i>Ver Citas
+                    </a>
+                    <a href="{% url 'administracion:dashboard_veterinario' %}" class="btn btn-info action-btn">
+                        <i class="fas fa-sync-alt me-1"></i>Actualizar Panel
+                    </a>
+                    <a href="{% url 'admin:index' %}" class="btn btn-secondary action-btn">
+                        <i class="fas fa-cog me-1"></i>Panel Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="row">
+    <!-- CITAS DE HOY -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Citas de Hoy</h5>
+                <span class="badge bg-primary">{{ citas_hoy|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if citas_gestion %}
+                    <div class="list-group list-group-flush">
+                        {% for cita in citas_gestion|slice:":5" %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">{{ cita.mascota.nombre }}</h6>
+                                        <p class="mb-1 text-muted small">
+                                            <i class="fas fa-user me-1"></i>{{ cita.mascota.cliente.usuario.get_full_name|default:cita.mascota.cliente.usuario.username }}
+                                        </p>
+                                        <p class="mb-1 text-muted small">
+                                            <i class="fas fa-clock me-1"></i>{{ cita.fecha|date:"H:i" }}
+                                            <span class="badge bg-{{ cita.estado|lower }}">{{ cita.get_estado_display }}</span>
+                                        </p>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">{{ cita.get_tipo_display }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if citas_gestion|length > 5 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'citas:mis_citas' %}" class="btn btn-sm btn-outline-primary">
+                                Ver todas las citas
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No hay citas programadas para hoy</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- VACUNAS PRÓXIMAS -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-syringe me-2"></i>Vacunas Próximas</h5>
+                <span class="badge bg-warning">{{ proximas_vacunas|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if proximas_vacunas %}
+                    <div class="list-group list-group-flush">
+                        {% for vacuna in proximas_vacunas %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">{{ vacuna.mascota.nombre }}</h6>
+                                        <p class="mb-1 text-muted small">
+                                            <i class="fas fa-user me-1"></i>{{ vacuna.mascota.cliente.usuario.get_full_name|default:vacuna.mascota.cliente.usuario.username }}
+                                        </p>
+                                        <p class="mb-1 text-muted small">
+                                            <i class="fas fa-calendar me-1"></i>Próxima: {{ vacuna.fecha_proxima|date:"d/m/Y" }}
+                                        </p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-info">{{ vacuna.nombre_vacuna|truncatechars:15 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <p class="text-muted">No hay vacunas próximas pendientes</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HISTORIAL MÉDICO RECIENTE -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Historial Médico Reciente</h5>
+            </div>
+            <div class="card-body">
+                {% if historial_reciente %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Mascota</th>
+                                    <th>Propietario</th>
+                                    <th>Tipo</th>
+                                    <th>Diagnóstico</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registro in historial_reciente %}
+                                    <tr>
+                                        <td>{{ registro.fecha|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            <strong>{{ registro.mascota.nombre }}</strong><br>
+                                            <small class="text-muted">{{ registro.mascota.get_tipo_display }}</small>
+                                        </td>
+                                        <td>{{ registro.mascota.cliente.usuario.get_full_name|default:registro.mascota.cliente.usuario.username }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ registro.get_tipo_display }}</span>
+                                        </td>
+                                        <td>
+                                            <span title="{{ registro.diagnostico }}">{{ registro.diagnostico|truncatechars:50 }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'mascotas:detalle_mascota' registro.mascota.id %}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i> Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No hay registros médicos recientes</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Función para actualizar datos del panel
+function actualizarPanel() {
+    location.reload();
+}
+
+// Auto-refresh cada 5 minutos
+setInterval(actualizarPanel, 300000);
+</script>
+{% endblock %}

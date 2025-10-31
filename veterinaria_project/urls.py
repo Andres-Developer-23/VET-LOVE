@@ -11,6 +11,8 @@ from . import views
 def redireccionar_despues_login(request):
     if request.user.is_staff:
         return redirect('administracion:dashboard_admin')
+    elif hasattr(request.user, 'perfil_veterinario') and request.user.perfil_veterinario.activo:
+        return redirect('administracion:dashboard_veterinario')
     else:
         return redirect('home')
 
