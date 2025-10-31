@@ -13,9 +13,7 @@ services:
     startCommand: 'cd veterinaria_project && python -m gunicorn veterinaria_project.asgi:application -k uvicorn.workers.UvicornWorker'
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: veterinaria_db
-          property: connectionString
+        value: postgresql://veterinaria_db_f9ru_user:MiMEsx8yHudgtuTgwzVl9JdteIyPeA5v@dpg-d424m0gdl3ps73ec6pjg-a.oregon-postgres.render.com/veterinaria_db_f9ru
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
