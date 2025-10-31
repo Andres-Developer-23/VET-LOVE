@@ -14,6 +14,9 @@ python manage.py collectstatic --no-input
 # Apply any outstanding database migrations
 python manage.py migrate
 
+# Wait a moment for database to be ready
+sleep 5
+
 # Load data from fixtures if available
 if [ -f "db_dump.json" ]; then
     echo "Loading data from fixtures..."
