@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from . import views
 
 @login_required
@@ -15,6 +16,9 @@ def redireccionar_despues_login(request):
         return redirect('administracion:dashboard_veterinario')
     else:
         return redirect('home')
+
+def health_check(request):
+    return HttpResponse("OK")
 
 # estas son las rutas principales del proyecto
 urlpatterns = [
@@ -28,6 +32,7 @@ urlpatterns = [
     path('notificaciones/', include('notificaciones.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('redireccionar/', redireccionar_despues_login, name='redireccionar'),
+    path('healthz/', health_check),  # Health check endpoint
 ]
 
 if settings.DEBUG:
