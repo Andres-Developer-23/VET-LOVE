@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <!-- Notificaciones para Administrador -->
+    {% if notificaciones_recientes %}
+    <div class="module">
+        <table>
+            <caption>
+                <a href="{% url 'admin:notificaciones_notificacion_changelist' %}" class="section">Notificaciones Recientes</a>
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Prioridad</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Leída</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notif in notificaciones_recientes %}
+                <tr class="{% if not notif.leida %}font-weight-bold{% endif %}">
+                    <td>{{ notif.get_tipo_display }}</td>
+                    <td>
+                        <a href="{% url 'admin:notificaciones_notificacion_change' notif.id %}">{{ notif.titulo }}</a>
+                    </td>
+                    <td>{{ notif.get_prioridad_display }}</td>
+                    <td>{{ notif.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if notif.leida %}
+                            <span style="color: green;">✓</span>
+                        {% else %}
+                            <span style="color: red;">✗</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay notificaciones recientes.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Contenido original del admin -->
+    <div class="module">
+        <h2>Administración del sitio</h2>
+        <p>Bienvenido al panel de administración de Veterinaria VET LOVE.</p>
+    </div>
+
+    <div class="module">
+        <h2>Aplicaciones</h2>
+        <ul>
+            {% for app in app_list %}
+            <li>
+                <a href="{{ app.app_url }}">{{ app.name }}</a>
+                <ul>
+                    {% for model in app.models %}
+                    <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -22,5 +22,5 @@ class Veterinario(models.Model):
         # Agregar automáticamente al grupo Veterinarios
         super().save(*args, **kwargs)
         from django.contrib.auth.models import Group
-        grupo_veterinarios = Group.objects.get(name='Veterinarios')
+        grupo_veterinarios, created = Group.objects.get_or_create(name='Veterinarios')
         self.usuario.groups.add(grupo_veterinarios)

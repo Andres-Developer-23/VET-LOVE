@@ -99,3 +99,110 @@
     font-weight: 600;
     border-bottom: 3px solid #007bff;
 }
+
+/* Media queries adicionales para gestión de notificaciones */
+@media (max-width: 767px) {
+    /* Tabla de notificaciones más compacta */
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    /* Ocultar columnas menos importantes en móviles */
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        display: none; /* Tipo */
+    }
+
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        display: none; /* Prioridad */
+    }
+
+    /* Hacer columna de cliente más ancha */
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+        min-width: 150px;
+    }
+
+    /* Hacer columna de título más ancha */
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+        min-width: 120px;
+    }
+
+    /* Botones de acciones más pequeños */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Filtros en columna en móviles */
+    .row.g-3 .col-md-2,
+    .row.g-3 .col-md-4 {
+        margin-bottom: 1rem;
+    }
+
+    /* Estadísticas en fila en móviles */
+    .row.mb-4 .col-md-3 {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Media queries para responsividad móvil */
+@media (max-width: 767px) {
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .quick-action-btn {
+        padding: 8px 12px;
+        margin: 3px;
+        font-size: 0.9rem;
+    }
+
+    .btn-toolbar .btn {
+        margin-bottom: 5px;
+    }
+
+    .card-header h5 {
+        font-size: 1.1rem;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .chart-container,
+    .chart-container-sm {
+        height: 200px;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        margin: 20px 0 15px 0;
+    }
+}

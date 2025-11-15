@@ -12,8 +12,8 @@ from . import views
 def redireccionar_despues_login(request):
     if request.user.is_staff:
         return redirect('administracion:dashboard_admin')
-    elif hasattr(request.user, 'perfil_veterinario') and request.user.perfil_veterinario.activo:
-        return redirect('administracion:dashboard_veterinario')
+    elif hasattr(request.user, 'perfil_veterinario_app') and request.user.perfil_veterinario_app.activo:
+        return redirect('veterinario:dashboard_veterinario')
     else:
         return redirect('home')
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('clientes/', include('clientes.urls')),
     path('citas/', include('citas.urls')),
     path('administracion/', include('administracion.urls')),
+    path('veterinario/', include('veterinario.urls')),
     path('tienda/', include('tienda.urls')),
     path('notificaciones/', include('notificaciones.urls')),
     path('accounts/', include('django.contrib.auth.urls')),

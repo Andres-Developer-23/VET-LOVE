@@ -77,6 +77,26 @@ class Producto(models.Model):
     def stock_bajo(self):
         return self.stock <= self.stock_minimo
 
+    @property
+    def calificacion_promedio(self):
+        comentarios = self.comentarios.filter(aprobado=True)
+        if comentarios.exists():
+            return round(sum(c.calificacion for c in comentarios) / comentarios.count(), 1)
+        return 0
+
+    @property
+    def estrellas_lista(self):
+        promedio = self.calificacion_promedio
+        estrellas = []
+        for i in range(5):
+            if promedio > 0 and i < int(promedio):
+                estrellas.append('full')
+            elif promedio > 0 and i == int(promedio) and promedio % 1 >= 0.5:
+                estrellas.append('half')
+            else:
+                estrellas.append('empty')
+        return estrellas
+
 class Carrito(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='carrito')
     fecha_creacion = models.DateTimeField(auto_now_add=True)

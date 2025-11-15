@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (prioridadSelect.value === 'urgente' || prioridadSelect.value === 'emergencia') {
             sintomasField.required = true;
             sintomasField.parentElement.querySelector('.form-label').innerHTML =
-                'Síntomas Presentados';
+                'Síntomas Presentados <span class="text-danger">*</span>';
             sintomasField.parentElement.querySelector('.form-text').innerHTML =
                 'Para citas urgentes o de emergencia, es obligatorio describir los síntomas.';
         } else {

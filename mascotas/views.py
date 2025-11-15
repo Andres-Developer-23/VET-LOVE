@@ -93,9 +93,10 @@ def detalle_mascota(request, mascota_id):
         id=mascota_id
     )
 
-    # Verificar permisos: administradores pueden ver todas, clientes solo las suyas
+    # Verificar permisos: administradores y veterinarios pueden ver todas, clientes solo las suyas
     es_admin = request.user.is_staff or request.user.is_superuser
-    if not es_admin:
+    es_veterinario = hasattr(request.user, 'perfil_veterinario_app')
+    if not es_admin and not es_veterinario:
         if not hasattr(request.user, 'cliente') or mascota.cliente != request.user.cliente:
             return HttpResponseForbidden("No tienes permiso para ver esta mascota")
 

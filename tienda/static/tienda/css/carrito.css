@@ -11,3 +11,30 @@
     position: sticky;
     top: 100px;
 }
+
+/* Media queries para responsividad móvil */
+@media (max-width: 767px) {
+    .cart-item-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .quantity-input {
+        width: 60px;
+        font-size: 0.9rem;
+    }
+
+    .summary-card {
+        position: static;
+        margin-top: 2rem;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

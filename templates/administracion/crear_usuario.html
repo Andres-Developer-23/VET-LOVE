@@ -20,121 +20,140 @@
 
     <!-- Formulario -->
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-user-edit me-2"></i>Información del Usuario
                     </h5>
                 </div>
-                <div class="card-body">
-                    <form method="post">
+                <div class="card-body p-4">
+                    <form method="post" id="crearUsuarioForm">
                         {% csrf_token %}
 
                         <!-- Tipo de Usuario -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Tipo de Usuario</label>
-                            <div class="row">
+                            <label class="form-label fw-bold mb-3">
+                                <i class="fas fa-user-tag me-2"></i>Tipo de Usuario
+                            </label>
+                            <div class="row g-3">
                                 <div class="col-md-4">
-                                    <div class="form-check">
-                                        {{ form.tipo_usuario }}
-                                        <label class="form-check-label" for="{{ form.tipo_usuario.id_for_label }}">
-                                            <i class="fas fa-user-shield text-danger me-2"></i>Administrador
+                                    <div class="form-check card h-100 p-3 border-primary">
+                                        <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_0" value="administrador">
+                                        <label class="form-check-label fw-bold" for="id_tipo_usuario_0">
+                                            <i class="fas fa-user-shield text-danger me-2 fa-lg"></i>Administrador
                                         </label>
-                                        <small class="form-text text-muted">Acceso completo al sistema</small>
+                                        <small class="form-text text-muted mt-2">Acceso completo al sistema</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="form-check">
+                                    <div class="form-check card h-100 p-3 border-success">
                                         <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_1" value="veterinario">
-                                        <label class="form-check-label" for="id_tipo_usuario_1">
-                                            <i class="fas fa-user-md text-success me-2"></i>Veterinario
+                                        <label class="form-check-label fw-bold" for="id_tipo_usuario_1">
+                                            <i class="fas fa-user-md text-success me-2 fa-lg"></i>Veterinario
                                         </label>
-                                        <small class="form-text text-muted">Gestión de mascotas y citas</small>
+                                        <small class="form-text text-muted mt-2">Gestión de mascotas y citas</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="form-check">
+                                    <div class="form-check card h-100 p-3 border-info">
                                         <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_2" value="cliente" checked>
-                                        <label class="form-check-label" for="id_tipo_usuario_2">
-                                            <i class="fas fa-user-friends text-info me-2"></i>Cliente
+                                        <label class="form-check-label fw-bold" for="id_tipo_usuario_2">
+                                            <i class="fas fa-user-friends text-info me-2 fa-lg"></i>Cliente
                                         </label>
-                                        <small class="form-text text-muted">Acceso limitado a sus datos</small>
+                                        <small class="form-text text-muted mt-2">Acceso limitado a sus datos</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Información Básica -->
-                        <div class="row">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <div class="form-floating">
+                                    {{ form.username }}
+                                    <label for="{{ form.username.id_for_label }}">
                                         <i class="fas fa-user me-1"></i>{{ form.username.label }}
                                     </label>
-                                    {{ form.username }}
                                     {% if form.username.errors %}
-                                        <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                                        <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                <div class="form-floating">
+                                    {{ form.email }}
+                                    <label for="{{ form.email.id_for_label }}">
                                         <i class="fas fa-envelope me-1"></i>{{ form.email.label }}
                                     </label>
-                                    {{ form.email }}
                                     {% if form.email.errors %}
-                                        <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                                        <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                <div class="form-floating">
+                                    {{ form.first_name }}
+                                    <label for="{{ form.first_name.id_for_label }}">
                                         <i class="fas fa-signature me-1"></i>{{ form.first_name.label }}
                                     </label>
-                                    {{ form.first_name }}
                                     {% if form.first_name.errors %}
-                                        <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
+                                        <div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                <div class="form-floating">
+                                    {{ form.last_name }}
+                                    <label for="{{ form.last_name.id_for_label }}">
                                         <i class="fas fa-signature me-1"></i>{{ form.last_name.label }}
                                     </label>
-                                    {{ form.last_name }}
                                     {% if form.last_name.errors %}
-                                        <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
+                                        <div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Contraseña -->
-                        <div class="row">
+                        <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="id_password1" class="form-label">
+                                <div class="form-floating position-relative">
+                                    <input type="password" name="password1" id="id_password1" class="form-control" placeholder="Contraseña" required>
+                                    <label for="id_password1">
                                         <i class="fas fa-lock me-1"></i>Contraseña
                                     </label>
-                                    <input type="password" name="password1" id="id_password1" class="form-control" required>
-                                    <div class="form-text">Mínimo 8 caracteres</div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" onclick="togglePasswordVisibility('id_password1')" id="togglePassword1" title="Mostrar contraseña">
+                                        <i class="fas fa-eye" id="eyeIcon1"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text mt-1">
+                                    <i class="fas fa-info-circle me-1"></i>Mínimo 8 caracteres
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="id_password2" class="form-label">
+                                <div class="form-floating position-relative">
+                                    <input type="password" name="password2" id="id_password2" class="form-control" placeholder="Confirmar Contraseña" required>
+                                    <label for="id_password2">
                                         <i class="fas fa-lock me-1"></i>Confirmar Contraseña
                                     </label>
-                                    <input type="password" name="password2" id="id_password2" class="form-control" required>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" onclick="togglePasswordVisibility('id_password2')" id="togglePassword2" title="Mostrar contraseña">
+                                        <i class="fas fa-eye" id="eyeIcon2"></i>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Barra de fortaleza de contraseña -->
+                        <div class="mb-3" id="passwordStrength" style="display: none;">
+                            <label class="form-label">Fortaleza de la contraseña:</label>
+                            <div class="progress">
+                                <div class="progress-bar" id="passwordStrengthBar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="form-text text-muted" id="passwordStrengthText"></small>
                         </div>
 
                         <!-- Errores generales -->
@@ -148,11 +167,11 @@
                         {% endif %}
 
                         <!-- Botones -->
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-secondary me-2">
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-2"></i>Cancelar
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-save me-2"></i>Crear Usuario
                             </button>
                         </div>
@@ -164,19 +183,306 @@
 </div>
 
 <style>
+/* Estilos mejorados para el formulario */
 .form-check-input:checked {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
 }
 
 .card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+    border-radius: 0.75rem;
 }
 
 .card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    padding: 1.5rem;
+}
+
+.form-floating > label {
+    padding: 1rem 0.75rem;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-check.card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.form-check.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.form-check.card input[type="radio"]:checked + label {
+    font-weight: bold;
+}
+
+.form-check.card.border-primary input[type="radio"]:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.form-check.card.border-success input[type="radio"]:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.form-check.card.border-info input[type="radio"]:checked {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(102, 126, 234, 0.3);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transform: translateY(-1px);
+}
+
+/* Barra de fortaleza de contraseña */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+#passwordStrengthText {
+    font-size: 0.875rem;
+}
+
+/* Estilos para botones de mostrar/ocultar contraseña */
+.position-relative .btn-outline-secondary {
+    border: 1px solid #ced4da;
+    background: white;
+    color: #6c757d;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.position-relative .btn-outline-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.position-relative .btn-outline-secondary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .form-check.card {
+        margin-bottom: 1rem;
+    }
+
+    .d-flex.justify-content-end {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    /* Ajustar botones de contraseña en móvil */
+    .position-relative .btn-outline-secondary {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.5s ease-out;
 }
 </style>
+
+<script>
+// Función para verificar fortaleza de contraseña
+function checkPasswordStrength() {
+    const password = document.getElementById('id_password1').value;
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    const strengthContainer = document.getElementById('passwordStrength');
+
+    if (password.length === 0) {
+        strengthContainer.style.display = 'none';
+        return;
+    }
+
+    strengthContainer.style.display = 'block';
+
+    let strength = 0;
+    let feedback = [];
+
+    // Longitud
+    if (password.length >= 8) {
+        strength += 25;
+    } else {
+        feedback.push('Al menos 8 caracteres');
+    }
+
+    // Mayúsculas y minúsculas
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+        strength += 25;
+    } else {
+        feedback.push('Mayúsculas y minúsculas');
+    }
+
+    // Números
+    if (password.match(/\d/)) {
+        strength += 25;
+    } else {
+        feedback.push('Al menos un número');
+    }
+
+    // Caracteres especiales
+    if (password.match(/[^a-zA-Z\d]/)) {
+        strength += 25;
+    } else {
+        feedback.push('Al menos un carácter especial');
+    }
+
+    // Actualizar barra
+    strengthBar.style.width = strength + '%';
+
+    // Colores y texto
+    if (strength < 25) {
+        strengthBar.className = 'progress-bar bg-danger';
+        strengthText.textContent = 'Muy débil: ' + feedback.join(', ');
+    } else if (strength < 50) {
+        strengthBar.className = 'progress-bar bg-warning';
+        strengthText.textContent = 'Débil: ' + feedback.join(', ');
+    } else if (strength < 75) {
+        strengthBar.className = 'progress-bar bg-info';
+        strengthText.textContent = 'Buena: ' + feedback.join(', ');
+    } else {
+        strengthBar.className = 'progress-bar bg-success';
+        strengthText.textContent = 'Muy fuerte';
+    }
+}
+
+// Función para validar contraseñas coinciden
+function validatePasswords() {
+    const password1 = document.getElementById('id_password1').value;
+    const password2 = document.getElementById('id_password2').value;
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    if (password1 !== password2 && password2.length > 0) {
+        password2.setCustomValidity('Las contraseñas no coinciden');
+        submitBtn.disabled = true;
+    } else {
+        password2.setCustomValidity('');
+        submitBtn.disabled = false;
+    }
+}
+
+// Función para alternar visibilidad de contraseña
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById('togglePassword' + inputId.slice(-1));
+    const icon = document.getElementById('eyeIcon' + inputId.slice(-1));
+
+    if (!input || !button || !icon) {
+        console.error('Elementos no encontrados para inputId:', inputId);
+        return;
+    }
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+        button.setAttribute('title', 'Ocultar contraseña');
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+        button.setAttribute('title', 'Mostrar contraseña');
+    }
+}
+
+// Inicializar eventos
+document.addEventListener('DOMContentLoaded', function() {
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+
+    password1.addEventListener('input', checkPasswordStrength);
+    password1.addEventListener('input', validatePasswords);
+    password2.addEventListener('input', validatePasswords);
+
+    // Mejorar selección de tipo de usuario
+    const radioButtons = document.querySelectorAll('input[name="tipo_usuario"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remover clases activas
+            document.querySelectorAll('.form-check.card').forEach(card => {
+                card.classList.remove('border-primary', 'border-success', 'border-info');
+            });
+
+            // Agregar clase activa al seleccionado
+            const card = this.closest('.form-check.card');
+            if (this.value === 'administrador') {
+                card.classList.add('border-primary');
+            } else if (this.value === 'veterinario') {
+                card.classList.add('border-success');
+            } else if (this.value === 'cliente') {
+                card.classList.add('border-info');
+            }
+        });
+    });
+
+    // Inicializar tooltips para botones de mostrar/ocultar contraseña
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
 {% endblock %}

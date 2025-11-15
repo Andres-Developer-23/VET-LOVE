@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             const bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
-        }, 5000);
+        },10000);
     });
 
     // Prevenir envío múltiple de formularios
@@ -40,11 +40,35 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     }
 
+    // Actualizar contador de notificaciones
+    function actualizarNotificacionesWidget() {
+        fetch('/notificaciones/conteo/')
+            .then(response => response.json())
+            .then(data => {
+                const notifCount = document.getElementById('notificaciones-count');
+                if (notifCount) {
+                    const navLink = notifCount.closest('.nav-link');
+                    notifCount.textContent = data.total_no_leidas;
+                    // Ocultar badge si no hay notificaciones
+                    if (data.total_no_leidas === 0) {
+                        notifCount.style.display = 'none';
+                        if (navLink) navLink.classList.remove('has-notifications');
+                    } else {
+                        notifCount.style.display = 'flex';
+                        if (navLink) navLink.classList.add('has-notifications');
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
     // Actualizar al cargar la página
     actualizarCarritoWidget();
+    actualizarNotificacionesWidget();
 
     // Actualizar cada 30 segundos
     setInterval(actualizarCarritoWidget, 30000);
+    setInterval(actualizarNotificacionesWidget, 30000);
 
     // Aplicar sticky a la caja de filtros de la tienda (detectada por icono de filtro)
     document.querySelectorAll('.card-header i.fa-filter').forEach(function(icon) {

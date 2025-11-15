@@ -4,6 +4,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from citas.models import Cita
 from mascotas.models import Vacuna, Mascota
+from tienda.models import Orden, Comentario
 from .models import Recordatorio, Notificacion
 
 @receiver(post_save, sender=Cita)
@@ -29,7 +30,7 @@ def crear_recordatorio_cita(sender, instance, created, **kwargs):
         elif instance.prioridad == 'emergencia':
             prioridad = 'urgente'
 
-        # Crear notificación inmediata
+        # Crear notificación inmediata al cliente
         Notificacion.objects.create(
             cliente=instance.mascota.cliente,
             tipo='cita',
@@ -37,6 +38,16 @@ def crear_recordatorio_cita(sender, instance, created, **kwargs):
             mensaje=f'Se ha programado una cita para {instance.mascota.nombre} el {instance.fecha.strftime("%d/%m/%Y a las %H:%M")}. Tipo: {instance.get_tipo_display()}.',
             url_relacionada=f'/citas/mis-citas/',
             prioridad=prioridad
+        )
+
+        # Notificación al administrador
+        Notificacion.objects.create(
+            tipo='cita',
+            titulo=f'Nueva cita programada: {instance.mascota.nombre}',
+            mensaje=f'El cliente {instance.mascota.cliente} ha programado una cita para {instance.mascota.nombre} el {instance.fecha.strftime("%d/%m/%Y a las %H:%M")}. Tipo: {instance.get_tipo_display()}.',
+            url_relacionada=f'/admin/citas/cita/{instance.id}/change/',
+            prioridad=prioridad,
+            para_admin=True
         )
 
 @receiver(post_save, sender=Vacuna)
@@ -143,4 +154,40 @@ def crear_recordatorio_cumpleanos(sender, instance, created, **kwargs):
             mensaje=f'Se ha registrado exitosamente a {instance.nombre} en el sistema veterinario.',
             url_relacionada=f'/mascotas/{instance.id}/',
             prioridad='normal'
+        )
+
+        # Notificación al administrador
+        Notificacion.objects.create(
+            tipo='sistema',
+            titulo=f'Nueva mascota registrada: {instance.nombre}',
+            mensaje=f'El cliente {instance.cliente} ha registrado una nueva mascota: {instance.nombre} ({instance.tipo}).',
+            url_relacionada=f'/admin/mascotas/mascota/{instance.id}/change/',
+            prioridad='normal',
+            para_admin=True
+        )
+
+@receiver(post_save, sender=Orden)
+def notificar_nueva_orden(sender, instance, created, **kwargs):
+    """Notificar al administrador cuando se crea una nueva orden"""
+    if created:
+        Notificacion.objects.create(
+            tipo='sistema',
+            titulo=f'Nueva orden creada: #{instance.numero_orden}',
+            mensaje=f'El cliente {instance.usuario.username} ha creado una nueva orden por ${instance.total}. Estado: {instance.get_estado_display()}.',
+            url_relacionada=f'/admin/tienda/orden/{instance.id}/change/',
+            prioridad='alta',
+            para_admin=True
+        )
+
+@receiver(post_save, sender=Comentario)
+def notificar_nuevo_comentario(sender, instance, created, **kwargs):
+    """Notificar al administrador cuando se crea un nuevo comentario"""
+    if created:
+        Notificacion.objects.create(
+            tipo='sistema',
+            titulo=f'Nuevo comentario en {instance.producto.nombre}',
+            mensaje=f'El usuario {instance.usuario.username} ha comentado en el producto "{instance.producto.nombre}". Calificación: {instance.calificacion} estrellas.',
+            url_relacionada=f'/admin/tienda/comentario/{instance.id}/change/',
+            prioridad='normal',
+            para_admin=True
         )

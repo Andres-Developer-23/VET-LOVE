@@ -121,3 +121,42 @@
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Media queries para responsividad móvil */
+@media (max-width: 767px) {
+    .modal-dialog {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+
+    #btnConfirmarCita {
+        min-width: auto;
+    }
+
+    #btnSolicitarCita {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .alert {
+        font-size: 0.9rem;
+    }
+}

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Mascota, HistorialMedico, Vacuna
+from veterinario.models import Veterinario
 from datetime import date
 from django.utils.safestring import mark_safe
 
@@ -189,8 +190,8 @@ class MascotaForm(forms.ModelForm):
     class Meta:
         model = Mascota
         fields = [
-            'nombre', 'tipo', 'raza', 'sexo', 'fecha_nacimiento', 
-            'foto', 'color', 'caracteristicas', 'microchip'
+            'nombre', 'tipo', 'raza', 'sexo', 'fecha_nacimiento',
+            'foto', 'color', 'caracteristicas', 'microchip', 'veterinario_asignado'
         ]
         widgets = {
             'nombre': forms.TextInput(attrs={
@@ -224,6 +225,9 @@ class MascotaForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': '15 dígitos (opcional)'
             }),
+            'veterinario_asignado': forms.Select(attrs={
+                'class': 'form-select'
+            }),
         }
         labels = {
             'nombre': '<i class="fas fa-paw me-2"></i>Nombre de la Mascota',
@@ -235,6 +239,7 @@ class MascotaForm(forms.ModelForm):
             'color': '<i class="fas fa-palette me-2"></i>Color Principal',
             'caracteristicas': '<i class="fas fa-search me-2"></i>Señas Particulares',
             'microchip': '<i class="fas fa-microchip me-2"></i>Número de Microchip',
+            'veterinario_asignado': '<i class="fas fa-user-md me-2"></i>Veterinario Asignado',
         }
         help_texts = {
             'nombre': 'Nombre oficial para registros médicos y identificativos',

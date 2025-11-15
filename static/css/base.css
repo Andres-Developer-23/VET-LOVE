@@ -116,6 +116,49 @@ body {
     display: inline-block;
 }
 
+/* Mejoras para el icono de notificaciones */
+#notificaciones-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc3545 !important;
+    color: white !important;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    animation: notification-pulse 2s infinite;
+    z-index: 10;
+}
+
+@keyframes notification-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Icono de campana con animación cuando hay notificaciones */
+.nav-link .fa-bell {
+    transition: all 0.3s ease;
+}
+
+.nav-link.has-notifications .fa-bell {
+    color: #dc3545 !important;
+    animation: bell-shake 1s ease-in-out;
+}
+
+@keyframes bell-shake {
+    0%, 100% { transform: rotate(0deg); }
+    10%, 30%, 50%, 70%, 90% { transform: rotate(-10deg); }
+    20%, 40%, 60%, 80% { transform: rotate(10deg); }
+}
+
 /* Sticky sidebar para paneles de filtros en la tienda */
 @media (min-width: 768px) {
     .sticky-sidebar {
@@ -123,5 +166,68 @@ body {
         position: sticky;
         top: 90px;
         z-index: 102;
+    }
+}
+
+
+/* Media queries para responsividad móvil */
+@media (max-width: 767px) {
+    body {
+        padding-top: 70px; /* Ajustar para navbar en móviles */
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .profile-stats .stat-item {
+        border-right: none !important;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .profile-stats .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+
+    .footer .row {
+        text-align: center;
+    }
+
+    .footer .col-md-6 {
+        margin-bottom: 15px;
+    }
+
+    .edit-button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .card {
+        margin-bottom: 15px;
+    }
+
+    .admin-badge {
+        font-size: 0.6rem;
+        padding: 1px 6px;
+    }
+
+    .cart-badge {
+        font-size: 0.6rem;
+        padding: 1px 5px;
+    }
+
+    #notificaciones-count {
+        top: -6px;
+        right: -6px;
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
     }
 }

@@ -1,5 +1,6 @@
 from django.db import models
 from mascotas.models import Mascota
+from veterinario.models import Veterinario
 from django.utils import timezone
 
 class Cita(models.Model):
@@ -44,7 +45,15 @@ class Cita(models.Model):
     motivo = models.TextField(verbose_name="Motivo de la Consulta")
     sintomas = models.TextField(blank=True, verbose_name="Síntomas Presentados")
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='programada', verbose_name="Estado")
-    veterinario = models.CharField(max_length=100, blank=True, verbose_name="Veterinario Asignado")
+    veterinario_asignado = models.ForeignKey(
+        Veterinario,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='citas_asignadas',
+        verbose_name="Veterinario Asignado"
+    )
+    veterinario = models.CharField(max_length=100, blank=True, verbose_name="Veterinario Asignado (Texto)")
     duracion_estimada = models.PositiveIntegerField(default=30, verbose_name="Duración Estimada (minutos)")
     sala = models.CharField(max_length=50, blank=True, verbose_name="Sala/Consultorio")
     notas = models.TextField(blank=True, verbose_name="Notas Adicionales")

@@ -18,10 +18,10 @@ def multiply(value, arg):
     except (ValueError, TypeError):
         return value
 
-@register.filter
+@register.filter(name='div')
 def divide(value, arg):
     """Divide value por arg"""
     try:
-        return float(value) / float(arg)
+        return int(value) // int(arg)
     except (ValueError, TypeError, ZeroDivisionError):
         return value

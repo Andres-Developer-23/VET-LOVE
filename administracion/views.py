@@ -290,6 +290,11 @@ def dashboard(request):
     cita_tipo = request.GET.get('cita_tipo', '')
     cita_periodo = request.GET.get('cita_periodo', 'hoy')
 
+    # FILTROS PARA GESTIÓN DE MASCOTAS
+    tipo_filtro = request.GET.get('tipo', '')
+    cliente_filtro = request.GET.get('cliente', '')
+    busqueda = request.GET.get('busqueda', '')
+
     # Base query para citas
     citas_query = Cita.objects.select_related('mascota__cliente__usuario')
 
@@ -323,7 +328,92 @@ def dashboard(request):
         )
 
     # Citas filtradas para gestión (ordenadas por fecha)
-    citas_hoy_filtradas = citas_query.order_by('fecha')[:50]
+    citas_gestion = citas_query.order_by('fecha')[:50]
+
+    # Base query para mascotas
+    mascotas_query = Mascota.objects.select_related('cliente__usuario', 'veterinario_asignado')
+
+    # Aplicar filtros de mascotas
+    if tipo_filtro:
+        mascotas_query = mascotas_query.filter(tipo=tipo_filtro)
+
+    if cliente_filtro:
+        mascotas_query = mascotas_query.filter(
+            Q(cliente__usuario__username__icontains=cliente_filtro) |
+            Q(cliente__usuario__first_name__icontains=cliente_filtro) |
+            Q(cliente__usuario__last_name__icontains=cliente_filtro)
+        )
+
+    if busqueda:
+        mascotas_query = mascotas_query.filter(
+            Q(nombre__icontains=busqueda) |
+            Q(raza__icontains=busqueda) |
+            Q(color__icontains=busqueda)
+        )
+
+    # Estadísticas específicas para la pestaña de mascotas (antes del slice)
+    total_mascotas_mostradas = mascotas_query.count()
+    mascotas_sin_asignar = mascotas_query.filter(veterinario_asignado__isnull=True).count()
+    mascotas_asignadas = mascotas_query.filter(veterinario_asignado__isnull=False).count()
+
+    # Mascotas para gestión (después de calcular estadísticas)
+    mascotas_gestion = mascotas_query.order_by('-fecha_registro')[:100]
+
+    # FILTROS PARA GESTIÓN DE USUARIOS
+    tipo_filtro = request.GET.get('tipo', 'todos')  # todos, staff, veterinarios, clientes
+    busqueda = request.GET.get('busqueda', '')
+    estado_filtro = request.GET.get('estado', 'todos')  # todos, activos, inactivos
+
+    # Base query para usuarios
+    usuarios_query = User.objects.select_related()
+
+    # Aplicar filtros de tipo
+    if tipo_filtro == 'staff':
+        usuarios_query = usuarios_query.filter(is_staff=True)
+    elif tipo_filtro == 'veterinarios':
+        usuarios_query = usuarios_query.filter(groups__name='Veterinarios')
+    elif tipo_filtro == 'clientes':
+        usuarios_query = usuarios_query.filter(is_staff=False).exclude(groups__name='Veterinarios')
+
+    # Aplicar filtros de estado (considerando que usuarios que nunca iniciaron sesión son inactivos)
+    if estado_filtro == 'activos':
+        # Usuarios activos Y que han iniciado sesión al menos una vez
+        usuarios_query = usuarios_query.filter(is_active=True, last_login__isnull=False)
+    elif estado_filtro == 'inactivos':
+        # Usuarios inactivos O que nunca han iniciado sesión
+        usuarios_query = usuarios_query.filter(
+            Q(is_active=False) | Q(last_login__isnull=True)
+        )
+
+    if busqueda:
+        usuarios_query = usuarios_query.filter(
+            Q(username__icontains=busqueda) |
+            Q(first_name__icontains=busqueda) |
+            Q(last_name__icontains=busqueda) |
+            Q(email__icontains=busqueda)
+        )
+
+    # Obtener usuarios
+    usuarios = usuarios_query.order_by('-date_joined')[:100]
+
+    # Estadísticas de usuarios (actualizadas para considerar usuarios que nunca iniciaron sesión como inactivos)
+    usuarios_staff = User.objects.filter(is_staff=True).count()
+    usuarios_veterinarios = User.objects.filter(groups__name='Veterinarios').count()
+    usuarios_clientes = User.objects.filter(is_staff=False).exclude(groups__name='Veterinarios').count()
+    usuarios_activos = User.objects.filter(is_active=True, last_login__isnull=False).count()
+    usuarios_inactivos = User.objects.filter(
+        Q(is_active=False) | Q(last_login__isnull=True)
+    ).count()
+
+    # Estadísticas adicionales para mascotas
+    from veterinario.models import Veterinario
+    veterinarios_activos = Veterinario.objects.filter(activo=True).count()
+    mascotas_sin_veterinario = Mascota.objects.filter(veterinario_asignado__isnull=True).count()
+    mascotas_por_tipo = list(Mascota.objects.values('tipo').annotate(total=Count('id')).order_by('-total'))
+
+    # Lista de todos los veterinarios para el modal
+    veterinarios_activos_list = Veterinario.objects.all().order_by('nombre_completo')
+
 
     context = {
         # ESTADÍSTICAS EXISTENTES
@@ -355,8 +445,14 @@ def dashboard(request):
         'productos_bajo_stock': productos_bajo_stock,
 
         # LISTAS EXISTENTES
-        'citas_hoy': citas_hoy_filtradas,
+        'citas_hoy': citas_gestion,
         'proximas_citas': proximas_citas,
+
+        # GESTIÓN DE MASCOTAS Y CITAS
+        'mascotas_gestion': mascotas_gestion,
+        'tipos_mascota': Mascota.TIPO_CHOICES,
+        'estados_cita': Cita.ESTADO_CHOICES,
+        'tipos_cita': Cita.TIPO_CHOICES,
 
         # FILTROS CITAS
         'cita_busqueda': cita_busqueda,
@@ -403,10 +499,22 @@ def dashboard(request):
         'recordatorios_activos': recordatorios_activos,
         'recordatorios_pendientes': recordatorios_pendientes,
         'notificaciones_recientes': Notificacion.objects.select_related('cliente__usuario').order_by('-fecha_creacion')[:5],
+
+        # FILTROS Y DATOS PARA GESTIÓN DE USUARIOS
+        'usuarios': usuarios,
+        'tipo_filtro': tipo_filtro,
+        'busqueda': busqueda,
+        'estado_filtro': estado_filtro,
+        'usuarios_staff': usuarios_staff,
+        'usuarios_veterinarios': usuarios_veterinarios,
+        'usuarios_clientes': usuarios_clientes,
+        'usuarios_activos': usuarios_activos,
+        'usuarios_inactivos': usuarios_inactivos,
     }
     
     return render(request, 'administracion/dashboard.html', context)
 
+@login_required
 def exportar_datos(request):
     if request.method not in ['GET', 'POST']:
         return redirect('administracion:dashboard_admin')
@@ -418,31 +526,69 @@ def exportar_datos(request):
     generado_por = request.user.get_full_name() or request.user.username
     fecha_gen = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    # Construir datos
+    # Construir datos con mejor formato
+    total_clientes = Cliente.objects.count()
+    total_mascotas = Mascota.objects.count()
+    total_usuarios = User.objects.count()
+    total_productos = Producto.objects.filter(activo=True).count()
+    total_categorias = Categoria.objects.filter(activo=True).count()
+    total_ordenes = Orden.objects.count()
+
     stats_generales = [
         ['Métrica', 'Valor'],
-        ['Total de Clientes', Cliente.objects.count()],
-        ['Total de Mascotas', Mascota.objects.count()],
-        ['Total de Usuarios', User.objects.count()],
-        ['Total de Productos', Producto.objects.filter(activo=True).count()],
-        ['Total de Categorías', Categoria.objects.filter(activo=True).count()],
-        ['Total de Órdenes', Orden.objects.count()],
+        ['Total de Clientes', f"{total_clientes:,}"],
+        ['Total de Mascotas', f"{total_mascotas:,}"],
+        ['Total de Usuarios', f"{total_usuarios:,}"],
+        ['Total de Productos Activos', f"{total_productos:,}"],
+        ['Total de Categorías Activas', f"{total_categorias:,}"],
+        ['Total de Órdenes', f"{total_ordenes:,}"],
     ]
+
+    # Estadísticas del mes con mejor formato
+    citas_mes_count = Cita.objects.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year).count()
+    citas_completadas_mes = Cita.objects.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year, estado='completada').count()
+    clientes_nuevos_mes = Cliente.objects.filter(fecha_registro__month=hoy.month, fecha_registro__year=hoy.year).count()
+    ventas_mes = Orden.objects.filter(fecha_creacion__month=hoy.month, fecha_creacion__year=hoy.year).aggregate(total=Sum('total'))['total'] or 0
+    ordenes_mes = Orden.objects.filter(fecha_creacion__month=hoy.month, fecha_creacion__year=hoy.year).count()
+
+    # Calcular porcentaje de cumplimiento
+    cumplimiento_pct = 0
+    if citas_mes_count > 0:
+        cumplimiento_pct = round((citas_completadas_mes / citas_mes_count) * 100, 1)
+
     stats_mes = [
         ['Métrica', 'Valor'],
-        ['Citas este mes', Cita.objects.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year).count()],
-        ['Citas completadas', Cita.objects.filter(fecha__date__month=hoy.month, fecha__date__year=hoy.year, estado='completada').count()],
-        ['Clientes nuevos', Cliente.objects.filter(fecha_registro__month=hoy.month, fecha_registro__year=hoy.year).count()],
-        ['Ventas tienda', Orden.objects.filter(fecha_creacion__month=hoy.month, fecha_creacion__year=hoy.year).aggregate(total=Sum('total'))['total'] or 0],
-        ['Órdenes tienda', Orden.objects.filter(fecha_creacion__month=hoy.month, fecha_creacion__year=hoy.year).count()],
+        ['Citas programadas este mes', f"{citas_mes_count:,}"],
+        ['Citas completadas este mes', f"{citas_completadas_mes:,}"],
+        ['Porcentaje de cumplimiento', f"{cumplimiento_pct}%"],
+        ['Clientes nuevos este mes', f"{clientes_nuevos_mes:,}"],
+        ['Ventas tienda este mes', f"${ventas_mes:,.2f}"],
+        ['Órdenes tienda este mes', f"{ordenes_mes:,}"],
     ]
-    citas_estado = [['Estado', 'Cantidad']] + [[e['estado'], e['total']] for e in Cita.objects.values('estado').annotate(total=Count('id'))]
-    mascotas_tipo = [['Tipo', 'Cantidad']] + [[e['tipo'], e['total']] for e in Mascota.objects.values('tipo').annotate(total=Count('id'))]
-    prod_por_categoria = [['Categoría', 'Cantidad']] + [[e['categoria__nombre'] or 'Sin categoría', e['total']] for e in Producto.objects.filter(activo=True).values('categoria__nombre').annotate(total=Count('id'))]
-    ordenes_estado = [['Estado', 'Cantidad']] + [[e['estado'], e['total']] for e in Orden.objects.values('estado').annotate(total=Count('id'))]
-    productos_bajo = [['Producto', 'Stock Actual', 'Stock Mínimo']]
+    # Datos mejor formateados para análisis
+    citas_estado = [['Estado de Cita', 'Cantidad', 'Porcentaje']] + [
+        [e['estado'].title(), e['total'], f"{(e['total']/total_citas*100):.1f}%"]
+        for e in Cita.objects.values('estado').annotate(total=Count('id')).order_by('-total')
+    ] if (total_citas := Cita.objects.count()) > 0 else [['Estado de Cita', 'Cantidad', 'Porcentaje']]
+
+    mascotas_tipo = [['Tipo de Mascota', 'Cantidad', 'Porcentaje']] + [
+        [e['tipo'].title(), e['total'], f"{(e['total']/total_mascotas*100):.1f}%"]
+        for e in Mascota.objects.values('tipo').annotate(total=Count('id')).order_by('-total')
+    ] if total_mascotas > 0 else [['Tipo de Mascota', 'Cantidad', 'Porcentaje']]
+
+    prod_por_categoria = [['Categoría de Producto', 'Cantidad', 'Porcentaje']] + [
+        [e['categoria__nombre'] or 'Sin Categoría', e['total'], f"{(e['total']/total_productos*100):.1f}%"]
+        for e in Producto.objects.filter(activo=True).values('categoria__nombre').annotate(total=Count('id')).order_by('-total')
+    ] if total_productos > 0 else [['Categoría de Producto', 'Cantidad', 'Porcentaje']]
+
+    ordenes_estado = [['Estado de Orden', 'Cantidad', 'Porcentaje']] + [
+        [e['estado'].title(), e['total'], f"{(e['total']/total_ordenes*100):.1f}%"]
+        for e in Orden.objects.values('estado').annotate(total=Count('id')).order_by('-total')
+    ] if total_ordenes > 0 else [['Estado de Orden', 'Cantidad', 'Porcentaje']]
+    productos_bajo = [['Producto', 'Stock Actual', 'Stock Mínimo', 'Estado']]
     for p in Producto.objects.filter(stock__lte=F('stock_minimo'), activo=True).order_by('stock'):
-        productos_bajo.append([p.nombre, p.stock, p.stock_minimo])
+        estado = "SIN STOCK" if p.stock == 0 else "STOCK BAJO"
+        productos_bajo.append([p.nombre, p.stock, p.stock_minimo, estado])
     citas_hoy_rows = [['Hora', 'Mascota', 'Dueño', 'Tipo', 'Estado']]
     for c in Cita.objects.filter(fecha__date=hoy).select_related('mascota__cliente__usuario'):
         citas_hoy_rows.append([
@@ -452,9 +598,15 @@ def exportar_datos(request):
             c.get_tipo_display(),
             c.get_estado_display(),
         ])
-    ordenes_pend_rows = [['Número Orden', 'Cliente', 'Total', 'Fecha']]
-    for o in Orden.objects.filter(estado='pendiente').select_related('usuario'):
-        ordenes_pend_rows.append([o.numero_orden, o.usuario.get_full_name() or o.usuario.username, float(o.total), o.fecha_creacion.strftime('%d/%m/%Y')])
+    ordenes_pend_rows = [['Número Orden', 'Cliente', 'Total', 'Fecha Creación', 'Estado']]
+    for o in Orden.objects.filter(estado='pendiente').select_related('usuario').order_by('-fecha_creacion'):
+        ordenes_pend_rows.append([
+            o.numero_orden,
+            o.usuario.get_full_name() or o.usuario.username,
+            f"${float(o.total):,.2f}",
+            o.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+            o.get_estado_display()
+        ])
 
     # Datos completos de la base de datos
     clientes_rows = [['ID', 'Usuario', 'Nombre', 'Apellido', 'Email', 'Teléfono', 'Dirección', 'Fecha Registro']]
@@ -495,32 +647,41 @@ def exportar_datos(request):
             c.notas or ''
         ])
 
-    productos_rows = [['ID', 'Nombre', 'Descripción', 'Categoría', 'Precio', 'Stock', 'Stock Mínimo', 'Activo', 'Destacado']]
-    for p in Producto.objects.select_related('categoria'):
+    productos_rows = [['ID', 'Nombre', 'Categoría', 'Precio Base', 'Precio Final', 'Stock', 'Stock Mínimo', 'Estado Stock', 'Activo', 'Destacado']]
+    for p in Producto.objects.select_related('categoria').order_by('nombre'):
+        estado_stock = "SIN STOCK" if p.stock == 0 else ("BAJO" if p.stock <= p.stock_minimo else "NORMAL")
         productos_rows.append([
             p.id,
             p.nombre,
-            p.descripcion or '',
-            p.categoria.nombre if p.categoria else '',
-            float(p.precio_final),
+            p.categoria.nombre if p.categoria else 'Sin Categoría',
+            f"${float(p.precio):,.2f}",
+            f"${float(p.precio_final):,.2f}",
             p.stock,
             p.stock_minimo,
-            'Sí' if p.activo else 'No',
-            'Sí' if p.destacado else 'No'
+            estado_stock,
+            'ACTIVO' if p.activo else 'INACTIVO',
+            'DESTACADO' if p.destacado else 'NORMAL'
         ])
 
-    ordenes_rows = [['ID', 'Número Orden', 'Cliente', 'Subtotal', 'Impuesto', 'Envío', 'Total', 'Estado', 'Fecha Creación']]
-    for o in Orden.objects.select_related('usuario'):
+    ordenes_rows = [['ID', 'Número Orden', 'Cliente', 'Subtotal', 'Impuesto', 'Envío', 'Total', 'Estado', 'Fecha Creación', 'Productos']]
+    for o in Orden.objects.select_related('usuario').order_by('-fecha_creacion'):
+        # Contar productos en la orden (si hay relación many-to-many)
+        try:
+            productos_count = o.items.count() if hasattr(o, 'items') else 0
+        except:
+            productos_count = 0
+
         ordenes_rows.append([
             o.id,
             o.numero_orden,
             o.usuario.get_full_name() or o.usuario.username,
-            float(o.subtotal),
-            float(o.impuesto),
-            0,  # Envío no está en el modelo, asumir 0
-            float(o.total),
+            f"${float(o.subtotal):,.2f}",
+            f"${float(o.impuesto):,.2f}",
+            "$0.00",  # Envío no está en el modelo
+            f"${float(o.total):,.2f}",
             o.get_estado_display(),
-            o.fecha_creacion.strftime('%d/%m/%Y %H:%M')
+            o.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+            productos_count
         ])
 
     notificaciones_rows = [['ID', 'Cliente', 'Tipo', 'Título', 'Mensaje', 'Prioridad', 'Leída', 'Fecha Creación']]
@@ -647,61 +808,61 @@ def exportar_datos(request):
             elems.extend([t, Spacer(1, 15)])
 
         # Primera página: Estadísticas principales
-        add_professional_table('📊 Estadísticas Generales', stats_generales)
-        add_professional_table('📈 Estadísticas del Mes Actual', stats_mes)
+        add_professional_table('📊 ESTADÍSTICAS GENERALES DEL SISTEMA', stats_generales)
+        add_professional_table('📈 ESTADÍSTICAS DEL MES ACTUAL', stats_mes)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Segunda página: Análisis detallado
-        add_professional_table('📅 Citas por Estado', citas_estado)
-        add_professional_table('🐾 Mascotas por Tipo', mascotas_tipo)
-        add_professional_table('🛒 Productos por Categoría', prod_por_categoria)
-        add_professional_table('📦 Órdenes por Estado', ordenes_estado)
+        add_professional_table('📅 ANÁLISIS DE CITAS POR ESTADO', citas_estado)
+        add_professional_table('🐾 DISTRIBUCIÓN DE MASCOTAS POR TIPO', mascotas_tipo)
+        add_professional_table('🛒 PRODUCTOS POR CATEGORÍA', prod_por_categoria)
+        add_professional_table('📦 ESTADO DE ÓRDENES DE COMPRA', ordenes_estado)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Tercera página: Alertas y pendientes
-        add_professional_table('⚠️ Productos con Stock Bajo', productos_bajo)
-        add_professional_table('📋 Citas para Hoy', citas_hoy_rows)
-        add_professional_table('⏳ Órdenes Pendientes', ordenes_pend_rows)
+        add_professional_table('⚠️ ALERTA: PRODUCTOS CON STOCK CRÍTICO', productos_bajo)
+        add_professional_table('📋 CITAS PROGRAMADAS PARA HOY', citas_hoy_rows)
+        add_professional_table('⏳ ÓRDENES PENDIENTES DE PROCESAMIENTO', ordenes_pend_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Cuarta página: Datos completos - Clientes
-        add_professional_table('👥 Lista Completa de Clientes', clientes_rows)
+        add_professional_table('👥 REGISTRO COMPLETO DE CLIENTES', clientes_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Quinta página: Mascotas
-        add_professional_table('🐾 Lista Completa de Mascotas', mascotas_rows)
+        add_professional_table('🐾 REGISTRO COMPLETO DE MASCOTAS', mascotas_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Sexta página: Citas
-        add_professional_table('📅 Lista Completa de Citas', citas_rows)
+        add_professional_table('📅 HISTORIAL COMPLETO DE CITAS', citas_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Séptima página: Productos
-        add_professional_table('🛒 Lista Completa de Productos', productos_rows)
+        add_professional_table('🛒 CATÁLOGO COMPLETO DE PRODUCTOS', productos_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Octava página: Órdenes
-        add_professional_table('📦 Lista Completa de Órdenes', ordenes_rows)
+        add_professional_table('📦 HISTORIAL COMPLETO DE ÓRDENES', ordenes_rows)
 
         # Salto de página
         elems.append(PageBreak())
 
         # Novena página: Notificaciones
-        add_professional_table('🔔 Lista Completa de Notificaciones', notificaciones_rows)
+        add_professional_table('🔔 REGISTRO COMPLETO DE NOTIFICACIONES', notificaciones_rows)
 
         # Footer
         footer_text = f"Reporte generado el {date.today().strftime('%d/%m/%Y')} - Veterinaria Vet Love"
@@ -717,6 +878,90 @@ def exportar_datos(request):
         response['Content-Disposition'] = f'attachment; filename="reporte_admin_{date.today().strftime('%Y%m%d')}.pdf"'
         response.write(pdf_data)
         return response
+
+    # Generación de Excel profesional con openpyxl
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'Resumen'
+
+    # Estilos
+    header_fill = PatternFill('solid', fgColor='F1F3F5')
+    header_font = Font(bold=True, color='212529')
+    thin = Side(border_style='thin', color='DEE2E6')
+    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+    center = Alignment(horizontal='center', vertical='center')
+
+    def write_table(sheet, start_row, start_col, title, data):
+        sheet.merge_cells(start_row=start_row, start_column=start_col, end_row=start_row, end_column=start_col+len(data[0])-1)
+        title_cell = sheet.cell(row=start_row, column=start_col, value=title)
+        title_cell.font = Font(bold=True, size=12)
+        row = start_row + 1
+        # Header
+        for j, val in enumerate(data[0], start=start_col):
+            c = sheet.cell(row=row, column=j, value=val)
+            c.fill = header_fill
+            c.font = header_font
+            c.alignment = center
+            c.border = border
+        # Rows
+        for rdata in data[1:]:
+            row += 1
+            for j, val in enumerate(rdata, start=start_col):
+                c = sheet.cell(row=row, column=j, value=val)
+                c.border = border
+        # Auto width
+        for idx in range(start_col, start_col + len(data[0])):
+            letter = get_column_letter(idx)
+            max_len = 0
+            for r in range(start_row, row+1):
+                v = sheet.cell(row=r, column=idx).value
+                if v is None:
+                    continue
+                max_len = max(max_len, len(str(v)))
+            sheet.column_dimensions[letter].width = min(max_len + 2, 40)
+        return row + 2
+
+    # Header general
+    ws.merge_cells('A1:F1')
+    ws['A1'] = 'Reporte de Administración - Veterinaria Vet Love'
+    ws['A1'].font = Font(size=14, bold=True)
+    ws['A2'] = f'Generado por: {generado_por}   Fecha: {fecha_gen}'
+
+    r = 4
+    r = write_table(ws, r, 1, 'Estadísticas Generales', stats_generales)
+    r = write_table(ws, r, 1, 'Estadísticas del Mes', stats_mes)
+
+    # Hojas adicionales
+    def add_sheet(name, data):
+        sh = wb.create_sheet(title=name)
+        write_table(sh, 1, 1, name, data)
+
+    add_sheet('Citas por Estado', citas_estado)
+    add_sheet('Mascotas por Tipo', mascotas_tipo)
+    add_sheet('Prod. por Categoría', prod_por_categoria)
+    add_sheet('Órdenes por Estado', ordenes_estado)
+    add_sheet('Stock Bajo', productos_bajo)
+    add_sheet('Citas Hoy', citas_hoy_rows)
+    add_sheet('Órdenes Pendientes', ordenes_pend_rows)
+
+    # Hojas con datos completos
+    add_sheet('Todos los Clientes', clientes_rows)
+    add_sheet('Todas las Mascotas', mascotas_rows)
+    add_sheet('Todas las Citas', citas_rows)
+    add_sheet('Todos los Productos', productos_rows)
+    add_sheet('Todas las Órdenes', ordenes_rows)
+    add_sheet('Todas las Notificaciones', notificaciones_rows)
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = f'attachment; filename="reporte_admin_{date.today().strftime('%Y%m%d')}.xlsx"'
+    return response
     
 @login_required
 @veterinario_required(login_url='/admin/login/')
@@ -1027,36 +1272,44 @@ def dashboard_veterinario(request):
             sheet.column_dimensions[letter].width = min(max_len + 2, 40)
         return row + 2
 
-    # Header general
-    ws.merge_cells('A1:F1')
-    ws['A1'] = 'Reporte de Administración - Veterinaria Vet Love'
-    ws['A1'].font = Font(size=14, bold=True)
-    ws['A2'] = f'Generado por: {generado_por}   Fecha: {fecha_gen}'
+    # Header general mejorado
+    ws.merge_cells('A1:G1')
+    ws['A1'] = 'REPORTE DE ADMINISTRACIÓN - VETERINARIA VET LOVE'
+    ws['A1'].font = Font(size=16, bold=True, color='2C3E50')
+    ws['A1'].alignment = center
 
-    r = 4
-    r = write_table(ws, r, 1, 'Estadísticas Generales', stats_generales)
-    r = write_table(ws, r, 1, 'Estadísticas del Mes', stats_mes)
+    ws.merge_cells('A2:G2')
+    ws['A2'] = f'Generado por: {generado_por} | Fecha: {fecha_gen} | Sistema: Vet Love v2.0'
+    ws['A2'].font = Font(size=10, italic=True)
+    ws['A2'].alignment = center
+
+    # Espacio
+    ws['A3'] = ''
+
+    r = 5
+    r = write_table(ws, r, 1, '📊 ESTADÍSTICAS GENERALES DEL SISTEMA', stats_generales)
+    r = write_table(ws, r, 1, '📈 ESTADÍSTICAS DEL MES ACTUAL', stats_mes)
 
     # Hojas adicionales
     def add_sheet(name, data):
         sh = wb.create_sheet(title=name)
         write_table(sh, 1, 1, name, data)
 
-    add_sheet('Citas por Estado', citas_estado)
-    add_sheet('Mascotas por Tipo', mascotas_tipo)
-    add_sheet('Prod. por Categoría', prod_por_categoria)
-    add_sheet('Órdenes por Estado', ordenes_estado)
-    add_sheet('Stock Bajo', productos_bajo)
-    add_sheet('Citas Hoy', citas_hoy_rows)
-    add_sheet('Órdenes Pendientes', ordenes_pend_rows)
+    add_sheet('📊 Citas por Estado', citas_estado)
+    add_sheet('🐾 Mascotas por Tipo', mascotas_tipo)
+    add_sheet('🛒 Productos por Categoría', prod_por_categoria)
+    add_sheet('📦 Órdenes por Estado', ordenes_estado)
+    add_sheet('⚠️ Alertas Stock', productos_bajo)
+    add_sheet('📅 Citas de Hoy', citas_hoy_rows)
+    add_sheet('⏳ Órdenes Pendientes', ordenes_pend_rows)
 
     # Hojas con datos completos
-    add_sheet('Todos los Clientes', clientes_rows)
-    add_sheet('Todas las Mascotas', mascotas_rows)
-    add_sheet('Todas las Citas', citas_rows)
-    add_sheet('Todos los Productos', productos_rows)
-    add_sheet('Todas las Órdenes', ordenes_rows)
-    add_sheet('Todas las Notificaciones', notificaciones_rows)
+    add_sheet('👥 Base de Datos - Clientes', clientes_rows)
+    add_sheet('🐾 Base de Datos - Mascotas', mascotas_rows)
+    add_sheet('📅 Historial - Citas', citas_rows)
+    add_sheet('🛒 Catálogo - Productos', productos_rows)
+    add_sheet('📦 Historial - Órdenes', ordenes_rows)
+    add_sheet('🔔 Sistema - Notificaciones', notificaciones_rows)
 
     output = BytesIO()
     wb.save(output)
@@ -1358,6 +1611,15 @@ def gestionar_usuarios(request):
     usuarios_activos = User.objects.filter(is_active=True).count()
     usuarios_inactivos = User.objects.filter(is_active=False).count()
 
+    # Estadísticas adicionales para mascotas
+    from veterinario.models import Veterinario
+    veterinarios_activos = Veterinario.objects.filter(activo=True).count()
+    mascotas_sin_veterinario = Mascota.objects.filter(veterinario_asignado__isnull=True).count()
+    mascotas_por_tipo = list(Mascota.objects.values('tipo').annotate(total=Count('id')).order_by('-total'))
+
+    # Lista de todos los veterinarios para el modal
+    veterinarios_activos_list = Veterinario.objects.all().order_by('nombre_completo')
+
     context = {
         'usuarios': usuarios,
         'tipo_filtro': tipo_filtro,
@@ -1369,6 +1631,13 @@ def gestionar_usuarios(request):
         'usuarios_clientes': usuarios_clientes,
         'usuarios_activos': usuarios_activos,
         'usuarios_inactivos': usuarios_inactivos,
+
+        # Estadísticas adicionales para mascotas
+        'veterinarios_activos': veterinarios_activos,
+        'mascotas_sin_veterinario': mascotas_sin_veterinario,
+        'mascotas_por_tipo': mascotas_por_tipo,
+        'veterinarios_activos_list': veterinarios_activos_list,
+
     }
 
     return render(request, 'administracion/gestion_usuarios.html', context)
@@ -1522,13 +1791,20 @@ def editar_usuario(request, user_id):
     """
     Vista para editar usuarios existentes
     """
+    import logging
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"Inicio de edición de usuario ID: {user_id}")
     try:
         user = User.objects.get(id=user_id)
+        logger.info(f"Usuario encontrado: {user.username} (ID: {user.id})")
     except User.DoesNotExist:
+        logger.error(f"Usuario con ID {user_id} no encontrado")
         messages.error(request, 'Usuario no encontrado.')
         return redirect('administracion:gestion_usuarios')
 
     if request.method == 'POST':
+        logger.info(f"Procesando POST para usuario {user.username}")
         from django import forms
 
         class UsuarioEditForm(forms.ModelForm):
@@ -1577,10 +1853,21 @@ def editar_usuario(request, user_id):
                 # Determinar el tipo actual del usuario
                 if self.instance.is_staff:
                     self.fields['tipo_usuario'].initial = 'staff'
+                    logger.info(f"Tipo inicial determinado: staff para {self.instance.username}")
                 elif hasattr(self.instance, 'perfil_veterinario'):
                     self.fields['tipo_usuario'].initial = 'veterinario'
+                    logger.info(f"Tipo inicial determinado: veterinario para {self.instance.username}")
                 else:
-                    self.fields['tipo_usuario'].initial = 'cliente'
+                    # Verificar si tiene perfil de cliente
+                    from clientes.models import Cliente
+                    try:
+                        Cliente.objects.get(usuario=self.instance)
+                        self.fields['tipo_usuario'].initial = 'cliente'
+                        logger.info(f"Tipo inicial determinado: cliente para {self.instance.username}")
+                    except Cliente.DoesNotExist:
+                        # Si no tiene ningún perfil específico, asumir cliente
+                        self.fields['tipo_usuario'].initial = 'cliente'
+                        logger.info(f"Tipo inicial determinado: cliente (sin perfil) para {self.instance.username}")
 
             def clean(self):
                 cleaned_data = super().clean()
@@ -1588,31 +1875,42 @@ def editar_usuario(request, user_id):
                 password1 = cleaned_data.get('password1')
                 password2 = cleaned_data.get('password2')
 
+                logger.info(f"Validando formulario - cambiar_password: {cambiar_password}")
+
                 if cambiar_password:
                     if not password1 or not password2:
+                        logger.warning("Faltan contraseñas cuando cambiar_password=True")
                         raise forms.ValidationError('Debe ingresar ambas contraseñas')
                     if password1 != password2:
+                        logger.warning("Las contraseñas no coinciden")
                         raise forms.ValidationError('Las contraseñas no coinciden')
 
                 return cleaned_data
 
         form = UsuarioEditForm(request.POST, instance=user)
+        logger.info(f"Formulario creado, es válido: {form.is_valid()}")
         if form.is_valid():
+            logger.info("Formulario válido, procesando cambios")
             tipo_usuario = form.cleaned_data['tipo_usuario']
             cambiar_password = form.cleaned_data.get('cambiar_password')
             password1 = form.cleaned_data.get('password1')
+
+            logger.info(f"Tipo usuario: {tipo_usuario}, cambiar_password: {cambiar_password}")
 
             user = form.save(commit=False)
 
             # Actualizar permisos según el tipo
             if tipo_usuario == 'staff':
+                logger.info("Configurando como staff")
                 user.is_staff = True
                 user.is_superuser = True
                 # Remover de veterinarios si estaba
                 if hasattr(user, 'perfil_veterinario'):
                     user.perfil_veterinario.delete()
+                    logger.info("Perfil veterinario eliminado")
                 user.groups.clear()
             elif tipo_usuario == 'veterinario':
+                logger.info("Configurando como veterinario")
                 user.is_staff = False
                 user.is_superuser = False
                 # Crear perfil de veterinario si no existe
@@ -1625,35 +1923,53 @@ def editar_usuario(request, user_id):
                         telefono='',
                         activo=True
                     )
+                    logger.info("Perfil veterinario creado")
                 user.groups.clear()
                 from django.contrib.auth.models import Group
                 grupo_veterinarios, created = Group.objects.get_or_create(name='Veterinarios')
                 user.groups.add(grupo_veterinarios)
+                logger.info("Grupo veterinarios asignado")
             else:  # cliente
+                logger.info("Configurando como cliente")
                 user.is_staff = False
                 user.is_superuser = False
                 # Remover de veterinarios si estaba
                 if hasattr(user, 'perfil_veterinario'):
                     user.perfil_veterinario.delete()
+                    logger.info("Perfil veterinario eliminado")
                 user.groups.clear()
                 # Crear perfil de cliente si no existe
                 from clientes.models import Cliente
-                if not hasattr(user, 'cliente_profile'):
+                try:
+                    # Verificar si ya existe un perfil de cliente
+                    cliente_profile = Cliente.objects.get(usuario=user)
+                    logger.info("Perfil cliente ya existe")
+                except Cliente.DoesNotExist:
+                    # Solo crear si no existe
                     Cliente.objects.create(
                         usuario=user,
                         telefono='',
                         direccion='',
                         preferencias_comunicacion='email'
                     )
+                    logger.info("Perfil cliente creado")
 
             # Cambiar contraseña si se solicita
             if cambiar_password and password1:
+                logger.info("Cambiando contraseña")
                 user.set_password(password1)
 
-            user.save()
-            messages.success(request, f'Usuario {user.get_full_name()} actualizado exitosamente.')
-            return redirect('administracion:gestion_usuarios')
+            try:
+                user.save()
+                logger.info(f"Usuario {user.username} guardado exitosamente")
+                messages.success(request, f'Usuario {user.get_full_name()} actualizado exitosamente.')
+                return redirect('administracion:gestion_usuarios')
+            except Exception as e:
+                logger.error(f"Error al guardar usuario {user.username}: {str(e)}")
+                messages.error(request, f'Error al actualizar usuario: {str(e)}')
+                return redirect('administracion:gestion_usuarios')
     else:
+        logger.info(f"Mostrando formulario GET para usuario {user.username}")
         from django import forms
 
         class UsuarioEditForm(forms.ModelForm):
@@ -1702,12 +2018,24 @@ def editar_usuario(request, user_id):
                 # Determinar el tipo actual del usuario
                 if self.instance.is_staff:
                     self.fields['tipo_usuario'].initial = 'staff'
+                    logger.info(f"GET - Tipo inicial determinado: staff para {self.instance.username}")
                 elif hasattr(self.instance, 'perfil_veterinario'):
                     self.fields['tipo_usuario'].initial = 'veterinario'
+                    logger.info(f"GET - Tipo inicial determinado: veterinario para {self.instance.username}")
                 else:
-                    self.fields['tipo_usuario'].initial = 'cliente'
+                    # Verificar si tiene perfil de cliente
+                    from clientes.models import Cliente
+                    try:
+                        Cliente.objects.get(usuario=self.instance)
+                        self.fields['tipo_usuario'].initial = 'cliente'
+                        logger.info(f"GET - Tipo inicial determinado: cliente para {self.instance.username}")
+                    except Cliente.DoesNotExist:
+                        # Si no tiene ningún perfil específico, asumir cliente
+                        self.fields['tipo_usuario'].initial = 'cliente'
+                        logger.info(f"GET - Tipo inicial determinado: cliente (sin perfil) para {self.instance.username}")
 
         form = UsuarioEditForm(instance=user)
+        logger.info("Formulario GET creado")
 
     context = {
         'form': form,
@@ -1800,6 +2128,155 @@ def preview_pagina_web(request):
     return render(request, 'inicio.html', context)
 
 @login_required
+@login_required
+@login_required
+@staff_required(login_url='/admin/login/')
+def asignar_veterinario_mascota_page(request, mascota_id):
+    """
+    Vista para mostrar página de asignación de veterinario a mascota
+    """
+    try:
+        mascota = Mascota.objects.select_related('cliente__usuario', 'veterinario_asignado').get(id=mascota_id)
+    except Mascota.DoesNotExist:
+        messages.error(request, 'Mascota no encontrada.')
+        return redirect('administracion:dashboard_admin')
+
+    # Lista de todos los veterinarios
+    veterinarios = Veterinario.objects.all().order_by('nombre_completo')
+
+    context = {
+        'mascota': mascota,
+        'veterinarios': veterinarios,
+        'titulo': f'Asignar Veterinario - {mascota.nombre}',
+    }
+
+    return render(request, 'administracion/asignar_veterinario.html', context)
+
+@login_required
+@staff_required(login_url='/admin/login/')
+def asignar_veterinario(request):
+    """
+    Vista para mostrar página de asignación de veterinarios a mascotas
+    """
+    from veterinario.models import Veterinario
+
+    # Obtener todas las mascotas con filtros opcionales
+    tipo_filtro = request.GET.get('tipo', '')
+    cliente_filtro = request.GET.get('cliente', '')
+    busqueda = request.GET.get('busqueda', '')
+
+    mascotas_query = Mascota.objects.select_related('cliente__usuario', 'veterinario_asignado')
+
+    # Aplicar filtros
+    if tipo_filtro:
+        mascotas_query = mascotas_query.filter(tipo=tipo_filtro)
+
+    if cliente_filtro:
+        mascotas_query = mascotas_query.filter(
+            Q(cliente__usuario__username__icontains=cliente_filtro) |
+            Q(cliente__usuario__first_name__icontains=cliente_filtro) |
+            Q(cliente__usuario__last_name__icontains=cliente_filtro)
+        )
+
+    if busqueda:
+        mascotas_query = mascotas_query.filter(
+            Q(nombre__icontains=busqueda) |
+            Q(raza__icontains=busqueda)
+        )
+
+    # Calcular estadísticas antes del slice
+    total_mascotas_mostradas = mascotas_query.count()
+    mascotas_sin_asignar = mascotas_query.filter(veterinario_asignado__isnull=True).count()
+    mascotas_asignadas = mascotas_query.filter(veterinario_asignado__isnull=False).count()
+
+    # Aplicar límite después de calcular estadísticas
+    mascotas = mascotas_query.order_by('-fecha_registro')[:50]  # Limitar para rendimiento
+
+    # Lista de todos los veterinarios activos
+    veterinarios = Veterinario.objects.filter(activo=True).order_by('nombre_completo')
+
+    context = {
+        'mascotas': mascotas,
+        'veterinarios': veterinarios,
+        'tipos_mascota': Mascota.TIPO_CHOICES,
+        'tipo_filtro': tipo_filtro,
+        'cliente_filtro': cliente_filtro,
+        'busqueda': busqueda,
+        'titulo': 'Asignación de Veterinarios',
+        'total_mascotas_mostradas': total_mascotas_mostradas,
+        'mascotas_sin_asignar': mascotas_sin_asignar,
+        'mascotas_asignadas': mascotas_asignadas,
+    }
+
+    return render(request, 'administracion/asignar_veterinario_general.html', context)
+
+@staff_required(login_url='/admin/login/')
+def asignar_veterinario_mascota(request):
+    """
+    Vista AJAX para asignar o desasignar veterinario a una mascota
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+    try:
+        from mascotas.models import Mascota
+        from veterinario.models import Veterinario
+
+        mascota_id = request.POST.get('mascota_id')
+        veterinario_id = request.POST.get('veterinario_id')
+
+        if not mascota_id:
+            return JsonResponse({'success': False, 'error': 'ID de mascota requerido'})
+
+        mascota = Mascota.objects.select_related('veterinario_asignado').get(id=mascota_id)
+
+        if veterinario_id in [None, '', 'none']:
+            # Desasignar veterinario
+            veterinario_anterior = mascota.veterinario_asignado.nombre_completo if mascota.veterinario_asignado else None
+            mascota.veterinario_asignado = None
+            mascota.save()
+
+            mensaje = f'Veterinario removido de {mascota.nombre} exitosamente'
+            if veterinario_anterior:
+                mensaje += f' (anteriormente asignado a {veterinario_anterior})'
+
+            return JsonResponse({
+                'success': True,
+                'mensaje': mensaje
+            })
+
+        # Asignar veterinario
+        try:
+            veterinario = Veterinario.objects.get(id=veterinario_id, activo=True)
+        except Veterinario.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Veterinario no encontrado o inactivo'})
+
+        # Verificar si ya está asignado este veterinario
+        if mascota.veterinario_asignado and mascota.veterinario_asignado.id == veterinario.id:
+            return JsonResponse({
+                'success': False,
+                'error': f'{mascota.nombre} ya está asignada al Dr. {veterinario.nombre_completo}'
+            })
+
+        # Asignar veterinario
+        veterinario_anterior = mascota.veterinario_asignado.nombre_completo if mascota.veterinario_asignado else None
+        mascota.veterinario_asignado = veterinario
+        mascota.save()
+
+        mensaje = f'Dr. {veterinario.nombre_completo} asignado a {mascota.nombre} exitosamente'
+        if veterinario_anterior:
+            mensaje += f' (reemplaza a {veterinario_anterior})'
+
+        return JsonResponse({
+            'success': True,
+            'mensaje': mensaje
+        })
+
+    except Mascota.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Mascota no encontrada'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f'Error inesperado: {str(e)}'})
+
 @staff_required(login_url='/admin/login/')
 def preview_tienda(request):
     """

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load math_filters %}
 
 {% block title %}{{ producto.nombre }} - Veterinaria Vet Love{% endblock %}
 
@@ -8,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container-fluid py-4">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'tienda:lista_productos' %}">Tienda</a></li>
@@ -18,16 +19,19 @@
     </nav>
     
     <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body p-3">
+        <div class="col-lg-4 col-md-5 mb-4">
+            <div class="card h-100">
+                <div class="card-body p-3 d-flex align-items-start justify-content-center position-relative">
                     <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/600x400/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
-                         class="img-fluid rounded product-image w-100" alt="{{ producto.nombre }}">
+                         class="img-fluid rounded product-image w-100" alt="{{ producto.nombre }}" style="max-height: 400px; object-fit: contain;" id="main-product-image">
+                    <div class="zoom-overlay" onclick="openImageModal()">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-6">
+
+        <div class="col-lg-8 col-md-7">
             <div class="card">
                 <div class="card-body">
                     {% if producto.en_oferta %}
@@ -35,7 +39,26 @@
                     {% endif %}
                     
                     <h1 class="h2 mb-2">{{ producto.nombre }}</h1>
-                    
+
+                    <!-- Calificación promedio -->
+                    {% if producto.calificacion_promedio > 0 %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rating-stars me-2">
+                            {% for estrella in producto.estrellas_lista %}
+                                {% if estrella == 'full' %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% elif estrella == 'half' %}
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="fw-bold">{{ producto.calificacion_promedio|floatformat:1 }}</span>
+                        <small class="text-muted ms-1">({{ comentarios.count }} calificaciones)</small>
+                    </div>
+                    {% endif %}
+
                     <div class="d-flex align-items-center mb-3">
                         <span class="badge bg-secondary me-2">{{ producto.get_tipo_display }}</span>
                         <span class="text-muted">
@@ -54,11 +77,14 @@
                         {% endif %}
                     </div>
                     
+                    <hr class="my-4">
                     <div class="mb-4">
                         <h5>Descripción</h5>
                         <p class="text-muted">{{ producto.descripcion }}</p>
                     </div>
-                    
+
+
+
                     <div class="mb-4">
                         {% if producto.stock > 0 %}
                         <div class="d-flex align-items-center mb-3">
@@ -119,6 +145,123 @@
         </div>
     </div>
 
+    <!-- Información adicional del producto -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Información adicional del producto</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Información del producto</h6>
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="fw-bold">Marca</td>
+                            <td>Vet Love</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tipo</td>
+                            <td>Medicamento</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Categoría</td>
+                            <td>Alimentos</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tipo de Mascota</td>
+                            <td>Reptil</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Stock</td>
+                            <td>19 unidades</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Fecha de Creación</td>
+                            <td>14/11/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Última Actualización</td>
+                            <td>14/11/2025</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h6>Especificaciones técnicas</h6>
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="fw-bold">Marca</td>
+                            <td>Vet Love</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Fabricante</td>
+                            <td>Vet Love</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tipo de Producto</td>
+                            <td>Medicamento</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tipo de Mascota</td>
+                            <td>Reptil</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Precio</td>
+                            <td>$70,00</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Stock Disponible</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ¿Qué otros productos compran los clientes tras ver este producto? -->
+    {% if productos_relacionados %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4 class="mb-4">¿Qué otros productos compran los clientes tras ver este producto?</h4>
+            <div class="row">
+                {% for producto in productos_relacionados|slice:":4" %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <div class="position-relative">
+                            {% if producto.en_oferta %}
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-1 small">-{{ producto.porcentaje_descuento }}%</span>
+                            {% endif %}
+                            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/200x150/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
+                                 class="card-img-top" alt="{{ producto.nombre }}" style="height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="card-title mb-2">{{ producto.nombre|truncatewords:4 }}</h6>
+                            <div class="rating-stars mb-2">
+                                {% for estrella in producto.estrellas_lista %}
+                                    {% if estrella == 'full' %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% elif estrella == 'half' %}
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="card-text mb-2">
+                                {% if producto.en_oferta %}
+                                <span class="text-danger fw-bold">${{ producto.precio_final }}</span>
+                                {% else %}
+                                <span class="text-primary fw-bold">${{ producto.precio_final }}</span>
+                                {% endif %}
+                            </p>
+                            <small class="text-muted">Recíbelo mañana</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Comentarios y Calificaciones -->
     <div class="row mt-5">
         <div class="col-12">
@@ -126,17 +269,23 @@
                 <div class="card-header bg-light">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">
-                            <i class="fas fa-comments me-2"></i>Comentarios y Calificaciones
+                            <i class="fas fa-comments me-2"></i>Opiniones de los clientes
                         </h4>
-                        {% if calificacion_promedio %}
+                        {% if producto.calificacion_promedio > 0 %}
                         <div class="d-flex align-items-center">
                             <div class="rating-stars me-2">
-                                {% for i in "12345"|make_list %}
-                                <i class="fas fa-star{% if forloop.counter <= calificacion_promedio %} text-warning{% else %} text-muted{% endif %}"></i>
+                                {% for estrella in producto.estrellas_lista %}
+                                    {% if estrella == 'full' %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% elif estrella == 'half' %}
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
-                            <span class="fw-bold text-dark">{{ calificacion_promedio|floatformat:1 }}/5</span>
-                            <small class="text-dark fw-bold ms-2">({{ comentarios.count }} reseñas)</small>
+                            <span class="fw-bold text-dark">{{ producto.calificacion_promedio|floatformat:1 }} de 5</span>
+                            <small class="text-dark fw-bold ms-2">({{ comentarios.count }} calificaciones)</small>
                         </div>
                         {% endif %}
                     </div>
@@ -247,35 +396,110 @@
         </div>
     </div>
 
-    <!-- Productos relacionados -->
+    <!-- Productos relacionados con este artículo -->
     {% if productos_relacionados %}
     <div class="row mt-5">
         <div class="col-12">
-            <h3 class="mb-4 border-bottom pb-2">Productos Relacionados</h3>
+            <h3 class="mb-4">Productos relacionados con este artículo</h3>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <small class="text-muted">Patrocinado Página 1 de {{ productos_relacionados|length|add:4|div:5 }}</small>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary me-1">&larr; Página anterior</button>
+                    <button class="btn btn-sm btn-outline-secondary">Página siguiente &rarr;</button>
+                </div>
+            </div>
             <div class="row">
-                {% for producto in productos_relacionados %}
+                {% for producto in productos_relacionados|slice:":8" %}
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 related-product">
                         <div class="position-relative">
                             {% if producto.en_oferta %}
-                            <span class="badge bg-danger position-absolute top-0 end-0 m-2">-{{ producto.porcentaje_descuento }}%</span>
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-1 small">-{{ producto.porcentaje_descuento }}%</span>
                             {% endif %}
                             <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/200x150/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
                                  class="card-img-top" alt="{{ producto.nombre }}" style="height: 150px; object-fit: cover;">
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <h6 class="card-title">{{ producto.nombre|truncatewords:4 }}</h6>
+                        <div class="card-body d-flex flex-column p-3">
+                            <h6 class="card-title mb-2">{{ producto.nombre|truncatewords:4 }}</h6>
+                            <div class="rating-stars mb-2">
+                                {% for estrella in producto.estrellas_lista %}
+                                    {% if estrella == 'full' %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% elif estrella == 'half' %}
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                             <div class="mt-auto">
                                 <p class="card-text mb-2">
                                     {% if producto.en_oferta %}
                                     <span class="text-danger fw-bold">${{ producto.precio_final }}</span>
-                                    <small class="text-muted text-decoration-line-through">${{ producto.precio }}</small>
                                     {% else %}
                                     <span class="text-primary fw-bold">${{ producto.precio_final }}</span>
                                     {% endif %}
                                 </p>
-                                <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-outline-primary btn-sm w-100">
-                                    Ver Detalles
+                                <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-primary btn-sm w-100">
+                                    Ver opción
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Los clientes vieron con frecuencia -->
+    {% if productos_relacionados %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4 class="mb-3">Los clientes vieron con frecuencia</h4>
+            <small class="text-muted d-block mb-3">Patrocinado | Productos populares en los últimos 7 días</small>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <small class="text-muted">Página 1 de {{ productos_relacionados|length|add:4|div:5 }}</small>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary me-1">&larr; Página anterior</button>
+                    <button class="btn btn-sm btn-outline-secondary">Página siguiente &rarr;</button>
+                </div>
+            </div>
+            <div class="row">
+                {% for producto in productos_relacionados|slice:":8" %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 related-product">
+                        <div class="position-relative">
+                            {% if producto.en_oferta %}
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-1 small">-{{ producto.porcentaje_descuento }}%</span>
+                            {% endif %}
+                            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}https://via.placeholder.com/200x150/f8f9fa/6c757d?text=Sin+Imagen{% endif %}"
+                                 class="card-img-top" alt="{{ producto.nombre }}" style="height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="card-body d-flex flex-column p-3">
+                            <h6 class="card-title mb-2">{{ producto.nombre|truncatewords:4 }}</h6>
+                            <div class="rating-stars mb-2">
+                                {% for estrella in producto.estrellas_lista %}
+                                    {% if estrella == 'full' %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% elif estrella == 'half' %}
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="mt-auto">
+                                <p class="card-text mb-2">
+                                    {% if producto.en_oferta %}
+                                    <span class="text-danger fw-bold">${{ producto.precio_final }}</span>
+                                    {% else %}
+                                    <span class="text-primary fw-bold">${{ producto.precio_final }}</span>
+                                    {% endif %}
+                                </p>
+                                <a href="{% url 'tienda:detalle_producto' producto.id %}" class="btn btn-primary btn-sm w-100">
+                                    Ver opción
                                 </a>
                             </div>
                         </div>
@@ -287,6 +511,20 @@
     </div>
     {% endif %}
 </div>
+    <!-- Modal para imagen en grande -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">{{ producto.nombre }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="{{ producto.nombre }}" class="img-fluid rounded modal-product-image">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -416,6 +654,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
     }
+
+    // Función para abrir el modal de imagen
+    window.openImageModal = function() {
+        const mainImage = document.getElementById('main-product-image');
+        const modalImage = document.getElementById('modalImage');
+        if (mainImage && modalImage) {
+            modalImage.src = mainImage.src;
+            modalImage.alt = mainImage.alt;
+            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            modal.show();
+        }
+    };
 });
 </script>
 {% endblock %}

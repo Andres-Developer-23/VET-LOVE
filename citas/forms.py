@@ -1,6 +1,7 @@
 from django import forms
 from .models import Cita
 from mascotas.models import Mascota
+from veterinario.models import Veterinario
 from django.utils import timezone
 from datetime import time, datetime
 import re
@@ -154,7 +155,15 @@ class CitaForm(forms.ModelForm):
 
 class CitaAdminForm(forms.ModelForm):
     """Formulario para el panel de administración con campos adicionales"""
-    
+
+    veterinario_asignado = forms.ModelChoiceField(
+        queryset=Veterinario.objects.filter(activo=True),
+        required=False,
+        empty_label="Sin asignar",
+        label="Veterinario Asignado",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     class Meta:
         model = Cita
         fields = '__all__'

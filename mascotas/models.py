@@ -1,5 +1,6 @@
 from django.db import models
 from clientes.models import Cliente
+from veterinario.models import Veterinario
 from datetime import date
 from decimal import Decimal
 
@@ -107,6 +108,16 @@ class Mascota(models.Model):
     caracteristicas = models.TextField(blank=True, verbose_name="Señas particulares")
     color = models.CharField(max_length=50, blank=True, verbose_name="Color principal")
     
+    # Asignación de veterinario
+    veterinario_asignado = models.ForeignKey(
+        Veterinario,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='mascotas_asignadas',
+        verbose_name="Veterinario Asignado"
+    )
+
     # Metadata
     fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de registro")
     

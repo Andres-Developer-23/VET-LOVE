@@ -248,6 +248,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                 <!-- Título y categoría -->
                                 <h5 class="card-title mb-1">{{ producto.nombre }}</h5>
+                                <div class="rating-stars mb-1">
+                                    {% for estrella in producto.estrellas_lista %}
+                                        {% if estrella == 'full' %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% elif estrella == 'half' %}
+                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if producto.calificacion_promedio > 0 %}
+                                        <small class="text-muted ms-1">({{ producto.calificacion_promedio }})</small>
+                                    {% endif %}
+                                </div>
                                 <small class="text-muted mb-2">
                                     <i class="fas fa-tag me-1"></i>{{ producto.categoria.nombre }}
                                 </small>

@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{% block titulo_pagina %}Gestión de Mascotas - Veterinario{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'administracion/css/dashboard.css' %}">
+<style>
+    .mascota-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: none;
+        border-radius: 10px;
+    }
+    .mascota-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .filtro-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+    .table-responsive {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% block contenido_principal %}
+<!-- HEADER -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div>
+        <h1 class="h2">
+            <i class="fas fa-paw me-2"></i>Gestión de Mascotas
+        </h1>
+        <p class="text-muted mb-0">Administra la información médica de las mascotas</p>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'administracion:dashboard_veterinario' %}" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+        </a>
+        <button class="btn btn-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>Actualizar
+        </button>
+    </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtro-section">
+    <form method="GET" class="row g-3">
+        <div class="col-md-3">
+            <label for="tipo" class="form-label">Tipo de Mascota</label>
+            <select name="tipo" id="tipo" class="form-select">
+                <option value="">Todos los tipos</option>
+                {% for tipo_choice in tipos_mascota %}
+                    <option value="{{ tipo_choice.0 }}" {% if tipo_filtro == tipo_choice.0 %}selected{% endif %}>
+                        {{ tipo_choice.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="cliente" class="form-label">Propietario</label>
+            <input type="text" name="cliente" id="cliente" class="form-control"
+                   placeholder="Nombre del propietario" value="{{ cliente_filtro }}">
+        </div>
+        <div class="col-md-3">
+            <label for="estado" class="form-label">Estado</label>
+            <select name="estado" id="estado" class="form-select">
+                <option value="activas" {% if estado_filtro == 'activas' %}selected{% endif %}>Activas</option>
+                <option value="inactivas" {% if estado_filtro == 'inactivas' %}selected{% endif %}>Inactivas</option>
+                <option value="todas" {% if estado_filtro == 'todas' %}selected{% endif %}>Todas</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="busqueda" class="form-label">Búsqueda</label>
+            <input type="text" name="busqueda" id="busqueda" class="form-control"
+                   placeholder="Nombre, raza, color..." value="{{ busqueda }}">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary me-2">
+                <i class="fas fa-search me-1"></i>Filtrar
+            </button>
+            <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-1"></i>Limpiar Filtros
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- ESTADÍSTICAS -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">{{ mascotas|length }}</h3>
+                <p class="text-muted mb-0">Mascotas Encontradas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">{{ mascotas|length|add:"0" }}</h3>
+                <p class="text-muted mb-0">Activas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">0</h3>
+                <p class="text-muted mb-0">Con Historial</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="h4 mb-1">0</h3>
+                <p class="text-muted mb-0">Vacunas Pendientes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LISTA DE MASCOTAS -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Lista de Mascotas</h5>
+    </div>
+    <div class="card-body">
+        {% if mascotas %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mascota</th>
+                            <th>Tipo</th>
+                            <th>Propietario</th>
+                            <th>Información</th>
+                            <th>Estado</th>
+                            <th>Última Consulta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mascota in mascotas %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">{{ mascota.nombre }}</h6>
+                                            {% if mascota.raza %}
+                                                <small class="text-muted">{{ mascota.raza }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ mascota.get_tipo_display }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ mascota.cliente.usuario.get_full_name|default:mascota.cliente.usuario.username }}</strong><br>
+                                    <small class="text-muted">{{ mascota.cliente.telefono|default:"Sin teléfono" }}</small>
+                                </td>
+                                <td>
+                                    <small>
+                                        <strong>Sexo:</strong> {{ mascota.get_sexo_display }}<br>
+                                        <strong>Color:</strong> {{ mascota.color|default:"No especificado" }}<br>
+                                        {% if mascota.fecha_nacimiento %}
+                                            <strong>Edad:</strong> {{ mascota.fecha_nacimiento|timesince }}
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td>
+                                    {% if mascota.activo %}
+                                        <span class="badge bg-success">Activa</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactiva</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% with ultima_cita=mascota.cita_set.last %}
+                                        {% if ultima_cita %}
+                                            <small>{{ ultima_cita.fecha|date:"d/m/Y" }}</small><br>
+                                            <span class="badge bg-info">{{ ultima_cita.get_estado_display }}</span>
+                                        {% else %}
+                                            <small class="text-muted">Sin consultas</small>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'administracion:historial_medico_veterinario' mascota.id %}"
+                                           class="btn btn-sm btn-outline-primary" title="Ver historial médico">
+                                            <i class="fas fa-file-medical"></i>
+                                        </a>
+                                        <a href="{% url 'mascotas:detalle_mascota' mascota.id %}"
+                                           class="btn btn-sm btn-outline-info" title="Ver detalles" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'citas:agendar_cita' %}?mascota={{ mascota.id }}"
+                                           class="btn btn-sm btn-outline-success" title="Agendar cita" target="_blank">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            {% if mascotas|length >= 100 %}
+                <div class="text-center mt-3">
+                    <small class="text-muted">Mostrando los primeros 100 resultados. Use filtros para refinar la búsqueda.</small>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-paw fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No se encontraron mascotas</h4>
+                <p class="text-muted">Intente ajustar los filtros de búsqueda</p>
+                <a href="{% url 'mascotas:lista_mascotas' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-times me-1"></i>Limpiar Filtros
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Función para filtrar automáticamente al cambiar selects
+document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function() {
+        this.closest('form').submit();
+    });
+});
+
+// Función para búsqueda con delay
+let searchTimeout;
+document.getElementById('busqueda').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        this.closest('form').submit();
+    }, 500);
+});
+</script>
+{% endblock %}

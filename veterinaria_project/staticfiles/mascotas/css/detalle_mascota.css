@@ -17,3 +17,39 @@
   body { background:#fff; }
   .modal { display:none !important; }
 }
+
+/* Media queries para responsividad móvil */
+@media (max-width: 767px) {
+    #calendario-vacunas {
+        min-height: 400px;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1rem;
+    }
+
+    .fc .fc-button {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.8rem;
+    }
+
+    .carnet {
+        margin-bottom: 1rem;
+    }
+
+    .carnet .print-header {
+        padding-bottom: 6px;
+    }
+
+    .carnet h4 {
+        font-size: 1.1rem;
+    }
+
+    .carnet .section-title {
+        font-size: 0.8rem;
+    }
+
+    .carnet table {
+        font-size: 0.9rem;
+    }
+}

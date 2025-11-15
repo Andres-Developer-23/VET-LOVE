@@ -7,7 +7,7 @@ app_name = 'administracion'
 urlpatterns = [
     # Dashboard administrador
     path('dashboard/', administrador_required(views.dashboard), name='dashboard_admin'),
-    path('dashboard/exportar/', administrador_required(views.exportar_datos), name='exportar_datos'),
+    path('dashboard/exportar/', views.exportar_datos, name='exportar_datos'),
     path('api/estadisticas/', administrador_required(views.estadisticas_api), name='estadisticas_api'),
     path('preview-pagina-web/', administrador_required(views.preview_pagina_web), name='preview_pagina_web'),
     path('preview-tienda/', administrador_required(views.preview_tienda), name='preview_tienda'),
@@ -27,6 +27,11 @@ urlpatterns = [
 
     # Plantillas de carnets
     path('plantillas-carnets/', administrador_required(views.descargar_plantillas_carnets), name='descargar_plantillas_carnets'),
+
+    # Asignación de veterinarios
+    path('asignar-veterinario/', administrador_required(views.asignar_veterinario), name='asignar_veterinario'),
+    path('asignar-veterinario-mascota/<int:mascota_id>/', administrador_required(views.asignar_veterinario_mascota_page), name='asignar_veterinario_mascota_page'),
+    path('asignar-veterinario-mascota/', administrador_required(views.asignar_veterinario_mascota), name='asignar_veterinario_mascota'),
 
     # URLs para veterinarios
     path('veterinario/dashboard/', views.dashboard_veterinario, name='dashboard_veterinario'),

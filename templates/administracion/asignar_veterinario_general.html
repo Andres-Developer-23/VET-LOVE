@@ -1,0 +1,849 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- HEADER CON ESTADÍSTICAS RÁPIDAS -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="mb-0">
+                        <i class="fas fa-user-md text-primary me-2"></i>{{ titulo }}
+                    </h2>
+                    <small class="text-muted">Gestión centralizada de asignaciones veterinarias</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'administracion:dashboard_admin' %}#mascotas" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Dashboard
+                    </a>
+                    <button type="button" class="btn btn-success" onclick="location.reload()">
+                        <i class="fas fa-sync-alt me-1"></i>Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ESTADÍSTICAS RÁPIDAS -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-primary shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="display-4 text-primary mb-2">
+                                <i class="fas fa-paw"></i>
+                            </div>
+                            <h4 class="mb-0">{{ total_mascotas_mostradas }}</h4>
+                            <small class="text-muted">Mascotas Mostradas</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-success shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="display-4 text-success mb-2">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h4 class="mb-0">{{ veterinarios|length }}</h4>
+                            <small class="text-muted">Veterinarios Activos</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-warning shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="display-4 text-warning mb-2">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4 class="mb-0">{{ mascotas_sin_asignar }}</h4>
+                            <small class="text-muted">Sin Asignar</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-info shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="display-4 text-info mb-2">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h4 class="mb-0">{{ mascotas_asignadas }}</h4>
+                            <small class="text-muted">Asignadas</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VETERINARIOS DISPONIBLES -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Veterinarios Disponibles
+                        <span class="badge bg-light text-dark ms-2">{{ veterinarios|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for vet in veterinarios %}
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="card h-100 border-0 shadow-sm hover-card" style="transition: transform 0.2s;">
+                                <div class="card-body text-center">
+                                    <div class="avatar-circle bg-primary text-white mx-auto mb-3" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
+                                    <h6 class="card-title mb-1">{{ vet.nombre_completo }}</h6>
+                                    {% if vet.especialidad %}
+                                    <p class="text-primary mb-2 small">{{ vet.especialidad }}</p>
+                                    {% endif %}
+                                    {% if vet.telefono %}
+                                    <p class="text-muted mb-2 small">
+                                        <i class="fas fa-phone me-1"></i>{{ vet.telefono }}
+                                    </p>
+                                    {% endif %}
+                                    <span class="badge bg-success px-3 py-1">
+                                        <i class="fas fa-circle me-1"></i>Activo
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                                <h5>No hay veterinarios activos</h5>
+                                <p class="mb-0">Registre veterinarios en el sistema para poder asignarlos.</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GESTIÓN DE MASCOTAS -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-paw me-2"></i>Gestión de Mascotas
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <input type="text" id="busquedaRapida" class="form-control form-control-sm" placeholder="Buscar mascota..." style="width: 200px;">
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="filtrarRapido()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- FILTROS -->
+                    <form method="get" class="row g-3 mb-4" id="filtroForm">
+                        <div class="col-md-3">
+                            <label for="tipo" class="form-label fw-bold">Tipo de Mascota</label>
+                            <select class="form-select" id="tipo" name="tipo">
+                                <option value="">Todos los tipos</option>
+                                {% for tipo, nombre in tipos_mascota %}
+                                <option value="{{ tipo }}" {% if tipo_filtro == tipo %}selected{% endif %}>{{ nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="cliente" class="form-label fw-bold">Cliente</label>
+                            <input type="text" class="form-control" id="cliente" name="cliente"
+                                   value="{{ cliente_filtro }}" placeholder="Nombre del cliente...">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="busqueda" class="form-label fw-bold">Buscar Mascota</label>
+                            <input type="text" class="form-control" id="busqueda" name="busqueda"
+                                   value="{{ busqueda }}" placeholder="Nombre, raza...">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button type="submit" class="btn btn-primary flex-fill">
+                                <i class="fas fa-filter me-1"></i>Filtrar
+                            </button>
+                            <a href="{% url 'administracion:asignar_veterinario' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- TABLA DE MASCOTAS -->
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="mascotasTable">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th class="text-center">
+                                        <i class="fas fa-hashtag me-1"></i>ID
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-paw me-1"></i>Mascota
+                                    </th>
+                                    <th class="text-center">
+                                        <i class="fas fa-tag me-1"></i>Tipo
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-user me-1"></i>Cliente
+                                    </th>
+                                    <th class="text-center">
+                                        <i class="fas fa-user-md me-1"></i>Veterinario
+                                    </th>
+                                    <th class="text-center">
+                                        <i class="fas fa-cogs me-1"></i>Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mascota in mascotas %}
+                                <tr class="mascota-row" data-mascota-id="{{ mascota.id }}">
+                                    <td class="text-center fw-bold">{{ mascota.id }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle bg-info text-white me-3" style="width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                <i class="fas fa-paw"></i>
+                                            </div>
+                                            <div>
+                                                <strong class="mb-0">{{ mascota.nombre }}</strong>
+                                                {% if mascota.raza %}
+                                                <br><small class="text-muted">{{ mascota.raza }}</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info px-2 py-1">{{ mascota.get_tipo_display }}</span>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>{{ mascota.cliente.usuario.get_full_name|default:mascota.cliente.usuario.username }}</strong>
+                                            {% if mascota.cliente.telefono %}
+                                            <br><small class="text-muted">
+                                                <i class="fas fa-phone me-1"></i>{{ mascota.cliente.telefono }}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if mascota.veterinario_asignado %}
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="avatar-circle bg-success text-white me-2" style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                                <span class="badge bg-success px-2 py-1">{{ mascota.veterinario_asignado.nombre_completo }}</span>
+                                            </div>
+                                        {% else %}
+                                            <span class="badge bg-warning px-2 py-1">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Sin asignar
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-info" onclick="verDetalles({{ mascota.id }})" title="Ver detalles completos">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="asignarVeterinario({{ mascota.id }}, '{{ mascota.nombre }}')" title="Asignar Veterinario">
+                                                <i class="fas fa-user-md me-1"></i>Asignar
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No se encontraron mascotas</h5>
+                                            <p class="text-muted mb-0">Intenta ajustar los filtros de búsqueda.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if mascotas|length >= 50 %}
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota:</strong> Mostrando las primeras 50 mascotas. Use los filtros para refinar la búsqueda.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para asignar veterinario -->
+<div class="modal fade" id="asignarVeterinarioModal" tabindex="-1" aria-labelledby="asignarVeterinarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="asignarVeterinarioModalLabel">
+                    <i class="fas fa-user-md me-2"></i>Asignar Veterinario
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="asignarVeterinarioForm">
+                <div class="modal-body">
+                    <input type="hidden" id="mascota_id" name="mascota_id">
+
+                    <!-- Información de la mascota -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                <i class="fas fa-paw me-2"></i>Información de la Mascota
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Nombre:</strong> <span id="mascota_nombre_modal"></span></p>
+                                    <p class="mb-1"><strong>ID:</strong> <span id="mascota_id_modal"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Tipo:</strong> <span id="mascota_tipo_modal"></span></p>
+                                    <p class="mb-1"><strong>Raza:</strong> <span id="mascota_raza_modal"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Veterinario actual -->
+                    <div class="mb-3" id="veterinario_actual_container">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Veterinario Actual:</strong> <span id="veterinario_actual"></span>
+                        </div>
+                    </div>
+
+                    <!-- Selección de veterinario -->
+                    <div class="mb-3">
+                        <label for="veterinario_id" class="form-label">
+                            <i class="fas fa-user-md me-1"></i>Seleccionar Veterinario
+                        </label>
+                        <select class="form-select" id="veterinario_id" name="veterinario_id">
+                            <option value="">Seleccionar veterinario...</option>
+                            <option value="none">───── Sin asignar ─────</option>
+                            {% for vet in veterinarios %}
+                            <option value="{{ vet.id }}" data-especialidad="{{ vet.especialidad }}" data-telefono="{{ vet.telefono }}">
+                                {{ vet.nombre_completo }}{% if vet.especialidad %} - {{ vet.especialidad }}{% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            Selecciona un veterinario para asignar o "Sin asignar" para remover la asignación actual.
+                        </div>
+                    </div>
+
+                    <!-- Información del veterinario seleccionado -->
+                    <div class="mb-3" id="veterinario_info" style="display: none;">
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-id-card me-2"></i>Información del Veterinario
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Nombre:</strong> <span id="vet_nombre"></span></p>
+                                        <p class="mb-1"><strong>Especialidad:</strong> <span id="vet_especialidad"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Teléfono:</strong> <span id="vet_telefono"></span></p>
+                                        <p class="mb-1"><strong>Estado:</strong> <span id="vet_estado" class="badge bg-success">Activo</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmación -->
+                    <div class="alert alert-warning" id="confirmacion_alert" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Confirmación requerida:</strong>
+                        <span id="confirmacion_texto"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btn_asignar">
+                        <i class="fas fa-save me-1"></i>Asignar Veterinario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos adicionales para la interfaz mejorada */
+.hover-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+}
+
+.avatar-circle {
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.mascota-row:hover {
+    background-color: #f8f9fa;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.empty-state {
+    padding: 2rem 0;
+}
+
+.display-4 {
+    font-size: 2.5rem;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .avatar-circle {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .btn-group .btn {
+        margin-right: 0;
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Datos de mascotas para el modal
+const mascotasData = {};
+{% for mascota in mascotas %}
+mascotasData[{{ mascota.id }}] = {
+    nombre: '{{ mascota.nombre }}',
+    tipo: '{{ mascota.get_tipo_display }}',
+    raza: '{{ mascota.raza|default:"No especificada" }}',
+    veterinario_actual: '{% if mascota.veterinario_asignado %}{{ mascota.veterinario_asignado.nombre_completo }}{% else %}Sin asignar{% endif %}'
+};
+{% endfor %}
+
+function verDetalles(mascotaId) {
+    // Redirigir a la página de detalles de la mascota
+    window.open(`/mascotas/detalle/${mascotaId}/`, '_blank');
+}
+
+function asignarVeterinario(mascotaId, mascotaNombre) {
+    const mascota = mascotasData[mascotaId];
+
+    if (!mascota) {
+        console.error('Mascota no encontrada en datos:', mascotaId);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Datos de mascota no encontrados'
+            });
+        } else {
+            alert('Error: Datos de mascota no encontrados');
+        }
+        return;
+    }
+
+    // Llenar información de la mascota
+    document.getElementById('mascota_id').value = mascotaId;
+    document.getElementById('mascota_nombre_modal').textContent = mascota.nombre;
+    document.getElementById('mascota_id_modal').textContent = mascotaId;
+    document.getElementById('mascota_tipo_modal').textContent = mascota.tipo;
+    document.getElementById('mascota_raza_modal').textContent = mascota.raza;
+
+    // Mostrar veterinario actual
+    const vetActualContainer = document.getElementById('veterinario_actual_container');
+    const vetActualSpan = document.getElementById('veterinario_actual');
+    if (vetActualSpan) vetActualSpan.textContent = mascota.veterinario_actual;
+
+    if (mascota.veterinario_actual === 'Sin asignar') {
+        if (vetActualContainer) vetActualContainer.style.display = 'none';
+    } else {
+        if (vetActualContainer) vetActualContainer.style.display = 'block';
+    }
+
+    // Resetear formulario
+    document.getElementById('veterinario_id').value = '';
+    document.getElementById('veterinario_info').style.display = 'none';
+    document.getElementById('confirmacion_alert').style.display = 'none';
+
+    const modal = new bootstrap.Modal(document.getElementById('asignarVeterinarioModal'));
+    modal.show();
+}
+
+// Función de búsqueda rápida
+function filtrarRapido() {
+    const busqueda = document.getElementById('busquedaRapida').value.toLowerCase();
+    const filas = document.querySelectorAll('#mascotasTable tbody tr');
+
+    filas.forEach(fila => {
+        if (fila.cells.length > 1) { // Evitar fila vacía
+            const textoFila = fila.textContent.toLowerCase();
+            if (textoFila.includes(busqueda)) {
+                fila.style.display = '';
+                fila.style.animation = 'fadeIn 0.3s ease-in-out';
+            } else {
+                fila.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Búsqueda en tiempo real
+document.getElementById('busquedaRapida').addEventListener('input', function() {
+    filtrarRapido();
+});
+
+// Mejorar UX con atajos de teclado
+document.addEventListener('keydown', function(e) {
+    // Ctrl+F para enfocar búsqueda rápida
+    if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault();
+        document.getElementById('busquedaRapida').focus();
+    }
+
+    // Escape para limpiar búsqueda
+    if (e.key === 'Escape') {
+        document.getElementById('busquedaRapida').value = '';
+        filtrarRapido();
+    }
+});
+
+// Auto-submit de filtros con debounce
+let filtroTimeout;
+function debounceFiltro() {
+    clearTimeout(filtroTimeout);
+    filtroTimeout = setTimeout(() => {
+        document.getElementById('filtroForm').submit();
+    }, 500);
+}
+
+// Agregar debounce a inputs de filtro
+document.querySelectorAll('#filtroForm input, #filtroForm select').forEach(element => {
+    element.addEventListener('input', debounceFiltro);
+    element.addEventListener('change', debounceFiltro);
+});
+
+// Event listener para cambio de veterinario seleccionado
+document.getElementById('veterinario_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const veterinarioInfo = document.getElementById('veterinario_info');
+    const confirmacionAlert = document.getElementById('confirmacion_alert');
+    const btnAsignar = document.getElementById('btn_asignar');
+
+    if (this.value && this.value !== 'none') {
+        // Mostrar información del veterinario
+        const especialidad = selectedOption.getAttribute('data-especialidad') || 'General';
+        const telefono = selectedOption.getAttribute('data-telefono') || 'No disponible';
+
+        document.getElementById('vet_nombre').textContent = selectedOption.text.split(' - ')[0];
+        document.getElementById('vet_especialidad').textContent = especialidad;
+        document.getElementById('vet_telefono').textContent = telefono;
+
+        veterinarioInfo.style.display = 'block';
+        confirmacionAlert.style.display = 'none';
+        btnAsignar.innerHTML = '<i class="fas fa-save me-1"></i>Asignar Veterinario';
+        btnAsignar.className = 'btn btn-primary';
+    } else if (this.value === 'none') {
+        // Mostrar confirmación para desasignar
+        veterinarioInfo.style.display = 'none';
+        confirmacionAlert.style.display = 'block';
+        document.getElementById('confirmacion_texto').textContent =
+            '¿Estás seguro de que deseas remover la asignación del veterinario actual?';
+        btnAsignar.innerHTML = '<i class="fas fa-user-times me-1"></i>Remover Asignación';
+        btnAsignar.className = 'btn btn-warning';
+    } else {
+        // Nada seleccionado
+        veterinarioInfo.style.display = 'none';
+        confirmacionAlert.style.display = 'none';
+        btnAsignar.innerHTML = '<i class="fas fa-save me-1"></i>Asignar Veterinario';
+        btnAsignar.className = 'btn btn-primary';
+    }
+});
+
+document.getElementById('asignarVeterinarioForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const mascotaId = document.getElementById('mascota_id').value;
+    const veterinarioId = document.getElementById('veterinario_id').value;
+    const mascotaNombre = document.getElementById('mascota_nombre_modal').textContent;
+
+    if (!veterinarioId) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Selección requerida',
+                text: 'Por favor selecciona un veterinario o elige "Sin asignar"',
+                confirmButtonText: 'Entendido'
+            });
+        } else {
+            alert('Por favor selecciona un veterinario o elige "Sin asignar"');
+        }
+        return;
+    }
+
+    // Confirmación adicional para desasignar
+    if (veterinarioId === 'none') {
+        const confirmar = confirm(`¿Estás seguro de que deseas remover el veterinario asignado a ${mascotaNombre}?`);
+        if (!confirmar) return;
+    }
+
+    // Deshabilitar botón mientras procesa
+    const btnAsignar = document.getElementById('btn_asignar');
+    const textoOriginal = btnAsignar.innerHTML;
+    btnAsignar.disabled = true;
+    btnAsignar.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Procesando...';
+
+    // Enviar la asignación
+    fetch(`/administracion/asignar-veterinario-mascota/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            mascota_id: mascotaId,
+            veterinario_id: veterinarioId === 'none' ? null : veterinarioId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('asignarVeterinarioModal'));
+            modal.hide();
+
+            // Mostrar mensaje de éxito
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.mensaje,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                alert(data.mensaje);
+                location.reload();
+            }
+        } else {
+            // Mostrar error
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'Ocurrió un error al procesar la solicitud'
+                });
+            } else {
+                alert('Error: ' + (data.error || 'Ocurrió un error al procesar la solicitud'));
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo conectar con el servidor. Inténtalo de nuevo.'
+            });
+        } else {
+            alert('Error al asignar veterinario. Revisa tu conexión e inténtalo de nuevo.');
+        }
+    })
+    .finally(() => {
+        // Restaurar botón
+        btnAsignar.disabled = false;
+        btnAsignar.innerHTML = textoOriginal;
+    });
+});
+
+// Event listener para cambio de veterinario seleccionado
+document.getElementById('veterinario_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const veterinarioInfo = document.getElementById('veterinario_info');
+    const confirmacionAlert = document.getElementById('confirmacion_alert');
+    const btnAsignar = document.getElementById('btn_asignar');
+
+    if (this.value && this.value !== 'none') {
+        // Mostrar información del veterinario
+        const especialidad = selectedOption.getAttribute('data-especialidad') || 'General';
+        const telefono = selectedOption.getAttribute('data-telefono') || 'No disponible';
+
+        document.getElementById('vet_nombre').textContent = selectedOption.text.split(' - ')[0];
+        document.getElementById('vet_especialidad').textContent = especialidad;
+        document.getElementById('vet_telefono').textContent = telefono;
+
+        veterinarioInfo.style.display = 'block';
+        confirmacionAlert.style.display = 'none';
+        btnAsignar.innerHTML = '<i class="fas fa-save me-1"></i>Asignar Veterinario';
+        btnAsignar.className = 'btn btn-primary';
+    } else if (this.value === 'none') {
+        // Mostrar confirmación para desasignar
+        veterinarioInfo.style.display = 'none';
+        confirmacionAlert.style.display = 'block';
+        document.getElementById('confirmacion_texto').textContent =
+            '¿Estás seguro de que deseas remover la asignación del veterinario actual?';
+        btnAsignar.innerHTML = '<i class="fas fa-user-times me-1"></i>Remover Asignación';
+        btnAsignar.className = 'btn btn-warning';
+    } else {
+        // Nada seleccionado
+        veterinarioInfo.style.display = 'none';
+        confirmacionAlert.style.display = 'none';
+        btnAsignar.innerHTML = '<i class="fas fa-save me-1"></i>Asignar Veterinario';
+        btnAsignar.className = 'btn btn-primary';
+    }
+});
+
+document.getElementById('asignarVeterinarioForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const mascotaId = document.getElementById('mascota_id').value;
+    const veterinarioId = document.getElementById('veterinario_id').value;
+    const mascotaNombre = document.getElementById('mascota_nombre_modal').textContent;
+
+    if (!veterinarioId) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Selección requerida',
+                text: 'Por favor selecciona un veterinario o elige "Sin asignar"',
+                confirmButtonText: 'Entendido'
+            });
+        } else {
+            alert('Por favor selecciona un veterinario o elige "Sin asignar"');
+        }
+        return;
+    }
+
+    // Confirmación adicional para desasignar
+    if (veterinarioId === 'none') {
+        const confirmar = confirm(`¿Estás seguro de que deseas remover el veterinario asignado a ${mascotaNombre}?`);
+        if (!confirmar) return;
+    }
+
+    // Deshabilitar botón mientras procesa
+    const btnAsignar = document.getElementById('btn_asignar');
+    const textoOriginal = btnAsignar.innerHTML;
+    btnAsignar.disabled = true;
+    btnAsignar.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Procesando...';
+
+    // Enviar la asignación
+    fetch(`/administracion/asignar-veterinario-mascota/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            mascota_id: mascotaId,
+            veterinario_id: veterinarioId === 'none' ? null : veterinarioId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('asignarVeterinarioModal'));
+            modal.hide();
+
+            // Mostrar mensaje de éxito
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.mensaje,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                alert(data.mensaje);
+                location.reload();
+            }
+        } else {
+            // Mostrar error
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'Ocurrió un error al procesar la solicitud'
+                });
+            } else {
+                alert('Error: ' + (data.error || 'Ocurrió un error al procesar la solicitud'));
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo conectar con el servidor. Inténtalo de nuevo.'
+            });
+        } else {
+            alert('Error al asignar veterinario. Revisa tu conexión e inténtalo de nuevo.');
+        }
+    })
+    .finally(() => {
+        // Restaurar botón
+        btnAsignar.disabled = false;
+        btnAsignar.innerHTML = textoOriginal;
+    });
+});
+</script>
+{% endblock %}

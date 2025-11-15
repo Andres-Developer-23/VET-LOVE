@@ -1,167 +1,163 @@
-<!-- GESTIÓN DE USUARIOS -->
-<div class="row mb-4">
-    <!-- Estadísticas de Usuarios -->
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body text-center">
-                <div class="stat-icon mb-2">
-                    <i class="fas fa-users fa-2x text-primary"></i>
-                </div>
-                <div class="stat-number h3 text-primary">{{ total_usuarios }}</div>
-                <div class="stat-label text-muted">Total Usuarios</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body text-center">
-                <div class="stat-icon mb-2">
-                    <i class="fas fa-user-shield fa-2x text-danger"></i>
-                </div>
-                <div class="stat-number h3 text-danger">{{ usuarios_staff }}</div>
-                <div class="stat-label text-muted">Administradores</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body text-center">
-                <div class="stat-icon mb-2">
-                    <i class="fas fa-user-md fa-2x text-success"></i>
-                </div>
-                <div class="stat-number h3 text-success">{{ usuarios_veterinarios }}</div>
-                <div class="stat-label text-muted">Veterinarios</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body text-center">
-                <div class="stat-icon mb-2">
-                    <i class="fas fa-user-friends fa-2x text-info"></i>
-                </div>
-                <div class="stat-number h3 text-info">{{ usuarios_clientes }}</div>
-                <div class="stat-label text-muted">Clientes</div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Botones de acción -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Gestión de Usuarios</h5>
-            <a href="{% url 'administracion:crear_usuario' %}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Crear Nuevo Usuario
-            </a>
-        </div>
-    </div>
-</div>
 
-<!-- Filtros -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <form method="get" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="tipo" class="form-label">Tipo de Usuario</label>
-                        <select name="tipo" id="tipo" class="form-select">
-                            <option value="todos" {% if tipo_filtro == 'todos' %}selected{% endif %}>Todos</option>
-                            <option value="staff" {% if tipo_filtro == 'staff' %}selected{% endif %}>Administradores</option>
-                            <option value="veterinarios" {% if tipo_filtro == 'veterinarios' %}selected{% endif %}>Veterinarios</option>
-                            <option value="clientes" {% if tipo_filtro == 'clientes' %}selected{% endif %}>Clientes</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="estado" class="form-label">Estado</label>
-                        <select name="estado" id="estado" class="form-select">
-                            <option value="todos" {% if estado_filtro == 'todos' %}selected{% endif %}>Todos</option>
-                            <option value="activos" {% if estado_filtro == 'activos' %}selected{% endif %}>Activos</option>
-                            <option value="inactivos" {% if estado_filtro == 'inactivos' %}selected{% endif %}>Inactivos</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="busqueda" class="form-label">Buscar</label>
-                        <input type="text" name="busqueda" id="busqueda" class="form-control"
-                               placeholder="Nombre, usuario o email..." value="{{ busqueda }}">
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-outline-primary me-2">
-                            <i class="fas fa-search me-1"></i>Filtrar
-                        </button>
-                        <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-1"></i>Limpiar
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Tabla de usuarios -->
+<!-- Tabla de usuarios mejorada -->
 <div class="row">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-users me-2"></i>Lista de Usuarios
-                    <span class="badge bg-secondary ms-2">{{ usuarios|length|default:0 }}</span>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold">
+                    <i class="fas fa-users me-2 text-primary"></i>Lista de Usuarios
+                    <span class="badge bg-primary ms-2 fs-6">{{ usuarios|length|default:0 }}</span>
                 </h6>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleCompactView()" id="compactBtn">
+                        <i class="fas fa-compress me-1"></i>Vista Compacta
+                    </button>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'administracion:exportar_datos' %}?formato=excel" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-file-excel me-1"></i>Excel
+                        </a>
+                        <a href="{% url 'administracion:exportar_datos' %}?formato=pdf" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-file-pdf me-1"></i>PDF
+                        </a>
+                    </div>
+                    <div class="ms-auto d-flex align-items-center">
+                        <small class="text-muted me-2">Desliza horizontalmente para ver todas las columnas</small>
+                        <i class="fas fa-arrows-alt-h text-muted"></i>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="overflow-x: auto; max-width: 100%; background: white;">
+                    <table class="table table-hover mb-0" id="usuariosTable" style="min-width: 1200px; background: white;">
+                        <thead class="table-light">
                             <tr>
-                                <th>Usuario</th>
-                                <th>Nombre Completo</th>
-                                <th>Email</th>
-                                <th>Tipo</th>
-                                <th>Estado</th>
-                                <th>Último Login</th>
-                                <th>Fecha Registro</th>
-                                <th>Acciones</th>
+                                <th class="border-0 fw-semibold py-3 px-4" style="min-width: 200px;">
+                                    <i class="fas fa-user me-2 text-muted"></i>Usuario
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4" style="min-width: 180px;">
+                                    <i class="fas fa-id-card me-2 text-muted"></i>Nombre Completo
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4 d-none d-md-table-cell" style="min-width: 220px;">
+                                    <i class="fas fa-envelope me-2 text-muted"></i>Email
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4" style="min-width: 140px;">
+                                    <i class="fas fa-user-tag me-2 text-muted"></i>Tipo
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4" style="min-width: 120px;">
+                                    <i class="fas fa-toggle-on me-2 text-muted"></i>Estado
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4 d-none d-lg-table-cell" style="min-width: 140px;">
+                                    <i class="fas fa-clock me-2 text-muted"></i>Último Login
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4 d-none d-xl-table-cell" style="min-width: 140px;">
+                                    <i class="fas fa-calendar-plus me-2 text-muted"></i>Registro
+                                </th>
+                                <th class="border-0 fw-semibold py-3 px-4 text-center" style="min-width: 160px;">
+                                    <i class="fas fa-cogs me-2 text-muted"></i>Acciones
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for usuario in usuarios %}
-                            <tr>
-                                <td>{{ usuario.username }}</td>
-                                <td>{{ usuario.get_full_name|default:"-" }}</td>
-                                <td>{{ usuario.email|default:"-" }}</td>
-                                <td>
-                                    {% if usuario.is_staff %}
-                                        <span class="badge bg-danger">Administrador</span>
-                                    {% elif usuario|has_group:"Veterinarios" %}
-                                        <span class="badge bg-success">Veterinario</span>
-                                    {% else %}
-                                        <span class="badge bg-info">Cliente</span>
-                                    {% endif %}
+                            <tr class="align-middle user-row" data-user-id="{{ usuario.id }}">
+                                <td class="py-3 px-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3 bg-{% if usuario.is_staff %}danger{% elif usuario|has_group:"Veterinarios" %}success{% else %}info{% endif %} text-white fw-bold">
+                                            {{ usuario.username|first|upper }}
+                                        </div>
+                                        <div class="user-info">
+                                            <div class="fw-semibold text-truncate" style="max-width: 120px;" title="{{ usuario.username }}">
+                                                {{ usuario.username }}
+                                            </div>
+                                            <small class="text-muted">ID: {{ usuario.id }}</small>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>
-                                    {% if usuario.is_active %}
-                                        <span class="badge bg-success">Activo</span>
-                                    {% else %}
-                                        <span class="badge bg-danger">Inactivo</span>
-                                    {% endif %}
+                                <td class="py-3 px-4">
+                                    <div class="name-info">
+                                        <div class="fw-semibold text-truncate" style="max-width: 140px;" title="{{ usuario.get_full_name|default:'-' }}">
+                                            {{ usuario.get_full_name|default:"-" }}
+                                        </div>
+                                        {% if usuario.first_name or usuario.last_name %}
+                                        <small class="text-muted text-truncate d-block" style="max-width: 140px;" title="{{ usuario.first_name }} {{ usuario.last_name }}">
+                                            {{ usuario.first_name }} {{ usuario.last_name }}
+                                        </small>
+                                        {% endif %}
+                                    </div>
                                 </td>
-                                <td>
-                                    {% if usuario.last_login %}
-                                        {{ usuario.last_login|date:"d/m/Y H:i" }}
-                                    {% else %}
-                                        <span class="text-muted">Nunca</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ usuario.date_joined|date:"d/m/Y" }}</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{% url 'administracion:editar_usuario' usuario.id %}"
-                                           class="btn btn-sm btn-outline-primary" title="Editar usuario">
-                                            <i class="fas fa-edit"></i>
+                                <td class="py-3 px-4 d-none d-md-table-cell">
+                                    {% if usuario.email %}
+                                        <a href="mailto:{{ usuario.email }}" class="text-decoration-none text-truncate d-block" style="max-width: 200px;" title="{{ usuario.email }}">
+                                            {{ usuario.email }}
                                         </a>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if usuario.is_staff %}
+                                        <span class="badge bg-danger fs-7 px-3 py-2">
+                                            <i class="fas fa-user-shield me-1"></i>Administrador
+                                        </span>
+                                    {% elif usuario|has_group:"Veterinarios" %}
+                                        <span class="badge bg-success fs-7 px-3 py-2">
+                                            <i class="fas fa-user-md me-1"></i>Veterinario
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-info fs-7 px-3 py-2">
+                                            <i class="fas fa-user-friends me-1"></i>Cliente
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if usuario.is_active and usuario.last_login %}
+                                        <span class="badge bg-success fs-7 px-3 py-2">
+                                            <i class="fas fa-check-circle me-1"></i>Activo
+                                        </span>
+                                    {% elif usuario.is_active and not usuario.last_login %}
+                                        <span class="badge bg-danger fs-7 px-3 py-2">
+                                            <i class="fas fa-times-circle me-1"></i>Inactivo
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger fs-7 px-3 py-2">
+                                            <i class="fas fa-times-circle me-1"></i>Inactivo
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4 d-none d-lg-table-cell">
+                                    {% if usuario.last_login %}
+                                        <div class="text-nowrap">
+                                            <i class="fas fa-calendar-check text-success me-1"></i>
+                                            <span class="fw-semibold">{{ usuario.last_login|date:"d/m/Y" }}</span>
+                                            <br>
+                                            <small class="text-muted">{{ usuario.last_login|date:"H:i" }}</small>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">
+                                            <i class="fas fa-clock text-warning me-1"></i>Nunca
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4 d-none d-xl-table-cell">
+                                    <div class="text-nowrap">
+                                        <i class="fas fa-calendar-plus text-primary me-1"></i>
+                                        <span class="fw-semibold">{{ usuario.date_joined|date:"d/m/Y" }}</span>
+                                        <br>
+                                        <small class="text-muted">{{ usuario.date_joined|timesince }}</small>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-center">
+                                    <div class="btn-group action-buttons" role="group">
+                                        <a href="{% url 'administracion:editar_usuario' usuario.id %}"
+                                            class="btn btn-sm btn-outline-primary" title="Editar usuario">
+                                             <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-info" title="Ver detalles"
+                                                onclick="verDetallesUsuario({{ usuario.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                         {% if not usuario.is_superuser or user.is_superuser %}
                                         <button class="btn btn-sm btn-outline-danger"
                                                 onclick="confirmarEliminarUsuario('{{ usuario.username }}', {{ usuario.id }})"
@@ -174,9 +170,15 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center text-muted">
-                                    <i class="fas fa-users fa-2x mb-2"></i>
-                                    <br>No se encontraron usuarios con los filtros aplicados.
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-users fa-4x text-muted mb-3"></i>
+                                        <h5 class="text-muted">No se encontraron usuarios</h5>
+                                        <p class="text-muted mb-0">No hay usuarios que coincidan con los filtros aplicados.</p>
+                                        <a href="{% url 'administracion:gestion_usuarios' %}" class="btn btn-outline-primary mt-3">
+                                            <i class="fas fa-undo me-1"></i>Limpiar filtros
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -211,7 +213,334 @@
     </div>
 </div>
 
+<style>
+/* Estilos mejorados para la pestaña de usuarios */
+.stat-card {
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.avatar-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-group .btn {
+    border-radius: 0.375rem !important;
+    margin: 0 1px;
+    transition: all 0.2s ease;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.empty-state {
+    padding: 3rem 1rem;
+}
+
+.progress {
+    border-radius: 2px;
+}
+
+/* Mejoras para la tabla */
+.user-row {
+    transition: all 0.2s ease;
+}
+
+.user-info .fw-semibold {
+    font-size: 0.95rem;
+    color: #2c3e50;
+}
+
+.name-info .fw-semibold {
+    font-size: 0.95rem;
+    color: #2c3e50;
+}
+
+.name-info small {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Vista compacta */
+.compact-view .user-info,
+.compact-view .name-info {
+    max-width: 100px !important;
+}
+
+.compact-view .avatar-circle {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+}
+
+.compact-view .action-buttons .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 1400px) {
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .table th:nth-child(7),
+    .table td:nth-child(7) {
+        display: none;
+    }
+
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+        display: none;
+    }
+
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    .avatar-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-info .fw-semibold,
+    .name-info .fw-semibold {
+        font-size: 0.85rem;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .btn-group .btn {
+        margin: 1px 0;
+        width: 100%;
+        padding: 0.375rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.25em 0.5em;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-card .display-4 {
+        font-size: 2rem;
+    }
+
+    .stat-card .fa-3x {
+        font-size: 2rem;
+    }
+
+    .avatar-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card {
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+.stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Estilos para tooltips mejorados */
+.tooltip-inner {
+    background-color: #2c3e50;
+    font-size: 0.8rem;
+}
+
+/* Scrollbar personalizado para mejor UX */
+.table-responsive::-webkit-scrollbar {
+    height: 12px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6c757d, #495057);
+    border-radius: 6px;
+    border: 2px solid #f8f9fa;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #495057, #343a40);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.table-responsive::-webkit-scrollbar-thumb:active {
+    background: #343a40;
+}
+
+/* Para Firefox */
+.table-responsive {
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d #f8f9fa;
+}
+
+/* Indicador visual de scroll horizontal */
+.table-responsive {
+    position: relative;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.table-responsive::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255,255,255,0.95), rgba(255,255,255,0.7), rgba(255,255,255,0.3), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.table-responsive:hover::after {
+    opacity: 1;
+}
+
+/* Mejorar la apariencia de la tabla durante el scroll */
+.table-responsive {
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.table-responsive:hover {
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para badges */
+.badge {
+    border-radius: 20px;
+    padding: 0.35em 0.65em;
+}
+
+/* Hover effects para filas */
+.user-row:hover .avatar-circle {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+</style>
+
 <script>
+// Variable para controlar la vista compacta
+let isCompactView = false;
+
+// Función para alternar vista compacta
+function toggleCompactView() {
+    const table = document.getElementById('usuariosTable');
+    const btn = document.getElementById('compactBtn');
+    const icon = btn.querySelector('i');
+
+    isCompactView = !isCompactView;
+
+    if (isCompactView) {
+        table.classList.add('compact-view');
+        icon.className = 'fas fa-expand me-1';
+        btn.innerHTML = '<i class="fas fa-expand me-1"></i>Vista Normal';
+        btn.className = 'btn btn-sm btn-outline-success';
+    } else {
+        table.classList.remove('compact-view');
+        icon.className = 'fas fa-compress me-1';
+        btn.innerHTML = '<i class="fas fa-compress me-1"></i>Vista Compacta';
+        btn.className = 'btn btn-sm btn-outline-secondary';
+    }
+}
+
 // Función para confirmar eliminación de usuario
 function confirmarEliminarUsuario(nombreUsuario, usuarioId) {
     document.getElementById('usuarioEliminarNombre').textContent = nombreUsuario;
@@ -224,4 +553,64 @@ function confirmarEliminarUsuario(nombreUsuario, usuarioId) {
     };
     $('#eliminarUsuarioModal').modal('show');
 }
+
+// Función para limpiar búsqueda
+function limpiarBusqueda() {
+    document.getElementById('busqueda').value = '';
+    document.getElementById('filtroForm').submit();
+}
+
+// Función para exportar usuarios (ya no necesaria, ahora usa enlaces directos)
+function exportarUsuarios(formato) {
+    // Los enlaces ahora son directos, esta función se mantiene por compatibilidad
+    console.log('Exportando usuarios en formato:', formato);
+}
+
+// Función para ver detalles de usuario
+function verDetallesUsuario(usuarioId) {
+    // Aquí puedes implementar un modal con detalles del usuario
+    alert('Funcionalidad de detalles de usuario - ID: ' + usuarioId);
+}
+
+// Función para búsqueda en tiempo real (opcional)
+document.addEventListener('DOMContentLoaded', function() {
+    const busquedaInput = document.getElementById('busqueda');
+
+    if (busquedaInput) {
+        let timeout;
+        busquedaInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                // Auto-submit después de 1 segundo de inactividad
+                document.getElementById('filtroForm').submit();
+            }, 1000);
+        });
+    }
+
+    // Mejorar tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Agregar efectos hover a las filas
+    const userRows = document.querySelectorAll('.user-row');
+    userRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Auto-resize para textos largos
+    const textTruncates = document.querySelectorAll('.text-truncate');
+    textTruncates.forEach(element => {
+        if (element.scrollWidth > element.clientWidth) {
+            element.title = element.textContent.trim();
+        }
+    });
+});
 </script>

@@ -86,34 +86,56 @@
                         <!-- Tipo de Usuario -->
                         <div class="mb-4">
                             <label class="form-label fw-bold">Tipo de Usuario</label>
-                            <div class="row">
+                            <div class="row g-3">
                                 <div class="col-md-4">
-                                    <div class="form-check">
-                                        {{ form.tipo_usuario }}
-                                        <label class="form-check-label" for="{{ form.tipo_usuario.id_for_label }}">
-                                            <i class="fas fa-user-shield text-danger me-2"></i>Administrador
-                                        </label>
-                                        <small class="form-text text-muted">Acceso completo al sistema</small>
+                                    <div class="user-type-card" data-type="admin">
+                                        <div class="form-check user-type-option">
+                                            <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_0" value="administrador"
+                                                    {% if usuario.is_staff %}checked{% endif %}>
+                                            <div class="user-type-content">
+                                                <div class="user-type-icon">
+                                                    <i class="fas fa-user-shield"></i>
+                                                </div>
+                                                <div class="user-type-text">
+                                                    <strong>Administrador</strong>
+                                                    <small>Acceso completo al sistema</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_1" value="veterinario"
-                                               {% if usuario|has_group:"Veterinarios" %}checked{% endif %}>
-                                        <label class="form-check-label" for="id_tipo_usuario_1">
-                                            <i class="fas fa-user-md text-success me-2"></i>Veterinario
-                                        </label>
-                                        <small class="form-text text-muted">Gestión de mascotas y citas</small>
+                                    <div class="user-type-card" data-type="vet">
+                                        <div class="form-check user-type-option">
+                                            <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_1" value="veterinario"
+                                                    {% if usuario|has_group:"Veterinarios" %}checked{% endif %}>
+                                            <div class="user-type-content">
+                                                <div class="user-type-icon">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                                <div class="user-type-text">
+                                                    <strong>Veterinario</strong>
+                                                    <small>Gestión de mascotas y citas</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_2" value="cliente"
-                                               {% if not usuario.is_staff and not usuario|has_group:"Veterinarios" %}checked{% endif %}>
-                                        <label class="form-check-label" for="id_tipo_usuario_2">
-                                            <i class="fas fa-user-friends text-info me-2"></i>Cliente
-                                        </label>
-                                        <small class="form-text text-muted">Acceso limitado a sus datos</small>
+                                    <div class="user-type-card" data-type="client">
+                                        <div class="form-check user-type-option">
+                                            <input class="form-check-input" type="radio" name="tipo_usuario" id="id_tipo_usuario_2" value="cliente"
+                                                    {% if not usuario.is_staff and not usuario|has_group:"Veterinarios" %}checked{% endif %}>
+                                            <div class="user-type-content">
+                                                <div class="user-type-icon">
+                                                    <i class="fas fa-user-friends"></i>
+                                                </div>
+                                                <div class="user-type-text">
+                                                    <strong>Cliente</strong>
+                                                    <small>Acceso limitado a sus datos</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -193,20 +215,26 @@
                             <div id="password_fields" style="display: none;">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="mb-3">
+                                        <div class="mb-3 position-relative">
                                             <label for="id_password1" class="form-label">
                                                 <i class="fas fa-lock me-1"></i>Nueva Contraseña
                                             </label>
-                                            <input type="password" name="password1" id="id_password1" class="form-control">
+                                            <input type="password" name="password1" id="id_password1" class="form-control pe-5">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" onclick="togglePasswordVisibility('id_password1')" id="togglePassword1" title="Mostrar contraseña" style="margin-top: 8px;">
+                                                <i class="fas fa-eye" id="eyeIcon1"></i>
+                                            </button>
                                             <div class="form-text">Mínimo 8 caracteres</div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3">
+                                        <div class="mb-3 position-relative">
                                             <label for="id_password2" class="form-label">
                                                 <i class="fas fa-lock me-1"></i>Confirmar Nueva Contraseña
                                             </label>
-                                            <input type="password" name="password2" id="id_password2" class="form-control">
+                                            <input type="password" name="password2" id="id_password2" class="form-control pe-5">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" onclick="togglePasswordVisibility('id_password2')" id="togglePassword2" title="Mostrar contraseña" style="margin-top: 8px;">
+                                                <i class="fas fa-eye" id="eyeIcon2"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -218,10 +246,10 @@
                             <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 {% for error in form.non_field_errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                                   {{ error }}
+                               {% endfor %}
+                           </div>
+                       {% endif %}
 
                         <!-- Botones -->
                         <div class="d-flex justify-content-end mt-4">
@@ -240,6 +268,58 @@
 </div>
 
 <script>
+// Función para alternar visibilidad de contraseña
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById('togglePassword' + inputId.slice(-1));
+    const icon = document.getElementById('eyeIcon' + inputId.slice(-1));
+
+    if (!input || !button || !icon) {
+        console.error('Elementos no encontrados para inputId:', inputId);
+        return;
+    }
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+        button.setAttribute('title', 'Ocultar contraseña');
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+        button.setAttribute('title', 'Mostrar contraseña');
+    }
+}
+
+// Función para manejar selección de tipo de usuario
+function handleUserTypeSelection() {
+    const userTypeCards = document.querySelectorAll('.user-type-card');
+
+    userTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const radioInput = this.querySelector('input[type="radio"]');
+            const type = this.dataset.type;
+
+            if (radioInput) {
+                // Desmarcar todas las cards
+                userTypeCards.forEach(c => c.classList.remove('selected'));
+
+                // Marcar la card seleccionada
+                this.classList.add('selected');
+                radioInput.checked = true;
+            }
+        });
+    });
+
+    // Marcar la card inicialmente seleccionada
+    const checkedRadio = document.querySelector('input[name="tipo_usuario"]:checked');
+    if (checkedRadio) {
+        const card = checkedRadio.closest('.user-type-card');
+        if (card) {
+            card.classList.add('selected');
+        }
+    }
+}
+
 // Mostrar/ocultar campos de contraseña
 document.getElementById('cambiar_password_check').addEventListener('change', function() {
     const passwordFields = document.getElementById('password_fields');
@@ -255,22 +335,360 @@ document.getElementById('cambiar_password_check').addEventListener('change', fun
         document.getElementById('id_password2').value = '';
     }
 });
+
+// Inicializar tooltips y selección de tipo de usuario
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    handleUserTypeSelection();
+});
 </script>
 
 <style>
+/* Variables de colores modernas */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --border-radius: 15px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .form-check-input:checked {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    background: var(--primary-gradient);
+    border-color: transparent;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 .card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    box-shadow: var(--card-shadow);
+    border: none;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
 }
 
 .card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+    padding: 1.5rem;
+}
+
+.card-header h5, .card-header h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary {
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.bg-danger {
+    background: var(--danger-gradient) !important;
+}
+
+.bg-success {
+    background: var(--success-gradient) !important;
+}
+
+.bg-info {
+    background: var(--info-gradient) !important;
+}
+
+/* Estilos para botones de mostrar/ocultar contraseña */
+.position-relative .btn-outline-secondary {
+    border: 1px solid #e9ecef;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    color: #6c757d;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.position-relative .btn-outline-secondary:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.position-relative .btn-outline-secondary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Form controls modernos */
+.form-control, .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background: white;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+/* Iconos con gradientes */
+.fas.fa-user-circle {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fas.fa-user-shield { color: #dc3545; }
+.fas.fa-user-md { color: #28a745; }
+.fas.fa-user-friends { color: #17a2b8; }
+
+/* Animaciones sutiles */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 1rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .position-relative .btn-outline-secondary {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .form-control, .form-select {
+        padding: 0.625rem 0.875rem;
+    }
+}
+
+/* Hover effects para form-check */
+.form-check {
+    transition: var(--transition);
+}
+
+.form-check:hover {
+    transform: translateX(5px);
+}
+
+/* Estilos para alertas */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: var(--card-shadow);
+}
+
+/* Mejorar la apariencia del checkbox de cambiar contraseña */
+.form-check-input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 0.25em;
+    border: 2px solid #dee2e6;
+    background: white;
+    transition: var(--transition);
+}
+
+.form-check-input[type="checkbox"]:checked {
+    background: var(--primary-gradient);
+    border-color: transparent;
+}
+
+/* Estilos para el perfil de usuario */
+.card-body.text-center .fa-4x {
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.card-body.text-center h5 {
+    font-weight: 700;
+    color: #495057;
+}
+
+.card-body.text-center p.text-muted {
+    font-size: 0.9rem;
+}
+
+/* Estilos modernos para selección de tipo de usuario */
+.user-type-card {
+    position: relative;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.user-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: #667eea;
+}
+
+.user-type-card.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.user-type-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-type-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--transition);
+}
+
+.user-type-card[data-type="admin"] .user-type-icon {
+    background: var(--danger-gradient);
+    color: white;
+}
+
+.user-type-card[data-type="vet"] .user-type-icon {
+    background: var(--success-gradient);
+    color: white;
+}
+
+.user-type-card[data-type="client"] .user-type-icon {
+    background: var(--info-gradient);
+    color: white;
+}
+
+.user-type-card.selected .user-type-icon {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-type-text strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #495057;
+    margin-bottom: 0.25rem;
+}
+
+.user-type-text small {
+    color: #6c757d;
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+.user-type-option {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.user-type-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Responsive para user type cards */
+@media (max-width: 768px) {
+    .user-type-card {
+        padding: 1rem 0.75rem;
+    }
+
+    .user-type-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    .user-type-text strong {
+        font-size: 1rem;
+    }
 }
 </style>
 {% endblock %}

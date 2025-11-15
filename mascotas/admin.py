@@ -1,15 +1,16 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import Mascota, HistorialMedico, Vacuna
+from veterinario.models import Veterinario
 
 @admin.register(Mascota)
 class MascotaAdmin(admin.ModelAdmin):
     list_display = [
-        'nombre', 'tipo', 'raza', 'sexo', 'cliente', 'edad', 
+        'nombre', 'tipo', 'raza', 'sexo', 'cliente', 'veterinario_asignado', 'edad',
         'peso_actual', 'estado_vacunacion', 'desparasitacion', 'fecha_registro'
     ]
     list_filter = [
-        'tipo', 'sexo', 'esterilizado', 'estado_vacunacion', 
-        'desparasitacion', 'fecha_registro'
+        'tipo', 'sexo', 'esterilizado', 'estado_vacunacion',
+        'desparasitacion', 'veterinario_asignado', 'fecha_registro'
     ]
     search_fields = [
         'nombre', 'raza', 'microchip', 'cliente__usuario__first_name', 
@@ -21,9 +22,13 @@ class MascotaAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Información Básica', {
             'fields': (
-                'nombre', 'cliente', 'tipo', 'raza', 'sexo', 
+                'nombre', 'cliente', 'tipo', 'raza', 'sexo',
                 'fecha_nacimiento', 'peso_actual'
             )
+        }),
+        ('Asignación de Veterinario', {
+            'fields': ('veterinario_asignado',),
+            'description': 'Selecciona el veterinario responsable de esta mascota. Si no hay veterinarios disponibles, primero registra uno en la sección Veterinarios.'
         }),
         ('Identificación', {
             'fields': ('microchip', 'foto', 'color', 'caracteristicas')
@@ -63,6 +68,47 @@ class MascotaAdmin(admin.ModelAdmin):
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+        # Guardar el veterinario anterior para comparar
+        veterinario_anterior = None
+        if change:  # Si es una edición
+            mascota_original = Mascota.objects.get(pk=obj.pk)
+            veterinario_anterior = mascota_original.veterinario_asignado
+
+        # Guardar el objeto
+        super().save_model(request, obj, form, change)
+
+        # Mensajes personalizados
+        if change:
+            if obj.veterinario_asignado != veterinario_anterior:
+                if obj.veterinario_asignado:
+                    messages.success(
+                        request,
+                        f'¡Excelente! La mascota "{obj.nombre}" ha sido asignada al veterinario Dr. {obj.veterinario_asignado.nombre_completo}.'
+                    )
+                else:
+                    messages.info(
+                        request,
+                        f'La asignación de veterinario para "{obj.nombre}" ha sido removida.'
+                    )
+            else:
+                messages.success(
+                    request,
+                    f'Los datos de la mascota "{obj.nombre}" ({obj.get_tipo_display()}) se han actualizado correctamente.'
+                )
+        else:
+            messages.success(
+                request,
+                f'¡Nueva mascota registrada! "{obj.nombre}" ({obj.get_tipo_display()}) ha sido agregada al sistema.'
+            )
+
+    def delete_model(self, request, obj):
+        messages.warning(
+            request,
+            f'La mascota "{obj.nombre}" ({obj.get_tipo_display()}) ha sido eliminada del sistema.'
+        )
+        super().delete_model(request, obj)
+
     def edad(self, obj):
         return obj.edad()
     edad.short_description = 'Edad'
@@ -98,6 +144,26 @@ class HistorialMedicoAdmin(admin.ModelAdmin):
         }),
     )
     
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if change:
+            messages.success(
+                request,
+                f'El historial médico de "{obj.mascota.nombre}" ha sido actualizado correctamente.'
+            )
+        else:
+            messages.success(
+                request,
+                f'Nuevo historial médico registrado para "{obj.mascota.nombre}".'
+            )
+
+    def delete_model(self, request, obj):
+        messages.warning(
+            request,
+            f'El historial médico de "{obj.mascota.nombre}" (fecha: {obj.fecha.strftime("%d/%m/%Y")}) ha sido eliminado.'
+        )
+        super().delete_model(request, obj)
+
     def diagnostico_corto(self, obj):
         return obj.diagnostico[:50] + '...' if len(obj.diagnostico) > 50 else obj.diagnostico
     diagnostico_corto.short_description = 'Diagnóstico'
@@ -128,3 +194,50 @@ class VacunaAdmin(admin.ModelAdmin):
             'fields': ('reacciones_adversas',)
         }),
     )
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if change:
+            messages.success(
+                request,
+                f'La vacuna "{obj.nombre}" de "{obj.mascota.nombre}" ha sido actualizada correctamente.'
+            )
+        else:
+            messages.success(
+                request,
+                f'Nueva vacuna "{obj.nombre}" registrada para "{obj.mascota.nombre}".'
+            )
+
+    def delete_model(self, request, obj):
+        messages.warning(
+            request,
+            f'La vacuna "{obj.nombre}" de "{obj.mascota.nombre}" ha sido eliminada del registro.'
+        )
+        super().delete_model(request, obj)
+
+@admin.register(Veterinario)
+class VeterinarioAdmin(admin.ModelAdmin):
+    list_display = ['nombre_completo', 'especialidad', 'numero_colegiado', 'telefono', 'activo']
+    list_filter = ['activo', 'especialidad']
+    search_fields = ['nombre_completo', 'numero_colegiado', 'usuario__username']
+    readonly_fields = ['usuario']
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if change:
+            messages.success(
+                request,
+                f'Los datos del veterinario Dr. {obj.nombre_completo} han sido actualizados correctamente.'
+            )
+        else:
+            messages.success(
+                request,
+                f'¡Nuevo veterinario registrado! Dr. {obj.nombre_completo} ha sido agregado al sistema.'
+            )
+
+    def delete_model(self, request, obj):
+        messages.warning(
+            request,
+            f'El veterinario Dr. {obj.nombre_completo} ha sido removido del sistema.'
+        )
+        super().delete_model(request, obj)

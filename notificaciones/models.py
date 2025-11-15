@@ -21,6 +21,8 @@ class Notificacion(models.Model):
     ]
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='notificaciones', null=True, blank=True)
+    veterinario = models.ForeignKey('veterinario.Veterinario', on_delete=models.CASCADE, related_name='notificaciones', null=True, blank=True)
+    para_admin = models.BooleanField(default=False, verbose_name="Para Administrador")
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='general')
     titulo = models.CharField(max_length=200)
     mensaje = models.TextField()
@@ -43,8 +45,12 @@ class Notificacion(models.Model):
         verbose_name_plural = 'Notificaciones'
 
     def __str__(self):
-        if self.cliente:
+        if self.para_admin:
+            return f"{self.titulo} - Administrador"
+        elif self.cliente:
             return f"{self.titulo} - {self.cliente}"
+        elif self.veterinario:
+            return f"{self.titulo} - {self.veterinario}"
         else:
             return f"{self.titulo} - Todos los usuarios"
 

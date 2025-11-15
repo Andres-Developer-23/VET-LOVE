@@ -10,7 +10,57 @@
 }
 
 .product-image:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+/* === ZOOM OVERLAY === */
+.zoom-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 15px;
+    cursor: pointer;
+    backdrop-filter: blur(3px);
+    transform: scale(0.95);
+}
+
+.product-image:hover + .zoom-overlay,
+.zoom-overlay:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1);
+}
+
+.zoom-overlay i {
+    color: white;
+    font-size: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+}
+
+.zoom-overlay:hover i {
+    transform: scale(1.4) rotate(0deg);
+    color: #fff;
+    opacity: 1;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));
+    animation: zoomPulse 2s infinite;
+}
+
+@keyframes zoomPulse {
+    0%, 100% { transform: scale(1.4) rotate(0deg); }
+    50% { transform: scale(1.5) rotate(2deg); }
 }
 
 /* === CONTENEDORES PRINCIPALES === */
@@ -676,4 +726,80 @@ hr {
 
 .rating-feedback.negative {
     color: #dc3545;
+}
+
+/* === MODAL PARA IMAGEN EN GRANDE === */
+.modal-product-image {
+    max-height: 80vh;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.modal-product-image:hover {
+    transform: scale(1.02);
+}
+
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 15px 15px 0 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.modal-title {
+    color: #495057;
+    font-weight: 700;
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Responsive para modal y overlay */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    .modal-product-image {
+        max-height: 60vh;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .zoom-overlay i {
+        font-size: 2rem;
+    }
+
+    .product-image {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .zoom-overlay i {
+        font-size: 1.8rem;
+    }
+
+    .product-image {
+        max-height: 200px;
+    }
+
+    .modal-product-image {
+        max-height: 50vh;
+    }
+
+    .modal-title {
+        font-size: 1rem;
+    }
 }
